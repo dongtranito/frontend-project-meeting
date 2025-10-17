@@ -1,0 +1,74 @@
+/* --- Tổng thể Dialog --- */
+.create-meeting-dialog .MuiDialog-paper {
+  background-color: #fafafa;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 16px;
+}
+
+/* --- Tiêu đề --- */
+.dialog-title {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #004b59;
+  margin-bottom: 8px;
+}
+
+/* --- Nội dung --- */
+.dialog-content {
+  margin-top: 8px;
+}
+
+.dialog-input {
+  margin-top: 12px;
+}
+
+/* --- Nút upload file --- */
+.upload-btn.MuiButton-outlined {
+  margin-top: 10px;
+  border-color: #004b59;
+  color: #004b59;
+  border-radius: 8px;
+  text-transform: none;
+  transition: background-color 0.2s ease;
+}
+
+.upload-btn.MuiButton-outlined:hover {
+  background-color: rgba(0, 75, 89, 0.08);
+  border-color: #004b59;
+}
+
+/* --- Hàng nút dưới cùng --- */
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px;
+}
+
+/* --- Nút hủy --- */
+.cancel-btn.MuiButton-text {
+  color: #777;
+  text-transform: none;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  padding: 6px 16px;
+}
+
+.cancel-btn.MuiButton-text:hover {
+  background-color: #eaeaea;
+}
+
+/* --- Nút tạo --- */
+.create-btn.MuiButton-contained {
+  background-color: #004b59;
+  text-transform: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  padding: 6px 16px;
+  color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.create-btn.MuiButton-contained:hover {
+  background-color: #006d7a;
+}

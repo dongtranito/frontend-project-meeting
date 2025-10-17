@@ -1,0 +1,29 @@
+.list-btn {
+    display: flex;
+    justify-content: space-between;
+}
+
+.meeting-tab {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 100px); /* Đảm bảo luôn chiếm toàn chiều cao trang tab */
+  background-color: #f9f9f9;
+}
+
+.meeting-content {
+  flex: 1;
+  overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
+  /* padding-bottom: 80px; Tạo khoảng trống để không bị chatbox che */
+}
+
+.chatbox-wrapper {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  background: #f5f5f5;
+  /* border-top: 1px solid #ddd; */
+  padding: 12px 0;
+  /* box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); */
+  z-index: 10;
+}

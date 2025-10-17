@@ -1,8 +1,8 @@
 .container-header {
     position: fixed;
-  top: 5px;
+  top: 0;
   left: var(--sidebar-width);
-  width: calc(100% - var(--sidebar-width) - 10px);
+  width: calc(100% - var(--sidebar-width));
   height: var(--header-height);
   background-color: beige;
   display: flex;
@@ -10,4 +10,15 @@
   padding: 0 20px;
   z-index: 5;
   transition: left 0.3s ease, width 0.3s ease;
+}
+
+.header-name {
+  color: rgb(0, 0, 0);
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.right-header-container {
+  display: flex;
+  gap: 20px;
 }

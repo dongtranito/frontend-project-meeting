@@ -1,8 +1,3 @@
-/* .item-group-container-header {
-    color: white;
-    background-color: #1e1e2f;
-} */
-
 .item-group-card {
   display: flex;
   flex-direction: column;
@@ -12,7 +7,7 @@
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   background-color: #fff;
-  overflow: hidden; /* ✅ Giữ nội dung không tràn */
+  overflow: hidden; 
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -33,17 +28,16 @@
 
 .item-group-header .MuiCardHeader-content {
   flex: 1;
-  min-width: 0; /* ✅ Giúp text không đẩy avatar */
+  min-width: 0;
   order: 1;
   margin-right: 8px;
 }
 
 .item-group-header .MuiCardHeader-avatar {
   order: 2;
-  flex-shrink: 0; /* ✅ Giữ avatar không bị ép nhỏ */
+  flex-shrink: 0; /* Giữ avatar không bị ép nhỏ */
 }
 
-/* Tên nhóm */
 .item-group-header .MuiCardHeader-title {
   font-weight: 600;
   font-size: 1rem;
@@ -52,7 +46,6 @@
   text-overflow: ellipsis;
 }
 
-/* Tên chủ nhóm */
 .item-group-header .MuiCardHeader-subheader {
   color: rgba(255, 255, 255, 0.9);
   font-size: 0.875rem;
@@ -62,22 +55,11 @@
 }
 
 /* ===== Mô tả nhóm ===== */
-/* .item-group-description {
-  flex-grow: 1;
-  padding: 16px;
-  color: #555;
-  line-height: 1.5;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3; 
-  -webkit-box-orient: vertical;
-} */
-/* ===== Mô tả nhóm ===== */
 .item-group-description {
   flex-grow: 1;
   padding: 16px;
-  height: 120px; /* chiều cao cố định */
-  overflow-y: auto; /* ✅ Cho phép scroll dọc khi nội dung dài */
+  height: 120px; 
+  overflow-y: auto; /* Cho phép scroll dọc khi nội dung dài */
   overflow-x: hidden;
   color: #555;
   line-height: 1.5;
@@ -101,7 +83,6 @@
   background-color: transparent;
 }
 
-/* Nếu muốn hiển thị tối đa vài dòng trước khi scroll */
 .item-group-description p,
 .item-group-description span,
 .item-group-description div,

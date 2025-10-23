@@ -13,19 +13,16 @@ import MeetingItem from "./item-meeting/item-meeting";
 
 export default function DetailItemGroup() {
   const { id } = useParams();
-  const { user } = useContext(AuthContext); 
+  const { user } = useContext(AuthContext);
   const [value, setValue] = useState("1");
   const [loading, setLoading] = useState(true);
   const [groupDetail, setGroupDetail] = useState(null);
   const [error, setError] = useState("");
-  const [meetings, setMeetings] = useState([]); 
+  const [meetings, setMeetings] = useState([]);
   const [loadingMeetings, setLoadingMeetings] = useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    if (newValue === "2" && id) {
-      fetchMeetings();
-    }
   };
   const fetchGroupDetail = async () => {
     if (!id) return;
@@ -35,8 +32,9 @@ export default function DetailItemGroup() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token || ""}`,
+          // Authorization: `Bearer ${user?.token || ""}`,
         },
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -53,19 +51,32 @@ export default function DetailItemGroup() {
   };
 
   useEffect(() => {
+    setGroupDetail(null);
+    setMeetings([]);
+    setError("");
+    setLoading(true);
+    setLoadingMeetings(false);
+    setValue("1");
+
     fetchGroupDetail();
   }, [id, user]);
+
+  useEffect(() => {
+    if (value === "2" && id) {
+      fetchMeetings();
+    }
+  }, [value, id]);
 
   const fetchMeetings = async () => {
     if (!id) return;
     setLoadingMeetings(true);
     try {
-      const res = await fetch(
-        `http://localhost:3001/get-list-meeting?groupId=${id}`,
+      const res = await fetch(`http://localhost:3001/get-list-meeting?groupId=${id}`,
         {
-          headers: {
-            Authorization: `Bearer ${user?.token || ""}`,
-          },
+          // headers: {
+          //   Authorization: `Bearer ${user?.token || ""}`,
+          // },
+          credentials: "include",
         }
       );
 
@@ -174,15 +185,32 @@ export default function DetailItemGroup() {
             <div className="meeting-content">
               <div className="list-btn">
                 <h2>Danh sách cuộc họp:</h2>
-                <CreateMeetingDialog groupId={id} />
+                <CreateMeetingDialog groupId={id} onCreated={fetchMeetings} />
               </div>
 
               {loadingMeetings ? (
                 <CircularProgress />
               ) : meetings.length > 0 ? (
+                // meetings.map((meeting) => (
+                //   <MeetingItem key={meeting.meetingId} meeting={meeting} />
+                // ))
                 meetings.map((meeting) => (
-                  <MeetingItem key={meeting.meetingId} meeting={meeting} />
+                  <MeetingItem
+                    key={meeting.meetingId}
+                    meeting={meeting}
+                    onDeleted={(deletedId) => {
+                      setMeetings((prev) => prev.filter((m) => m.meetingId !== deletedId));
+                    }}
+                    onUpdated={(updatedMeeting) => {
+                      setMeetings((prev) =>
+                        prev.map((m) =>
+                          m.meetingId === updatedMeeting.meetingId ? updatedMeeting : m
+                        )
+                      );
+                    }}
+                  />
                 ))
+
               ) : (
                 <Typography color="text.secondary">
                   Chưa có cuộc họp nào.

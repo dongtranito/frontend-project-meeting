@@ -24,8 +24,9 @@ export default function MemberItem({ member, groupId, isOwner, currentUserEmail,
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          // Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify({
           groupId: groupId,
           memberId: member.user_id,
@@ -40,10 +41,10 @@ export default function MemberItem({ member, groupId, isOwner, currentUserEmail,
 
         alert(data.message || "Đã xóa thành viên");
 
-      onRemoved?.(); // ✅ cập nhật lại danh sách
+      onRemoved?.();
       handleCloseDialog();
     } catch (err) {
-      console.error("❌ Lỗi xóa thành viên:", err);
+      console.error("Lỗi xóa thành viên:", err);
       alert(err.message || "Xóa thành viên thất bại");
     } finally {
       setLoading(false);
@@ -63,7 +64,7 @@ export default function MemberItem({ member, groupId, isOwner, currentUserEmail,
       }}
     >
       <div>
-        <strong>{member.user_id}</strong>{" "}
+        <strong>{member.name}</strong>{" "}
         {member.role === "owner" && (
           <span style={{ color: "#1976d2", fontSize: 13 }}>
             (Chủ nhóm)
@@ -71,7 +72,6 @@ export default function MemberItem({ member, groupId, isOwner, currentUserEmail,
         )}
       </div>
 
-      {/* ✅ Chủ nhóm mới được xóa, không cho xóa chính mình */}
       {isOwner && member.role !== "owner" && member.user_id !== currentUserEmail && (
         <Tooltip title="Xóa thành viên">
           <IconButton color="error" size="small" onClick={handleOpenDialog}>
@@ -80,7 +80,6 @@ export default function MemberItem({ member, groupId, isOwner, currentUserEmail,
         </Tooltip>
       )}
 
-      {/* ✅ Dialog xác nhận */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>
           Bạn có chắc muốn xóa <b>{member.user_id}</b> khỏi nhóm không?

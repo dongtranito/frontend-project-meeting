@@ -31,14 +31,14 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const { groupName } = Object.fromEntries(formData.entries());
+    const { groupName, description } = Object.fromEntries(formData.entries());
 
     if (!selectedDate || !selectedTime) {
       setError("Vui lòng chọn ngày và giờ hợp lệ!");
       return;
     }
 
-    // ✅ Gộp ngày & giờ
+    // Gộp ngày & giờ
     const scheduledAt = new Date(
       selectedDate.getFullYear(),
       selectedDate.getMonth(),
@@ -47,7 +47,7 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
       selectedTime.getMinutes()
     );
 
-    // ❌ Kiểm tra thời gian trong quá khứ
+    // Kiểm tra thời gian trong quá khứ
     const now = new Date();
     if (scheduledAt < now) {
       setError("Ngày và giờ không hợp lệ! Vui lòng chọn thời gian trong tương lai.");
@@ -58,7 +58,7 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
     try {
       let metaUrl = null;
 
-      // ✅ Upload file metadata (nếu có)
+      // Upload file metadata (nếu có)
       if (metaFile) {
         const fileForm = new FormData();
         fileForm.append("file", metaFile);
@@ -71,16 +71,18 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
         if (data.success) metaUrl = data.data.url;
       }
 
-      // ✅ Tạo cuộc họp
+      // Tạo cuộc họp
       const response = await fetch("http://localhost:3001/create-meeting", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
+          // Authorization: `Bearer ${user?.token}`,
         },
+        credentials: "include",
         body: JSON.stringify({
           groupId,
           title: groupName,
+          description: description,
           scheduledAt: scheduledAt.toISOString(),
           metaData: metaUrl ? { url: metaUrl } : {},
         }),
@@ -114,6 +116,16 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
               required
               name="groupName"
               label="Tên cuộc họp"
+              fullWidth
+              variant="outlined"
+              margin="dense"
+            />
+
+            <DialogContentText>Nhập mô tả cuộc họp.</DialogContentText>
+            <TextField
+              required
+              name="description"
+              label="Mô tả cuộc họp"
               fullWidth
               variant="outlined"
               margin="dense"

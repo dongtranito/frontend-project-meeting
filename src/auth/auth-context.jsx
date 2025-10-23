@@ -6,7 +6,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
-  // ✅ Load user từ localStorage khi app khởi động
+  // Load user từ localStorage khi app khởi động
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ Lưu toàn bộ userData (có cả token) vào context
+  // Lưu toàn bộ userData (có cả token) vào context
   const login = (userData) => {
     setUser(userData);
     setIsLoggedIn(true);

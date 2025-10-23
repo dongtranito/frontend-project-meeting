@@ -45,18 +45,20 @@ export default function ItemGroup({ id, title, subheader, description }) {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
+            // Authorization: `Bearer ${user.token}`,
           },
+          credentials: "include",
         });
         if (!res.ok) throw new Error("Xóa nhóm thất bại");
-        alert(`✅ Nhóm "${title}" đã được xóa thành công.`);
+        alert(`Nhóm "${title}" đã được xóa thành công.`);
       } else {
         const res = await fetch(`http://localhost:3001/leave-group`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
+            // Authorization: `Bearer ${user.token}`,
           },
+          credentials: "include",
           body: JSON.stringify({ groupId: id, userId: user.uid }),
         });
         if (!res.ok) throw new Error("Rời nhóm thất bại");
@@ -85,8 +87,9 @@ export default function ItemGroup({ id, title, subheader, description }) {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
+          // Authorization: `Bearer ${user.token}`,
         },
+        credentials: "include",
         body: JSON.stringify({
           name: newName,
           description: newDescription,
@@ -94,12 +97,12 @@ export default function ItemGroup({ id, title, subheader, description }) {
       });
 
       if (!res.ok) throw new Error("Cập nhật nhóm thất bại");
-      alert("✅ Nhóm đã được cập nhật thành công!");
+      alert("Nhóm đã được cập nhật thành công!");
       setOpenUpdateDialog(false);
       window.location.reload();
     } catch (err) {
       console.error(err);
-      alert("❌ Có lỗi xảy ra khi cập nhật nhóm.");
+      alert("Có lỗi xảy ra khi cập nhật nhóm.");
     }
   };
 

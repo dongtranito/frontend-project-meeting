@@ -10,78 +10,6 @@ import './create-group-dialog.css';
 
 import { useState } from 'react';
 
-// export default function CreateGroupDialog() {
-//     const [open, setOpen] = React.useState(false);
-
-//     const handleClickOpen = () => {
-//         setOpen(true);
-//     };
-
-//     const handleClose = (event, reason) => {
-//         if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
-//             return;
-//         }
-//         setOpen(false);
-//     };
-
-//     const handleSubmit = (event) => {
-//         event.preventDefault();
-//         const formData = new FormData(event.currentTarget);
-//         const formJson = Object.fromEntries(formData.entries());
-//         const email = formJson.email;
-//         console.log(email);
-//         handleClose();
-//     };
-
-//     return (
-//         <React.Fragment>
-//             <Button variant="outlined" onClick={handleClickOpen}>
-//                 Tạo nhóm
-//             </Button>
-//             <Dialog open={open} onClose={handleClose} className="create-group-dialog">
-//                 <DialogTitle>Tạo nhóm</DialogTitle>
-//                 <DialogContent>
-//                     <DialogContentText>Nhập tên nhóm.</DialogContentText>
-//                     <form onSubmit={handleSubmit} id="subscription-form">
-//                         <TextField
-//                             autoFocus
-//                             required
-//                             margin="dense"
-//                             id="name"
-//                             name="groupName"
-//                             label="Tên nhóm"
-//                             type="text"
-//                             fullWidth
-//                             variant="outlined"
-//                         />
-//                     </form>
-//                 </DialogContent>
-//                 <DialogActions>
-//                     <Button onClick={handleClose} className="cancel-btn">
-//                         Hủy
-//                     </Button>
-//                     <Button type="submit" form="subscription-form" className="create-btn">
-//                         Tạo
-//                     </Button>
-//                 </DialogActions>
-//             </Dialog>
-
-//         </React.Fragment>
-//     );
-// }
-
-// import React, { useState } from "react";
-// import {
-// import { react } from '@vitejs/plugin-react';
-//   Button,
-//   Dialog,
-//   DialogTitle,
-//   DialogContent,
-//   DialogContentText,
-//   DialogActions,
-//   TextField,
-// } from "@mui/material";
-
 export default function CreateGroupDialog({ onGroupCreated }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -104,22 +32,22 @@ export default function CreateGroupDialog({ onGroupCreated }) {
     setSuccess("");
 
     const formData = new FormData(event.currentTarget);
-    const { groupName } = Object.fromEntries(formData.entries());
+    const { groupName, nameOwner } = Object.fromEntries(formData.entries());
 
     try {
       const response = await fetch("http://localhost:3001/creat-group", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ name: groupName }),
+        body: JSON.stringify({ name: groupName, nameOwner: nameOwner }),
       });
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Tạo nhóm thất bại");
 
-      setSuccess("✅ Tạo nhóm thành công!");
+      setSuccess("Tạo nhóm thành công!");
 
-      // ✅ Gọi callback để cập nhật danh sách nhóm
+      // Gọi callback để cập nhật danh sách nhóm
       if (onGroupCreated) onGroupCreated(data);
 
       setTimeout(() => handleClose(), 800);
@@ -147,14 +75,34 @@ export default function CreateGroupDialog({ onGroupCreated }) {
               autoFocus
               required
               margin="dense"
-              id="name"
+              id="groupName"
               name="groupName"
               label="Tên nhóm"
               type="text"
-              style={{ width: "100%" }}
+              fullWidth
               variant="outlined"
             />
+
+            <DialogContentText>Nhập tên trưởng nhóm:</DialogContentText>
+            <TextField
+              required
+              margin="dense"
+              id="nameOwner"
+              name="nameOwner"
+              label="Tên trưởng nhóm"
+              type="text"
+              fullWidth
+              variant="outlined"
+            />
+
+            {/* <DialogActions>
+              <Button onClick={handleClose}>Hủy</Button>
+              <Button type="submit" variant="contained">
+                Tạo nhóm
+              </Button>
+            </DialogActions> */}
           </form>
+
 
           {error && <p style={{ color: "red", marginTop: "8px" }}>{error}</p>}
           {success && <p style={{ color: "green", marginTop: "8px" }}>{success}</p>}

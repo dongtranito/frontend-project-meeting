@@ -1,74 +1,88 @@
-/* --- Tổng thể Dialog --- */
-.create-meeting-dialog .MuiDialog-paper {
-  background-color: #fafafa;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  border-radius: 16px;
-}
-
-/* --- Tiêu đề --- */
-.dialog-title {
-  text-align: center;
+/* .create-meeting-dialog .dialog-title {
   font-weight: 600;
-  font-size: 1.3rem;
-  color: #004b59;
-  margin-bottom: 8px;
+  font-size: 1.2rem;
+  color: #333;
 }
 
-/* --- Nội dung --- */
 .dialog-content {
-  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 8px;
 }
 
 .dialog-input {
-  margin-top: 12px;
+  margin-bottom: 8px;
 }
 
-/* --- Nút upload file --- */
-.upload-btn.MuiButton-outlined {
-  margin-top: 10px;
-  border-color: #004b59;
-  color: #004b59;
-  border-radius: 8px;
+.upload-btn {
   text-transform: none;
-  transition: background-color 0.2s ease;
+  border-radius: 8px;
 }
 
-.upload-btn.MuiButton-outlined:hover {
-  background-color: rgba(0, 75, 89, 0.08);
-  border-color: #004b59;
+.file-name {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 6px;
 }
 
-/* --- Hàng nút dưới cùng --- */
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
-  padding: 16px 24px;
+  padding: 16px;
 }
 
-/* --- Nút hủy --- */
-.cancel-btn.MuiButton-text {
-  color: #777;
-  text-transform: none;
-  font-size: 0.9rem;
+.cancel-btn {
+  color: #888;
+}
+
+.create-btn {
+  background-color: #1976d2;
+  color: white;
   border-radius: 8px;
-  padding: 6px 16px;
 }
 
-.cancel-btn.MuiButton-text:hover {
-  background-color: #eaeaea;
+.create-btn:hover {
+  background-color: #1565c0;
+} */
+
+
+
+.create-meeting-dialog .dialog-title {
+  width: 600px;
+  font-weight: 600;
+  text-align: center;
+  font-size: 1.25rem;
 }
 
-/* --- Nút tạo --- */
-.create-btn.MuiButton-contained {
-  background-color: #004b59;
-  text-transform: none;
-  border-radius: 8px;
+.create-meeting-dialog .dialog-content {
+  padding-top: 8px;
+}
+
+.file-name {
   font-size: 0.9rem;
-  padding: 6px 16px;
-  color: #fff;
-  transition: background-color 0.2s ease;
+  color: #1976d2;
+  margin-top: 6px;
+  text-align: left;
 }
 
-.create-btn.MuiButton-contained:hover {
-  background-color: #006d7a;
+.MuiPickersPopper-root .MuiPaper-root {
+  border-radius: 16px;
+  background-color: #ffffff;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.MuiPickersDay-root.Mui-selected {
+  background-color: #1976d2 !important;
+  color: white !important;
+}
+
+.MuiClock-pin,
+.MuiClockPointer-root {
+  background-color: #1976d2 !important;
+}
+
+.MuiPickersToolbarButton-root {
+  color: #1976d2 !important;
+  font-weight: 600;
 }

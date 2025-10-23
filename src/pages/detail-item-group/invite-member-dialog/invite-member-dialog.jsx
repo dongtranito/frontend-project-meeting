@@ -1,100 +1,240 @@
-// import * as React from 'react';
-// import Button from '@mui/material/Button';
-// import TextField from '@mui/material/TextField';
-// import Dialog from '@mui/material/Dialog';
-// import DialogActions from '@mui/material/DialogActions';
-// import DialogContent from '@mui/material/DialogContent';
-// import DialogContentText from '@mui/material/DialogContentText';
-// import DialogTitle from '@mui/material/DialogTitle';
+// import React, { useState, useContext } from "react";
+// import {
+//   Button,
+//   Dialog,
+//   DialogContent,
+//   DialogTitle,
+//   DialogActions,
+//   TextField,
+//   CircularProgress,
+//   Alert,
+// } from "@mui/material";
+// import { AuthContext } from './../../../auth/auth-context';
 
-// export default function InviteMemberDialog() {
-//     const [open, setOpen] = React.useState(false);
+// export default function InviteMemberDialog({ groupId }) {
+//   const [open, setOpen] = useState(false);
+//   const [gmailInvite, setGmailInvite] = useState("");
+//   const [loading, setLoading] = useState(false);
+//   const [message, setMessage] = useState(null);
+//   const { user } = useContext(AuthContext);
 
-//     const handleClickOpen = () => {
-//         setOpen(true);
-//     };
+//   const handleClose = () => {
+//     setOpen(false);
+//     setGmailInvite("");
+//     setMessage(null);
+//   };
 
-//     const handleClose = (event, reason) => {
-//         if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
-//             return;
-//         }
-//         setOpen(false);
-//     };
+//   const handleInvite = async () => {
+//     if (!gmailInvite.trim()) {
+//       setMessage({ type: "error", text: "Vui lòng nhập email người cần mời." });
+//       return;
+//     }
 
-//     const handleSubmit = (event) => {
-//         event.preventDefault();
-//         const formData = new FormData(event.currentTarget);
-//         const formJson = Object.fromEntries(formData.entries());
-//         const email = formJson.email;
-//         console.log(email);
-//         handleClose();
-//     };
+//     setLoading(true);
+//     setMessage(null);
 
-//     return (
-//         <React.Fragment>
-//             <Button variant="outlined" onClick={handleClickOpen}>
-//                 Mời thành viên
-//             </Button>
-//             <Dialog open={open} onClose={handleClose}>
-//                 <DialogTitle>Mời thành viên</DialogTitle>
-//                 <DialogContent>
-//                     <DialogContentText>
-//                         Nhập tên nhóm.
-//                     </DialogContentText>
-//                     <form onSubmit={handleSubmit} id="subscription-form">
-//                         <TextField
-//                             autoFocus
-//                             required
-//                             margin="dense"
-//                             id="name"
-//                             name="groupName"
-//                             label="Tên nhóm"
-//                             type="text"
-//                             fullWidth
-//                             variant="standard"
-//                         />
-//                     </form>
-//                 </DialogContent>
-//                 <DialogActions>
-//                     <Button onClick={handleClose}>Cancel</Button>
-//                     <Button type="submit" form="subscription-form">
-//                         Tạo
-//                     </Button>
-//                 </DialogActions>
-//             </Dialog>
-//         </React.Fragment>
-//     );
+//     // try {
+//     //   const res = await fetch("http://localhost:3001/invite-member", {
+//     //     method: "POST",
+//     //     headers: {
+//     //       "Content-Type": "application/json",
+//     //       Authorization: `Bearer ${user?.token}`,
+//     //     },
+//     //     body: JSON.stringify({
+//     //       groupId: groupId,
+//     //       gmailInvite,
+//     //     }),
+//     //   });
+
+//     //   const data = await res.json();
+
+//     //   if (!res.ok || !data.success) {
+//     //     throw new Error(data.error || data.message || "Mời thành viên thất bại");
+//     //   }
+
+//     //   setMessage({ type: "success", text: "✅ Mời thành viên thành công!" });
+//     //   setGmailInvite("");
+//     // } catch (err) {
+//     //   console.error("Invite error:", err);
+//     //   setMessage({
+//     //     type: "error",
+//     //     text: err.message || "❌ Có lỗi xảy ra khi mời thành viên.",
+//     //   });
+//     // } finally {
+//     //   setLoading(false);
+//     // }
+//     try {
+//       const res = await fetch("http://localhost:3001/invite-member", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${user?.token}`,
+//         },
+//         body: JSON.stringify({
+//           groupId: groupId,
+//           gmailInvite,
+//         }),
+//       });
+
+//       const data = await res.json();
+
+//       if (!res.ok || !data.success) {
+//         throw new Error(data.error || data.message || "Mời thành viên thất bại");
+//       }
+
+//       setMessage({ type: "success", text: "✅ Mời thành viên thành công!" });
+//       setGmailInvite("");
+
+//       // ✅ Gọi callback để reload danh sách thành viên
+//       if (typeof refreshGroup === "function") {
+//         await refreshGroup();
+//       }
+//     } catch (err) {
+//       console.error("Invite error:", err);
+//       setMessage({
+//         type: "error",
+//         text: err.message || "❌ Có lỗi xảy ra khi mời thành viên.",
+//       });
+//     } finally {
+//       setLoading(false);
+//     }
+
+//   };
+
+//   return (
+//     <>
+//       <Button variant="outlined" onClick={() => setOpen(true)}>
+//         Mời thành viên
+//       </Button>
+
+//       <Dialog
+//         open={open}
+//         onClose={handleClose}
+//         PaperProps={{
+//           sx: {
+//             width: 400,
+//             borderRadius: 3,
+//             p: 2,
+//           },
+//         }}
+//       >
+//         <DialogTitle sx={{ fontWeight: 600, textAlign: "center" }}>
+//           Mời thành viên vào nhóm
+//         </DialogTitle>
+
+//         <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+//           <TextField
+//             label="Nhập email thành viên"
+//             placeholder="vd: example@gmail.com"
+//             fullWidth
+//             variant="outlined"
+//             value={gmailInvite}
+//             onChange={(e) => setGmailInvite(e.target.value)}
+//             disabled={loading}
+//           />
+
+//           {message && (
+//             <Alert severity={message.type} sx={{ mt: 1 }}>
+//               {message.text}
+//             </Alert>
+//           )}
+//         </DialogContent>
+
+//         <DialogActions sx={{ justifyContent: "space-between", p: 2 }}>
+//           <Button onClick={handleClose} variant="outlined" disabled={loading}>
+//             Hủy
+//           </Button>
+//           <Button
+//             onClick={handleInvite}
+//             variant="contained"
+//             color="primary"
+//             disabled={loading}
+//           >
+//             {loading ? <CircularProgress size={24} color="inherit" /> : "Thêm"}
+//           </Button>
+//         </DialogActions>
+//       </Dialog>
+//     </>
+//   );
 // }
 
-import React, { useState } from "react";
+
+import React, { useState, useContext } from "react";
 import {
-  Dialog,
-  DialogContent,
-  TextField,
   Button,
-  Avatar,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import "./invite-member-dialog.css";
+import { AuthContext } from "../../../auth/auth-context";
 
-export default function InviteMemberDialog() {
+export default function InviteMemberDialog({ groupId, refreshGroup }) {
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const [members] = useState([
-    { id: 1, name: "Nguyễn Văn A", email: "a@example.com", color: "#6dbf67" },
-    { id: 2, name: "Trần Thị B", email: "b@example.com", color: "#8974c4" },
-  ]);
+  const [gmailInvite, setGmailInvite] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+  const { user } = useContext(AuthContext);
 
-  const filtered = members.filter(
-    (m) =>
-      m.name.toLowerCase().includes(search.toLowerCase()) ||
-      m.email.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleClose = () => {
+    setOpen(false);
+    setGmailInvite("");
+    setMessage(null);
+  };
+
+  const handleInvite = async () => {
+    if (!gmailInvite.trim()) {
+      setMessage({ type: "error", text: "Vui lòng nhập email người cần mời." });
+      return;
+    }
+
+    setLoading(true);
+    setMessage(null);
+
+    try {
+      const res = await fetch("http://localhost:3001/invite-member", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify({
+          groupId: groupId,
+          gmailInvite,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || data.message || "Mời thành viên thất bại");
+      }
+
+      setMessage({ type: "success", text: "✅ Mời thành viên thành công!" });
+      setGmailInvite("");
+
+      // ✅ Gọi API cập nhật danh sách trước khi đóng
+      if (typeof refreshGroup === "function") {
+        await refreshGroup();
+      }
+
+      // ✅ Đợi 0.5s cho alert hiển thị rồi đóng dialog
+      setTimeout(() => {
+        handleClose();
+      }, 500);
+    } catch (err) {
+      console.error("Invite error:", err);
+      setMessage({
+        type: "error",
+        text: err.message || "❌ Có lỗi xảy ra khi mời thành viên.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -104,90 +244,50 @@ export default function InviteMemberDialog() {
 
       <Dialog
         open={open}
-        onClose={() => setOpen(false)}
-        className="invite-member-dialog"
+        onClose={handleClose}
         PaperProps={{
           sx: {
-            width: 420,
+            width: 400,
             borderRadius: 3,
-            boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+            p: 2,
           },
         }}
       >
-        <DialogContent className="invite-content">
-          {/* Search */}
-          <div className="search-container">
-            <TextField
-              placeholder="Tìm kiếm thành viên..."
-              variant="outlined"
-              size="small"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="search-input"
-              InputProps={{
-                endAdornment: (
-                  <IconButton className="search-icon">
-                    <SearchIcon />
-                  </IconButton>
-                ),
-              }}
-            />
-          </div>
+        <DialogTitle sx={{ fontWeight: 600, textAlign: "center" }}>
+          Mời thành viên vào nhóm
+        </DialogTitle>
 
-          {/* Member list */}
-          <List className="member-list">
-            {filtered.map((m) => (
-              <ListItem
-                key={m.id}
-                secondaryAction={
-                  <Button
-                    className="add-btn"
-                    variant="contained"
-                    size="small"
-                  >
-                    Thêm
-                  </Button>
-                }
-              >
-                <ListItemAvatar>
-                  <Avatar
-                    sx={{
-                      bgcolor: m.color,
-                      width: 40,
-                      height: 40,
-                      fontSize: "1rem",
-                    }}
-                  >
-                    {m.name.charAt(0)}
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={m.name}
-                  secondary={m.email}
-                  primaryTypographyProps={{
-                    fontWeight: 600,
-                    fontSize: "0.95rem",
-                  }}
-                  secondaryTypographyProps={{
-                    fontSize: "0.8rem",
-                    color: "#6b6b6b",
-                  }}
-                />
-              </ListItem>
-            ))}
-          </List>
+        <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <TextField
+            label="Nhập email thành viên"
+            placeholder="vd: example@gmail.com"
+            fullWidth
+            variant="outlined"
+            value={gmailInvite}
+            onChange={(e) => setGmailInvite(e.target.value)}
+            disabled={loading}
+          />
 
-          {/* Footer */}
-          <div className="footer">
-            <Button
-              onClick={() => setOpen(false)}
-              className="cancel-btn"
-              variant="contained"
-            >
-              Hủy
-            </Button>
-          </div>
+          {message && (
+            <Alert severity={message.type} sx={{ mt: 1 }}>
+              {message.text}
+            </Alert>
+          )}
         </DialogContent>
+
+        <DialogActions sx={{ justifyContent: "space-between", p: 2 }}>
+          <Button onClick={handleClose} variant="outlined" disabled={loading}>
+            Hủy
+          </Button>
+          <Button
+            onClick={handleInvite}
+            variant="contained"
+            color="primary"
+            disabled={loading}
+          >
+            {loading ? <CircularProgress size={24} color="inherit" /> : "Thêm"}
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   );

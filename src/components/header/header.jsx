@@ -7,46 +7,69 @@ import CreateGroupDialog from '../../pages/home/components/create-group-dialog/c
 
 
 
-export default function Header() {
-  const [openDialog, setOpenDialog] = useState(false);
+// export default function Header() {
+//   const [openDialog, setOpenDialog] = useState(false);
 
-  const handleCreateGroup = () => {
-    setOpenDialog(true);
-  };
+//   const handleCreateGroup = () => {
+//     setOpenDialog(true);
+//   };
 
-  const handleClose = () => {
-    setOpenDialog(false);
-  };
+//   const handleClose = () => {
+//     setOpenDialog(false);
+//   };
 
+//   return (
+//     <Box
+//       className='container-header'
+//       sx={{
+//         display: 'flex',
+//         justifyContent: 'space-between',
+//         alignItems: 'center',
+//       }}
+//     >
+//       <div className='header-name'>
+//         Group name
+//       </div>
+//       {/* <Button onClick={handleCreateGroup} color="error" variant="contained">
+//         Tạo nhóm
+//       </Button> */}
+
+//       <div className='right-header-container'>
+//         <CreateGroupDialog
+//         // open={open}       // Truyền trạng thái hiện tại (true/false)
+//         // handleClose={handleClose} // Truyền hàm đóng cho Dialog
+//         />
+
+//         <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe" >
+//           NA
+//         </Avatar>
+//       </div>
+//     </Box>
+//   )
+// }
+
+export default function Header({ onGroupCreated }) {
   return (
     <Box
-      className='container-header'
+      className="container-header"
       sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
       }}
     >
-      <div className='header-name'>
-        Group name
-      </div>
-      {/* <Button onClick={handleCreateGroup} color="error" variant="contained">
-        Tạo nhóm
-      </Button> */}
+      <div className="header-name">Group name</div>
 
-      <div className='right-header-container'>
-        <CreateGroupDialog
-        // open={open}       // Truyền trạng thái hiện tại (true/false)
-        // handleClose={handleClose} // Truyền hàm đóng cho Dialog
-        />
-
-        <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe" >
+      <div className="right-header-container">
+        <CreateGroupDialog onGroupCreated={onGroupCreated} />
+        <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
           NA
         </Avatar>
       </div>
     </Box>
-  )
+  );
 }
+
 
 
 

@@ -14,7 +14,6 @@ export default function ChatBox() {
       <IconButton
         variant="outlined"
         component="label"
-        fullWidth
         className="upload-btn"
       >
         <AddIcon />

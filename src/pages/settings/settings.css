@@ -1,0 +1,48 @@
+/* Container chứa các card */
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* khoảng cách giữa hai card */
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    /* căn giữa nếu cần */
+    padding: 16px;
+}
+
+/* Style chung cho card */
+.MuiCard-root {
+    border-radius: 5px 5px 0 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hiệu ứng hover nhẹ */
+.MuiCard-root:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+/* Header của từng card */
+.item-group-container-header .MuiCardHeader-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: white;
+}
+
+/* Divider */
+.MuiDivider-root {
+    margin: 0 16px;
+}
+
+/* Nội dung trong CardContent */
+.MuiCardContent-root {
+    padding-top: 12px;
+    padding-bottom: 16px;
+}
+
+.MuiTypography-body2 {
+    /* color: #555; */
+    line-height: 1.6;
+}

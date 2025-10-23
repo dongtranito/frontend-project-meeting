@@ -1,69 +1,202 @@
-import React from 'react'
-import './detail-item-group.css'
-import { Box, Button, Tab } from '@mui/material';
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
+import { Box, Typography, CircularProgress, Tab } from "@mui/material";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { AuthContext } from "../../auth/auth-context";
 
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
 import InviteMemberDialog from './invite-member-dialog/invite-member-dialog';
 import CreateMeetingDialog from './create-meeting-dialog/create-meeting-dialog';
 import ChatBox from '../../components/chatbox/chatbox';
+import MemberItem from "./item-member/item-member";
+import './detail-item-group.css';
+import MeetingItem from "./item-meeting/item-meeting";
 
 export default function DetailItemGroup() {
-    const { id } = useParams();
+  const { id } = useParams();
+  const { user } = useContext(AuthContext); 
+  const [value, setValue] = useState("1");
+  const [loading, setLoading] = useState(true);
+  const [groupDetail, setGroupDetail] = useState(null);
+  const [error, setError] = useState("");
+  const [meetings, setMeetings] = useState([]); 
+  const [loadingMeetings, setLoadingMeetings] = useState(false);
 
-    const [value, setValue] = React.useState('1');
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+    if (newValue === "2" && id) {
+      fetchMeetings();
+    }
+  };
+  const fetchGroupDetail = async () => {
+    if (!id) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`http://localhost:3001/detail-group/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token || ""}`,
+        },
+      });
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
+      const data = await res.json();
+      if (!res.ok || !data.success)
+        throw new Error(data.message || "Không thể tải thông tin nhóm");
 
+      setGroupDetail(data.data);
+    } catch (err) {
+      console.error("❌ Lỗi khi tải chi tiết nhóm:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchGroupDetail();
+  }, [id, user]);
+
+  const fetchMeetings = async () => {
+    if (!id) return;
+    setLoadingMeetings(true);
+    try {
+      const res = await fetch(
+        `http://localhost:3001/get-list-meeting?groupId=${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.token || ""}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+      if (!res.ok || !data.success)
+        throw new Error(data.message || "Không thể tải danh sách cuộc họp");
+
+      setMeetings(data.data || []);
+    } catch (err) {
+      console.error("❌ Lỗi khi tải cuộc họp:", err);
+      setMeetings([]);
+    } finally {
+      setLoadingMeetings(false);
+    }
+  };
+
+  if (loading)
     return (
-        // <div>
-        //     <div style={{ padding: 20 }}>
-        //         <h2>Chi tiết nhóm: {id}</h2>
-        //         <p>Thông tin chi tiết của nhóm {id} này sẽ hiển thị ở đây.</p>
-        //     </div>
-        // </div>
-        <Box sx={{ width: '100%', typography: 'body1', height: '100%' }}>
-            <TabContext value={value}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <TabList onChange={handleChange} aria-label="lab API tabs example" centered>
-                        <Tab label="Thành viên" value="1" />
-                        <Tab label="Cuộc họp" value="2" />
-                    </TabList>
-                </Box>
-                <TabPanel value="1">
-                    <div className="list-btn">
-                        <h2>Danh sách thành viên: </h2>
-                        <InviteMemberDialog />
-                    </div>
-                    <div className='list-members'>
-                        Các member!
-                    </div>
-                </TabPanel>
-                <TabPanel value="2" >
-                    <div className="meeting-tab">
-                        <div className="meeting-content">
-                            <div className="list-btn">
-                                <h2>Danh sách cuộc họp:</h2>
-                                <CreateMeetingDialog />
-                            </div>
+      <Box sx={{ textAlign: "center", mt: 6 }}>
+        <CircularProgress />
+        <Typography variant="body2" color="text.secondary" mt={2}>
+          Đang tải thông tin nhóm...
+        </Typography>
+      </Box>
+    );
 
-                            {/* Nội dung khác */}
-                        </div>
+  if (error)
+    return (
+      <Typography color="error" sx={{ textAlign: "center", mt: 4 }}>
+        {error}
+      </Typography>
+    );
 
-                        {/* Thanh chatbox */}
-                        <div className="chatbox-wrapper">
-                            <ChatBox />
-                        </div>
-                    </div>
-                </TabPanel>
+  if (!groupDetail)
+    return (
+      <Typography color="text.secondary" sx={{ textAlign: "center", mt: 4 }}>
+        Không tìm thấy thông tin nhóm.
+      </Typography>
+    );
 
-            </TabContext>
+  console.log("📘 groupDetail nhận được từ backend:", groupDetail);
+
+  return (
+    <Box sx={{ width: "100%", typography: "body1", height: "100%" }}>
+      <Box sx={{ mb: 2, borderBottom: "1px solid #ddd", pb: 1 }}>
+        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+          {groupDetail.name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Chủ nhóm: {groupDetail.owner_id || "Không xác định"}
+        </Typography>
+      </Box>
+
+      <TabContext value={value}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <TabList onChange={handleChange} aria-label="lab API tabs example" centered>
+            <Tab label="Thành viên" value="1" />
+            <Tab label="Cuộc họp" value="2" />
+          </TabList>
         </Box>
-    )
-}
 
+        <TabPanel value="1">
+          <div className="list-btn">
+            <h2>Danh sách thành viên:</h2>
+            <InviteMemberDialog groupId={id} refreshGroup={fetchGroupDetail} />
+          </div>
+
+          <div className="list-members">
+            {groupDetail.members?.length > 0 ? (
+              groupDetail.members.map((member, index) => {
+                const isOwner =
+                  groupDetail.members.some(
+                    (m) => m.user_id === user?.email && m.role === "owner"
+                  ) || groupDetail.owner_id === user?.email;
+
+                return (
+                  <MemberItem
+                    key={index}
+                    member={member}
+                    groupId={id}
+                    isOwner={isOwner}
+                    currentUserEmail={user?.email}
+                    token={user?.token}
+                    onRemoved={() => {
+                      // Cập nhật lại danh sách sau khi xóa
+                      setGroupDetail((prev) => ({
+                        ...prev,
+                        members: prev.members.filter(
+                          (m) => m.user_id !== member.user_id
+                        ),
+                      }));
+                    }}
+                  />
+                );
+              })
+            ) : (
+              <Typography color="text.secondary">
+                Chưa có thành viên nào.
+              </Typography>
+            )}
+          </div>
+        </TabPanel>
+
+        <TabPanel value="2">
+          <div className="meeting-tab">
+            <div className="meeting-content">
+              <div className="list-btn">
+                <h2>Danh sách cuộc họp:</h2>
+                <CreateMeetingDialog groupId={id} />
+              </div>
+
+              {loadingMeetings ? (
+                <CircularProgress />
+              ) : meetings.length > 0 ? (
+                meetings.map((meeting) => (
+                  <MeetingItem key={meeting.meetingId} meeting={meeting} />
+                ))
+              ) : (
+                <Typography color="text.secondary">
+                  Chưa có cuộc họp nào.
+                </Typography>
+              )}
+            </div>
+
+            <div className="chatbox-wrapper">
+              <ChatBox />
+            </div>
+          </div>
+        </TabPanel>
+      </TabContext>
+    </Box>
+  );
+}
 

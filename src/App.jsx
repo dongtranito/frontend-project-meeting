@@ -8,6 +8,11 @@ import './App.css';
 import Settings from "./pages/settings/settings";
 import Help from "./pages/help/help";
 import DetailItemGroup from "./pages/detail-item-group/detail-item-group";
+import LoginForm from "./pages/login/login-form";
+import MainLayout from "./routes/main-layout";
+import { AuthProvider } from "./auth/auth-context";
+import TestBackend from "./pages/test/test";
+import { GroupContext, GroupProvider } from "./context/group-context";
 function App() {
   return (
     // <div className="app-container">
@@ -16,22 +21,19 @@ function App() {
     //   <Header />
     // </div>
     <Router>
+      <AuthProvider>
+        <GroupProvider>
       <div className="app-container" >
-        <Sidebar />
-        <div >
-          <Header />
-          <main className="main-content" style={{ padding: "24px" }}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/group/:id" element={<DetailItemGroup />} />
+        <Routes>
+          <Route path="/*" element={<MainLayout />} />
 
-              {/* <Route path="/registered" element={<Registered />} /> */}
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/help" element={<Help />} /> 
-            </Routes>
-          </main>
-        </div>
+          <Route path="/login" element={<LoginForm />} />
+          {/* <Route path="/test" element={<TestBackend />} /> */}
+
+        </Routes>
       </div>
+      </GroupProvider>
+      </AuthProvider>
     </Router>
   );
 }

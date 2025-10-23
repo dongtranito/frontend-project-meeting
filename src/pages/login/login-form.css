@@ -293,16 +293,16 @@ input {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 } */
-
+/* ---------- Toàn bộ layout ---------- */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  /* background: linear-gradient(135deg, #182C4A, #203451, #34496A, #34556a); */
   background: linear-gradient(135deg, #001C44, #0C5776, #2D99AE, #BCFEFE);
   background-size: 300% 300%;
   animation: gradientMove 6s ease infinite;
+  font-family: "Inter", "Segoe UI", sans-serif;
 }
 
 @keyframes gradientMove {
@@ -317,33 +317,94 @@ input {
   }
 }
 
+/* ---------- Card đăng nhập ---------- */
 .login-card {
-  background: #fff;
+  background: #ffffff;
   border-radius: 20px;
-  padding: 40px 50px;
+  padding: 45px 55px;
   text-align: center;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-  max-width: 380px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  max-width: 400px;
   width: 90%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 45px rgba(0, 0, 0, 0.2);
 }
 
 .login-card h2 {
-  margin-bottom: 10px;
-  color: #333;
+  margin-bottom: 20px;
+  color: #001c44;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .login-card p {
   color: #666;
-  font-size: 15px;
-  margin-bottom: 25px;
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+  line-height: 1.5;
 }
 
-.google-btn-wrapper {
+/* ---------- Nút Google ---------- */
+.login-button {
   display: flex;
+  align-items: center;
   justify-content: center;
+  width: 100%;
+  padding: 12px 18px;
+  background-color: #ffffff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease;
+  cursor: pointer;
+  font-weight: 500;
 }
 
-.img-gg {
-    border-radius: 50px;
+.login-button:hover {
+  background-color: #f9fafb;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 
+.login-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* ---------- Logo Google trong nút ---------- */
+.login-button img {
+  width: 22px;
+  height: 22px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+/* ---------- Thông báo lỗi ---------- */
+.login-card p.error {
+  color: #ef4444;
+  font-size: 0.9rem;
+  margin-top: 15px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 35px 30px;
+  }
+
+  .login-card h2 {
+    font-size: 1.4rem;
+  }
+
+  .login-button span {
+    font-size: 0.9rem;
+  }
+}

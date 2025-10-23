@@ -1,198 +1,203 @@
-import React, { useState }from 'react'
-import './item-group.css'
-import { styled } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider } from '@mui/material';
-// import { useState } from 'react'
+import React, { useState, useContext } from "react";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Divider,
+  IconButton,
+  Avatar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+  Typography,
+  TextField,
+} from "@mui/material";
+import { red } from "@mui/material/colors";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
+import './item-group.css';
+import { AuthContext } from './../../auth/auth-context';
 
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme }) => ({
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-  variants: [
-    {
-      props: ({ expand }) => !expand,
-      style: {
-        transform: 'rotate(0deg)',
-      },
-    },
-    {
-      props: ({ expand }) => !!expand,
-      style: {
-        transform: 'rotate(180deg)',
-      },
-    },
-  ],
-}));
-
-export default function ItemGroup({ id, title, subheader }) {
-
-  const [expanded, setExpanded] = React.useState(false);
+export default function ItemGroup({ id, title, subheader, description }) {
   const [openDialog, setOpenDialog] = useState(false);
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+  const [newName, setNewName] = useState(title || "");
+  const [newDescription, setNewDescription] = useState(description || "");
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
-  const handleCardClick = () => {
-    navigate(`/group/${id}`);
-  };
+  const isOwner = user?.email === subheader;
 
-  // Mở dialog khi click vào icon
-  const handleOpenDialog = () => {
+  const handleCardClick = () => navigate(`/detail-group/${id}`);
+  const handleOpenDialog = (e) => {
+    e.stopPropagation();
     setOpenDialog(true);
   };
+  const handleCloseDialog = () => setOpenDialog(false);
 
-  // Đóng dialog
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
+  const handleLeaveGroup = async () => {
+    try {
+      if (isOwner) {
+        const res = await fetch(`http://localhost:3001/delete-group/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+        if (!res.ok) throw new Error("Xóa nhóm thất bại");
+        alert(`✅ Nhóm "${title}" đã được xóa thành công.`);
+      } else {
+        const res = await fetch(`http://localhost:3001/leave-group`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+          body: JSON.stringify({ groupId: id, userId: user.uid }),
+        });
+        if (!res.ok) throw new Error("Rời nhóm thất bại");
+        alert(`🚪 Bạn đã rời khỏi nhóm "${title}".`);
+      }
+      setOpenDialog(false);
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      alert("❌ Có lỗi xảy ra khi xử lý yêu cầu.");
+    }
   };
 
-  // Xử lý khi xác nhận rời nhóm
-  const handleLeaveGroup = () => {
-    setOpenDialog(false);
-    alert("Bạn đã rời khỏi nhóm!");
+  const handleOpenUpdate = (e) => {
+    e.stopPropagation();
+    setNewName(title || "");
+    setNewDescription(description || "");
+    setOpenUpdateDialog(true);
   };
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
+  const handleCloseUpdate = () => setOpenUpdateDialog(false);
+
+  const handleUpdateGroup = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/update-group/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          name: newName,
+          description: newDescription,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Cập nhật nhóm thất bại");
+      alert("✅ Nhóm đã được cập nhật thành công!");
+      setOpenUpdateDialog(false);
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      alert("❌ Có lỗi xảy ra khi cập nhật nhóm.");
+    }
   };
 
   return (
-    <Card sx={{ maxWidth: 345 }} >
-      <CardHeader onClick={handleCardClick} className="item-group-container-header" sx={{
-        '& .MuiCardHeader-subheader': {
-          color: 'white', 
-        },
-        '& .MuiCardHeader-content': {
-          order: 1, 
-          marginRight: 2 
-        },
-        '& .MuiCardHeader-avatar': {
-          order: 2 
-        }
-      }}
-        title={title}
-        subheader={subheader}
-        // action={
-        //   <IconButton aria-label="settings">
-        //     <MoreVertIcon />
-        //   </IconButton>
-        // }
+    <Card className="item-group-card">
+      <CardHeader
+        onClick={handleCardClick}
+        className="item-group-header"
+        title={title || "Tên nhóm chưa có"}
+        subheader={subheader || "Chưa có chủ nhóm"}
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            NA
+          <Avatar sx={{ bgcolor: red[500] }} aria-label="group">
+            {title ? title.charAt(0).toUpperCase() : "?"}
           </Avatar>
         }
       />
-      <Divider />
-      {/* <CardMedia
-        component="img"
-        height="194"
-        image="/static/images/cards/paella.jpg"
-        alt="Paella dish"
-      /> */}
-      <CardContent>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the mussels,
-          if you like.
+
+      <CardContent className="item-group-description">
+        <Typography variant="body2">
+          {description && description.trim() !== ""
+            ? description
+            : "Nhóm này chưa có mô tả."}
         </Typography>
       </CardContent>
 
-      <Divider />
-      <CardHeader   
-        action={
-          <IconButton aria-label="settings" onClick={handleOpenDialog}>
-            <MoreVertIcon />
-          </IconButton>
-        }
-      />
+      <div className="item-group-actions">
+        {isOwner && (
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            onClick={handleOpenUpdate}
+          >
+            Cập nhật
+          </Button>
+        )}
+        <IconButton aria-label="settings" onClick={handleOpenDialog}>
+          <MoreVertIcon />
+        </IconButton>
+      </div>
 
-      {/* ✅ Dialog xác nhận */}
-      <Dialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        aria-labelledby="leave-group-dialog-title"
-        aria-describedby="leave-group-dialog-description"
-      >
-        <DialogTitle id="leave-group-dialog-title">Xác nhận</DialogTitle>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Xác nhận</DialogTitle>
         <DialogContent>
-          <DialogContentText id="leave-group-dialog-description">
-            Bạn có chắc chắn muốn rời khỏi nhóm này không?
+          <DialogContentText>
+            {isOwner ? (
+              <>
+                Bạn có chắc chắn muốn <b>xóa nhóm</b> <b>{title}</b> không?
+              </>
+            ) : (
+              <>
+                Bạn có chắc chắn muốn <b>rời khỏi nhóm</b> <b>{title}</b> không?
+              </>
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="inherit">
-            Hủy
-          </Button>
+          <Button onClick={handleCloseDialog}>Hủy</Button>
           <Button onClick={handleLeaveGroup} color="error" variant="contained">
-            Rời khỏi nhóm
+            {isOwner ? "Xóa nhóm" : "Rời khỏi nhóm"}
           </Button>
         </DialogActions>
       </Dialog>
-      {/* <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography sx={{ marginBottom: 2 }}>Method:</Typography>
-          <Typography sx={{ marginBottom: 2 }}>
-            Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-            aside for 10 minutes.
-          </Typography>
-          <Typography sx={{ marginBottom: 2 }}>
-            Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over
-            medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring
-            occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a
-            large plate and set aside, leaving chicken and chorizo in the pan. Add
-            pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook,
-            stirring often until thickened and fragrant, about 10 minutes. Add
-            saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-          </Typography>
-          <Typography sx={{ marginBottom: 2 }}>
-            Add rice and stir very gently to distribute. Top with artichokes and
-            peppers, and cook without stirring, until most of the liquid is absorbed,
-            15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp and
-            mussels, tucking them down into the rice, and cook again without
-            stirring, until mussels have opened and rice is just tender, 5 to 7
-            minutes more. (Discard any mussels that don&apos;t open.)
-          </Typography>
-          <Typography>
-            Set aside off of the heat to let rest for 10 minutes, and then serve.
-          </Typography>
-        </CardContent>
-      </Collapse> */}
+
+      <Dialog open={openUpdateDialog} onClose={handleCloseUpdate}>
+        <DialogTitle>Cập nhật nhóm</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="Tên nhóm"
+            fullWidth
+            variant="outlined"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Mô tả nhóm"
+            fullWidth
+            multiline
+            rows={3}
+            variant="outlined"
+            value={newDescription}
+            onChange={(e) => setNewDescription(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseUpdate}>Hủy</Button>
+          <Button
+            onClick={handleUpdateGroup}
+            variant="contained"
+            color="primary"
+          >
+            Lưu thay đổi
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Card>
+
   );
 }
-
-

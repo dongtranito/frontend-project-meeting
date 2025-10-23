@@ -1,0 +1,104 @@
+.recorder-container {
+  border: 1px solid #ccd3d3;
+  border-radius: 16px;
+  padding: 20px;
+  width: 420px;
+  margin: 0 auto;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  transition: 0.3s ease;
+}
+
+.recorder-actions {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.recorder-action {
+  text-align: center;
+}
+
+.record-btn,
+.upload-btn {
+  background-color: #f5f8f8;
+  border: 2px solid transparent;
+  transition: all 0.25s ease;
+}
+
+.record-btn:hover,
+.upload-btn:hover {
+  background-color: #e0f2f1;
+  border-color: #90a4ae;
+}
+
+.record-btn svg,
+.upload-btn svg {
+  font-size: 28px;
+  color: #e53935;
+}
+
+.record-btn.recording {
+  background-color: #ffebee;
+  border-color: #ef5350;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(239, 83, 80, 0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(239, 83, 80, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 83, 80, 0); }
+}
+
+.upload-input {
+  display: none;
+}
+
+.send-btn {
+  margin-top: 8px;
+  padding: 6px 24px;
+  border-radius: 20px;
+  text-transform: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  background-color: transparent;
+  color: black;
+  border: 1px solid #1e1e2f;
+}
+
+.send-btn:hover {
+  transform: translateY(-2px);
+}
+
+.send-btn.sent {
+  background-color: #4caf50;
+}
+
+.loading {
+  margin-top: 4px;
+}
+
+.message {
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.message.success {
+  color: #2e7d32;
+}
+
+.message.error {
+  color: #c62828;
+}
+
+.audio-player {
+  margin-top: 10px;
+  width: 100%;
+  border-radius: 8px;
+}

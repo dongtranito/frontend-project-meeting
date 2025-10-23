@@ -1,0 +1,31 @@
+.meeting-item-card {
+  margin-bottom: 16px;
+  border-radius: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.meeting-item-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.meeting-title {
+  font-weight: 600;
+  color: #1976d2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meeting-info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.meeting-icon {
+  color: #1976d2;
+  font-size: 18px;
+}

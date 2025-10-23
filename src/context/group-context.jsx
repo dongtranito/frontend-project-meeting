@@ -11,10 +11,10 @@ export const GroupProvider = ({ children }) => {
     const [error, setError] = useState("");
 
     const fetchGroups = useCallback(async () => {
-        if (!user?.token) {
-            console.warn("⚠️ Không có token, không gọi API.");
-            return;
-        }
+        // if (!user?.token) {
+        //     console.warn("⚠️ Không có token, không gọi API.");
+        //     return;
+        // }
 
         setLoading(true);
         setError("");
@@ -22,10 +22,11 @@ export const GroupProvider = ({ children }) => {
         try {
             const res = await fetch("http://localhost:3001/get-list-group", {
                 method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${user.token}`,
-                },
+                // headers: {
+                //     "Content-Type": "application/json",
+                //     Authorization: `Bearer ${user.token}`,
+                // },
+                credentials: "include",
             });
 
             const data = await res.json();
@@ -34,7 +35,7 @@ export const GroupProvider = ({ children }) => {
                 throw new Error(data.message || "Không thể tải danh sách nhóm");
             }
 
-            console.log("✅ Nhóm nhận được:", data.data);
+            console.log("Nhóm nhận được:", data.data);
 
             setOwnedGroups(data.data.ownedGroups || []);
             setJoinedGroups(data.data.joinedGroups || []);

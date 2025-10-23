@@ -1,31 +1,83 @@
-.meeting-item-card {
+.meeting-item {
+  position: relative;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   margin-bottom: 16px;
-  border-radius: 12px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  cursor: pointer;
+  transition: all 0.3s ease;
+  padding-bottom: 56px; /* tạo khoảng cho nút nằm trong */
 }
 
-.meeting-item-card:hover {
+.meeting-item:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.meeting-content {
+  padding: 20px 24px 12px 24px;
+}
+
+.meeting-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
 }
 
 .meeting-title {
   font-weight: 600;
-  color: #1976d2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: #1a1a1a;
+  letter-spacing: 0.3px;
 }
 
-.meeting-info-row {
+.meeting-actions {
+  position: absolute;
+  bottom: 16px;
+  right: 20px;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 6px;
+  gap: 10px;
 }
 
-.meeting-icon {
-  color: #1976d2;
-  font-size: 18px;
+/* Nút cập nhật */
+.btn-update {
+  border-color: #1976d2 !important;
+  color: #1976d2 !important;
+  background: #f4f9ff !important;
+  font-weight: 500;
+  text-transform: none;
+  transition: 0.2s;
 }
+
+.btn-update:hover {
+  background: #e8f1ff !important;
+  transform: scale(1.03);
+}
+
+/* Nút xóa */
+.btn-delete {
+  background: #f44336 !important;
+  color: #fff !important;
+  font-weight: 500;
+  text-transform: none;
+  transition: 0.2s;
+}
+
+.btn-delete:hover {
+  background: #d32f2f !important;
+  transform: scale(1.03);
+}
+
+.MuiDialog-paper {
+  border-radius: 16px !important;
+}
+
+.MuiDialogTitle-root {
+  font-weight: 600 !important;
+  color: #1a1a1a;
+}
+
+.MuiDialogActions-root button {
+  text-transform: none !important;
+  font-weight: 500;
+}
+

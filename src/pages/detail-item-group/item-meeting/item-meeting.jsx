@@ -22,24 +22,6 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // const handleDelete = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const res = await fetch(`http://localhost:3001/delete-meeting/${meeting.meetingId}`, {
-  //       method: "DELETE",
-  //       credentials: "include",
-  //     });
-  //     const data = await res.json();
-  //     if (!res.ok || !data.success) throw new Error(data.error || "Xóa cuộc họp thất bại");
-
-  //     if (onDeleted) onDeleted(meeting.meetingId);
-  //     setOpenConfirm(false);
-  //   } catch (err) {
-  //     setError(err.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const handleDeleteMeeting = async () => {
     try {
@@ -89,9 +71,6 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
       setOpenUpdate(false); // Đảm bảo dialog luôn đóng sau khi hoàn tất
     }
   };
-
-
-
 
   return (
     <Card className="meeting-item">

@@ -68,7 +68,7 @@ export default function ItemGroup({ id, title, subheader, description }) {
       window.location.reload();
     } catch (error) {
       console.error(error);
-      alert("❌ Có lỗi xảy ra khi xử lý yêu cầu.");
+      alert("Có lỗi xảy ra khi xử lý yêu cầu.");
     }
   };
 

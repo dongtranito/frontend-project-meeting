@@ -15,11 +15,6 @@ import TestBackend from "./pages/test/test";
 import { GroupContext, GroupProvider } from "./context/group-context";
 function App() {
   return (
-    // <div className="app-container">
-    //   {/* <LoginForm /> */}
-    //   <Sidebar />
-    //   <Header />
-    // </div>
     <Router>
       <AuthProvider>
         <GroupProvider>

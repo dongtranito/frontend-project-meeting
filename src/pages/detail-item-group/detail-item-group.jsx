@@ -43,7 +43,7 @@ export default function DetailItemGroup() {
 
       setGroupDetail(data.data);
     } catch (err) {
-      console.error("❌ Lỗi khi tải chi tiết nhóm:", err);
+      console.error("Lỗi khi tải chi tiết nhóm:", err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -86,7 +86,7 @@ export default function DetailItemGroup() {
 
       setMeetings(data.data || []);
     } catch (err) {
-      console.error("❌ Lỗi khi tải cuộc họp:", err);
+      console.error("Lỗi khi tải cuộc họp:", err);
       setMeetings([]);
     } finally {
       setLoadingMeetings(false);

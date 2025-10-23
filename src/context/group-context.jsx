@@ -40,7 +40,7 @@ export const GroupProvider = ({ children }) => {
             setOwnedGroups(data.data.ownedGroups || []);
             setJoinedGroups(data.data.joinedGroups || []);
         } catch (err) {
-            console.error("❌ Lỗi khi lấy danh sách nhóm:", err);
+            console.error("Lỗi khi lấy danh sách nhóm:", err);
             setError(err.message);
         } finally {
             setLoading(false);

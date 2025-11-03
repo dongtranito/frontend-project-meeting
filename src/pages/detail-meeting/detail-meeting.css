@@ -1,0 +1,202 @@
+.detail-meeting-container {
+  width: 100%;
+  font-family: "Inter", sans-serif;
+  /* overflow-y: auto;
+  scroll-behavior: smooth; */
+}
+
+.meeting-header {
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+  /* min-height: 100vh; */
+}
+
+.tab-header {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 16px;
+}
+
+.recorder-card {
+  border-radius: 16px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  transition: all 0.3s ease;
+}
+
+.recorder-title {
+  color: #006b7f;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.recorder-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 80px;
+  margin-bottom: 24px;
+}
+
+.recorder-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.record-btn,
+.upload-btn {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #006b7f;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.upload-btn {
+  background-color: #00a1b3;
+}
+
+.record-btn:hover,
+.upload-btn:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.record-btn.recording {
+  background-color: #d32f2f;
+}
+
+.upload-input {
+  display: none;
+}
+
+.recorder-action p,
+.recorder-action span,
+.recorder-action .MuiTypography-root {
+  margin-top: 6px;
+  color: #333;
+  font-weight: 500;
+}
+
+
+.record-btn,
+.upload-btn {
+  width: 64px;
+  height: 64px;
+  color: #fff;
+  transition: 0.3s;
+}
+
+.record-btn {
+  background-color: #006b7f;
+}
+
+.record-btn.recording {
+  background-color: #d32f2f;
+}
+
+.upload-btn {
+  background-color: #00a1b3;
+}
+
+.record-btn:hover,
+.upload-btn:hover {
+  opacity: 0.85;
+}
+
+.audio-preview {
+  margin: 16px 0;
+  text-align: center;
+  justify-items: center;
+}
+
+.audio-preview audio {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 8px;
+  border-radius: 8px;
+}
+
+.file-name {
+  font-weight: 500;
+  color: #006b7f;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.loading-section {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.message {
+  margin-top: 12px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.message.success {
+  color: #2e7d32;
+}
+
+.message.error {
+  color: #d32f2f;
+}
+
+ .meeting-tab {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh);
+  position: relative;
+}
+
+.meeting-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 20px; 
+}
+
+.meeting-content::-webkit-scrollbar {
+  display: none;
+}
+
+.chatbox-wrapper {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+}
+
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
+
+/* 
+.MuiTabPanel-root {
+    padding: 0 24px 0;
+} */
+
+.minute-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.minute-header h2 {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 24px;
+  font-weight: bold;
+}

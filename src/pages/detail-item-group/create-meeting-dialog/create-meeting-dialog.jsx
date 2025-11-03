@@ -38,7 +38,6 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
       return;
     }
 
-    // Gộp ngày & giờ
     const scheduledAt = new Date(
       selectedDate.getFullYear(),
       selectedDate.getMonth(),
@@ -47,50 +46,50 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
       selectedTime.getMinutes()
     );
 
-    // Kiểm tra thời gian trong quá khứ
-    const now = new Date();
-    if (scheduledAt < now) {
-      setError("Ngày và giờ không hợp lệ! Vui lòng chọn thời gian trong tương lai.");
+    if (scheduledAt < new Date()) {
+      setError("Ngày và giờ không hợp lệ!");
       return;
     }
 
     setLoading(true);
     try {
-      let metaUrl = null;
-
-      // Upload file metadata (nếu có)
-      if (metaFile) {
-        const fileForm = new FormData();
-        fileForm.append("file", metaFile);
-
-        const res = await fetch("http://localhost:3001/upload/metadata", {
-          method: "POST",
-          body: fileForm,
-        });
-        const data = await res.json();
-        if (data.success) metaUrl = data.data.url;
-      }
-
-      // Tạo cuộc họp
+      // 🔹 1️⃣ Tạo meeting trước
       const response = await fetch("http://localhost:3001/create-meeting", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer ${user?.token}`,
         },
         credentials: "include",
         body: JSON.stringify({
           groupId,
           title: groupName,
-          description: description,
+          description,
           scheduledAt: scheduledAt.toISOString(),
-          metaData: metaUrl ? { url: metaUrl } : {},
         }),
       });
 
       const result = await response.json();
       if (!result.success) throw new Error(result.error || "Không thể tạo cuộc họp");
 
+      const meetingId = result.data.meetingId; // 🔹 lấy ID meeting vừa tạo
+
+      // 🔹 2️⃣ Nếu có file, upload sample minute gắn với meetingId
+      if (metaFile && meetingId) {
+        const fileForm = new FormData();
+        fileForm.append("file", metaFile);
+        fileForm.append("meetingId", meetingId);
+
+        const uploadRes = await fetch("http://localhost:3001/upload/sample-minute", {
+          method: "POST",
+          body: fileForm,
+          credentials: "include",
+        });
+
+        const uploadData = await uploadRes.json();
+        if (!uploadData.success) throw new Error("Upload biên bản mẫu thất bại");
+      }
+
+      // 🔹 3️⃣ Đóng dialog và refresh danh sách
       if (onCreated) onCreated();
       handleClose();
     } catch (err) {
@@ -108,10 +107,10 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
 
       <Dialog open={open} onClose={handleClose} className="create-meeting-dialog">
         <form onSubmit={handleSubmit}>
-          <DialogTitle className="dialog-title">Tạo cuộc họp</DialogTitle>
+          <DialogTitle>Tạo cuộc họp</DialogTitle>
 
-          <DialogContent className="dialog-content">
-            <DialogContentText>Nhập tên cuộc họp.</DialogContentText>
+          <DialogContent>
+            <DialogContentText>Nhập tên cuộc họp:</DialogContentText>
             <TextField
               required
               name="groupName"
@@ -121,7 +120,7 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
               margin="dense"
             />
 
-            <DialogContentText>Nhập mô tả cuộc họp.</DialogContentText>
+            <DialogContentText>Nhập mô tả cuộc họp:</DialogContentText>
             <TextField
               required
               name="description"
@@ -132,7 +131,7 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
             />
 
             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={vi}>
-              <DialogContentText>Nhập ngày.</DialogContentText>
+              <DialogContentText>Nhập ngày:</DialogContentText>
               <DatePicker
                 label="Chọn ngày"
                 value={selectedDate}
@@ -140,15 +139,9 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
                 slotProps={{
                   textField: { fullWidth: true, margin: "dense", variant: "outlined" },
                 }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "10px",
-                    backgroundColor: "#fafafa",
-                  },
-                }}
               />
 
-              <DialogContentText>Nhập giờ.</DialogContentText>
+              <DialogContentText>Nhập giờ:</DialogContentText>
               <TimePicker
                 label="Chọn giờ"
                 ampm
@@ -157,16 +150,10 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
                 slotProps={{
                   textField: { fullWidth: true, margin: "dense", variant: "outlined" },
                 }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "10px",
-                    backgroundColor: "#fafafa",
-                  },
-                }}
               />
             </LocalizationProvider>
 
-            <DialogContentText>Meta data.</DialogContentText>
+            <DialogContentText>Meta data:</DialogContentText>
             <Button variant="outlined" component="label" fullWidth>
               Chọn file meta data
               <input
@@ -179,15 +166,16 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
           </DialogContent>
 
           <DialogActions>
-            <Button onClick={handleClose}>Hủy</Button>
-            <Button type="submit" variant="contained" disabled={loading}>
+            <Button onClick={handleClose} className="cancel-btn">
+              Hủy
+            </Button>
+            <Button type="submit" className="create-btn" disabled={loading}>
               {loading ? "Đang tạo..." : "Tạo"}
             </Button>
           </DialogActions>
         </form>
       </Dialog>
 
-      {/* Snackbar thông báo lỗi */}
       <Snackbar
         open={!!error}
         autoHideDuration={4000}
@@ -196,5 +184,6 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       />
     </React.Fragment>
+
   );
 }

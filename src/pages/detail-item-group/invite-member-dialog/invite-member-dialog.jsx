@@ -8,8 +8,10 @@ import {
   TextField,
   Alert,
   CircularProgress,
+  DialogContentText,
 } from "@mui/material";
 import { AuthContext } from "../../../auth/auth-context";
+import './invite-member-dialog.css'
 
 export default function InviteMemberDialog({ groupId, refreshGroup }) {
   const [open, setOpen] = useState(false);
@@ -87,68 +89,56 @@ export default function InviteMemberDialog({ groupId, refreshGroup }) {
 
   return (
     <>
-      <Button variant="outlined" onClick={() => setOpen(true)}>
-        Mời thành viên
+  <Button variant="outlined" onClick={() => setOpen(true)}>
+    Mời thành viên
+  </Button>
+
+  <Dialog open={open} onClose={handleClose} className="invite-member-dialog">
+    <DialogTitle>Mời thành viên vào nhóm</DialogTitle>
+
+    <DialogContent>
+      <DialogContentText>Nhập email thành viên:</DialogContentText>
+      <TextField
+        label="Email"
+        placeholder="vd: example@gmail.com"
+        fullWidth
+        variant="outlined"
+        value={gmailInvite}
+        onChange={(e) => setGmailInvite(e.target.value)}
+        disabled={loading}
+      />
+
+      <DialogContentText>Nhập tên gợi nhớ cho thành viên:</DialogContentText>
+      <TextField
+        label="Tên thành viên"
+        placeholder="Tên gợi nhớ"
+        fullWidth
+        variant="outlined"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        disabled={loading}
+      />
+
+      {message && (
+        <Alert severity={message.type}>{message.text}</Alert>
+      )}
+    </DialogContent>
+
+    <DialogActions>
+      <Button onClick={handleClose} className="cancel-btn" disabled={loading}>
+        Hủy
       </Button>
-
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          sx: {
-            width: 400,
-            borderRadius: 3,
-            p: 2,
-          },
-        }}
+      <Button
+        onClick={handleInvite}
+        className="invite-btn"
+        disabled={loading}
       >
-        <DialogTitle sx={{ fontWeight: 600, textAlign: "center" }}>
-          Mời thành viên vào nhóm
-        </DialogTitle>
+        {loading ? <CircularProgress size={20} color="inherit" /> : "Thêm"}
+      </Button>
+    </DialogActions>
+  </Dialog>
+</>
 
-        <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <TextField
-            label="Nhập email thành viên"
-            placeholder="vd: example@gmail.com"
-            fullWidth
-            variant="outlined"
-            value={gmailInvite}
-            onChange={(e) => setGmailInvite(e.target.value)}
-            disabled={loading}
-          />
-
-          <TextField
-            label="Nhập tên gợi nhớ cho thành viên"
-            placeholder="Tên thành viên"
-            fullWidth
-            variant="outlined"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            disabled={loading}
-          />
-
-          {message && (
-            <Alert severity={message.type} sx={{ mt: 1 }}>
-              {message.text}
-            </Alert>
-          )}
-        </DialogContent>
-
-        <DialogActions sx={{ justifyContent: "space-between", p: 2 }}>
-          <Button onClick={handleClose} variant="outlined" disabled={loading}>
-            Hủy
-          </Button>
-          <Button
-            onClick={handleInvite}
-            variant="contained"
-            color="primary"
-            disabled={loading}
-          >
-            {loading ? <CircularProgress size={24} color="inherit" /> : "Thêm"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
   );
 }
 

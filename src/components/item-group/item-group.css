@@ -105,3 +105,21 @@
   margin-top: auto;
   background-color: #fafafa;
 }
+
+.confirm-leave-btn {
+  border: 2px solid #d32f2f; /* viền đỏ */
+  color: #d32f2f;            /* chữ đỏ */
+  background-color: #ffffff; /* nền trắng */
+  font-weight: 600;
+  text-transform: none;
+  transition: all 0.25s ease;
+}
+
+.confirm-leave-btn:hover {
+  background-color: #d32f2f; /* nền đỏ khi hover */
+  color: #fff;               /* chữ trắng */
+  border-color: #b71c1c;     /* đậm hơn chút khi hover */
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(211, 47, 47, 0.3);
+}
+

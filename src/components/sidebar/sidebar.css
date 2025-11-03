@@ -32,6 +32,11 @@
 .sidebar .MuiListItemIcon-root {
   min-width: 40px;
   justify-content: center;
+  overflow: hidden;
+}
+
+.sidebar .MuiTypography-root {
+  overflow: hidden;
 }
 
 .MuiDrawer-paper.sidebar.collapsed {

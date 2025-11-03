@@ -6,6 +6,7 @@ import Home from "../pages/home/home";
 import Help from "../pages/help/help";
 import Settings from "../pages/settings/settings";
 import DetailItemGroup from "../pages/detail-item-group/detail-item-group";
+import DetailMeeting from "../pages/detail-meeting/detail-meeting";
 
 export default function MainLayout() {
   return (
@@ -17,6 +18,7 @@ export default function MainLayout() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/detail-group/:id" element={<DetailItemGroup />} />
+            <Route path="/meeting/:id" element={<DetailMeeting />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/help" element={<Help />} />
           </Routes>

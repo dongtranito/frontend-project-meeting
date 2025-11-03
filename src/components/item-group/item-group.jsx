@@ -20,12 +20,15 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import './item-group.css';
 import { AuthContext } from './../../auth/auth-context';
+import UpdateGroupDialog from "./update-group/update-group";
 
 export default function ItemGroup({ id, title, subheader, description }) {
   const [openDialog, setOpenDialog] = useState(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [newName, setNewName] = useState(title || "");
   const [newDescription, setNewDescription] = useState(description || "");
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
@@ -81,30 +84,52 @@ export default function ItemGroup({ id, title, subheader, description }) {
 
   const handleCloseUpdate = () => setOpenUpdateDialog(false);
 
-  const handleUpdateGroup = async () => {
+  // const handleUpdateGroup = async () => {
+  //   try {
+  //     const res = await fetch(`http://localhost:3001/update-group/${id}`, {
+  //       method: "PUT",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         // Authorization: `Bearer ${user.token}`,
+  //       },
+  //       credentials: "include",
+  //       body: JSON.stringify({
+  //         name: newName,
+  //         description: newDescription,
+  //       }),
+  //     });
+
+  //     if (!res.ok) throw new Error("Cập nhật nhóm thất bại");
+  //     alert("Nhóm đã được cập nhật thành công!");
+  //     setOpenUpdateDialog(false);
+  //     window.location.reload();
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert("Có lỗi xảy ra khi cập nhật nhóm.");
+  //   }
+  // };
+  const handleUpdateGroup = async ({ name, description }) => {
+    setLoading(true);
     try {
       const res = await fetch(`http://localhost:3001/update-group/${id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          // Authorization: `Bearer ${user.token}`,
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          name: newName,
-          description: newDescription,
-        }),
+        body: JSON.stringify({ name, description }),
       });
-
-      if (!res.ok) throw new Error("Cập nhật nhóm thất bại");
-      alert("Nhóm đã được cập nhật thành công!");
-      setOpenUpdateDialog(false);
-      window.location.reload();
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.message);
+      console.log("Cập nhật nhóm thành công:", data);
+      setNewName(name);
+      setNewDescription(description);
+      handleCloseUpdate();
     } catch (err) {
       console.error(err);
-      alert("Có lỗi xảy ra khi cập nhật nhóm.");
+    } finally {
+      setLoading(false);
     }
   };
+
 
   return (
     <Card className="item-group-card">
@@ -161,13 +186,13 @@ export default function ItemGroup({ id, title, subheader, description }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Hủy</Button>
-          <Button onClick={handleLeaveGroup} color="error" variant="contained">
+          <Button onClick={handleLeaveGroup} className="confirm-leave-btn" variant="contained">
             {isOwner ? "Xóa nhóm" : "Rời khỏi nhóm"}
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Dialog open={openUpdateDialog} onClose={handleCloseUpdate}>
+      {/* <Dialog open={openUpdateDialog} onClose={handleCloseUpdate}>
         <DialogTitle>Cập nhật nhóm</DialogTitle>
         <DialogContent>
           <TextField
@@ -199,7 +224,15 @@ export default function ItemGroup({ id, title, subheader, description }) {
             Lưu thay đổi
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
+      <UpdateGroupDialog
+        open={openUpdateDialog}
+        onClose={handleCloseUpdate}
+        onSubmit={handleUpdateGroup}
+        initialName={newName}
+        initialDescription={newDescription}
+        loading={loading}
+      />
     </Card>
 
   );

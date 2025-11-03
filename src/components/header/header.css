@@ -1,5 +1,5 @@
 .container-header {
-    position: fixed;
+  position: fixed;
   top: 0;
   left: var(--sidebar-width);
   width: calc(100% - var(--sidebar-width));

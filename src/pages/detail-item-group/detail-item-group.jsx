@@ -43,7 +43,7 @@ export default function DetailItemGroup() {
 
       setGroupDetail(data.data);
     } catch (err) {
-      console.error("❌ Lỗi khi tải chi tiết nhóm:", err);
+      console.error("Lỗi khi tải chi tiết nhóm:", err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -86,7 +86,7 @@ export default function DetailItemGroup() {
 
       setMeetings(data.data || []);
     } catch (err) {
-      console.error("❌ Lỗi khi tải cuộc họp:", err);
+      console.error("Lỗi khi tải cuộc họp:", err);
       setMeetings([]);
     } finally {
       setLoadingMeetings(false);
@@ -153,6 +153,23 @@ export default function DetailItemGroup() {
                   ) || groupDetail.owner_id === user?.email;
 
                 return (
+                  // <MemberItem
+                  //   key={index}
+                  //   member={member}
+                  //   groupId={id}
+                  //   isOwner={isOwner}
+                  //   currentUserEmail={user?.email}
+                  //   token={user?.token}
+                  //   onRemoved={() => {
+                  //     // Cập nhật lại danh sách sau khi xóa
+                  //     setGroupDetail((prev) => ({
+                  //       ...prev,
+                  //       members: prev.members.filter(
+                  //         (m) => m.user_id !== member.user_id
+                  //       ),
+                  //     }));
+                  //   }}
+                  // />
                   <MemberItem
                     key={index}
                     member={member}
@@ -161,15 +178,21 @@ export default function DetailItemGroup() {
                     currentUserEmail={user?.email}
                     token={user?.token}
                     onRemoved={() => {
-                      // Cập nhật lại danh sách sau khi xóa
                       setGroupDetail((prev) => ({
                         ...prev,
-                        members: prev.members.filter(
-                          (m) => m.user_id !== member.user_id
+                        members: prev.members.filter((m) => m.user_id !== member.user_id),
+                      }));
+                    }}
+                    onUpdated={(updatedMember) => {
+                      setGroupDetail((prev) => ({
+                        ...prev,
+                        members: prev.members.map((m) =>
+                          m.user_id === updatedMember.user_id ? updatedMember : m
                         ),
                       }));
                     }}
                   />
+
                 );
               })
             ) : (

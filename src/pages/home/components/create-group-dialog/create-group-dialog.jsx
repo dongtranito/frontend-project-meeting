@@ -52,7 +52,7 @@ export default function CreateGroupDialog({ onGroupCreated }) {
 
       setTimeout(() => handleClose(), 800);
     } catch (err) {
-      console.error("❌ Lỗi tạo nhóm:", err);
+      console.error("Lỗi tạo nhóm:", err);
       setError(err.message);
     } finally {
       setLoading(false);

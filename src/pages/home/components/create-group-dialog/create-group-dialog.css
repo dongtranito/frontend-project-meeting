@@ -48,7 +48,7 @@
 .create-group-dialog .create-btn {
   background-color: #006b7f;
   color: white;
-  text-transform: none;
+  text-transform: none; 
   border-radius: 8px;
   padding: 6px 18px;
   transition: background-color 0.2s ease;

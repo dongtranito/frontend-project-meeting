@@ -1,6 +1,11 @@
+.MuiTypography-root {
+  overflow: hidden;
+}
 .list-btn {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
 }
 
 .meeting-tab {

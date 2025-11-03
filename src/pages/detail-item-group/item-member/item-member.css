@@ -1,0 +1,71 @@
+.member-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid #e3e6eb;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  margin-bottom: 10px;
+}
+
+.member-item:hover {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.member-info {
+  display: flex;
+  flex-direction: column; /* ✅ Xếp name-role trên, email dưới */
+  align-items: flex-start;
+  gap: 4px; /* khoảng cách nhỏ giữa 2 phần */
+}
+
+.name-role {
+  display: flex;
+  align-items: baseline;
+  gap: 6px; 
+}
+
+.member-name {
+  font-weight: 600;
+  color: #222;
+  font-size: 1rem;
+}
+
+.member-role {
+  font-size: 0.875rem;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.member-email {
+  font-style: italic;
+  color: gray;
+  font-size: small;
+  margin-left: 2px; 
+}
+
+
+.member-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.update-dialog-paper {
+  border-radius: 16px;
+  padding: 8px 0;
+  min-width: 400px;
+}
+
+.update-dialog-content {
+  padding-top: 8px;
+}
+
+.update-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 24px;
+}

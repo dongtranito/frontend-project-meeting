@@ -1,0 +1,83 @@
+/* Hộp thoại cập nhật nhóm */
+.update-group-dialog .MuiDialog-paper {
+  width: 420px;
+  border-radius: 16px;
+  background-color: #ffffff;
+  padding: 12px 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề */
+.update-group-dialog .MuiDialogTitle-root {
+  font-weight: 600;
+  font-size: 20px;
+  color: #006b7f;
+  text-align: center;
+  padding-bottom: 8px;
+}
+
+/* Nội dung */
+.update-group-dialog .MuiDialogContent-root {
+  padding-top: 4px;
+}
+
+.update-group-dialog .MuiDialogContentText-root {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+/* Input */
+.update-group-dialog .MuiTextField-root {
+  margin-top: 10px;
+}
+
+/* Hành động (Actions) */
+.update-group-dialog .MuiDialogActions-root {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 16px;
+  gap: 8px;
+}
+
+/* Nút Hủy */
+.update-group-dialog .cancel-btn {
+  color: #666;
+  text-transform: none;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 6px 18px;
+  background-color: #fff;
+  transition: all 0.2s ease;
+}
+
+.update-group-dialog .cancel-btn:hover {
+  background-color: #f5f5f5;
+}
+
+/* Nút Lưu thay đổi */
+.update-group-dialog .update-btn {
+  background-color: #006b7f;
+  color: white;
+  text-transform: none;
+  border-radius: 8px;
+  padding: 6px 18px;
+  transition: background-color 0.2s ease;
+}
+
+.update-group-dialog .update-btn:hover {
+  background-color: #005966;
+}
+
+/* Thông báo lỗi & thành công */
+.update-group-dialog .error-text {
+  color: #d32f2f;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.update-group-dialog .success-text {
+  color: #2e7d32;
+  font-size: 14px;
+  margin-top: 8px;
+}

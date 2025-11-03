@@ -1,117 +1,67 @@
-/* --- Tổng thể dialog --- */
+/* --- Tổng thể Dialog --- */
 .invite-member-dialog .MuiDialog-paper {
-  background-color: #ffffff;
+  width: 420px;
   border-radius: 16px;
+  background-color: #ffffff;
   padding: 12px 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Tiêu đề --- */
+.invite-member-dialog .MuiDialogTitle-root {
+  font-weight: 600;
+  font-size: 20px;
+  color: #006b7f;
+  text-align: center;
+  padding-bottom: 8px;
 }
 
 /* --- Nội dung --- */
-.invite-content {
-  background-color: #fff;
-  padding: 16px;
-}
-
-/* --- Thanh search --- */
-.search-container {
+.invite-member-dialog .MuiDialogContent-root {
   display: flex;
-  align-items: center;
-  margin-bottom: 12px;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 8px;
 }
 
-.search-input.MuiFormControl-root.MuiTextField-root {
-  width: 100%;
+.invite-member-dialog .MuiTextField-root {
+  margin-top: 6px;
 }
 
-.search-input .MuiOutlinedInput-root {
-  border-radius: 10px;
-  background-color: #f4f4f4;
-  transition: background-color 0.2s ease;
+.invite-member-dialog .MuiDialogContentText-root {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 6px;
 }
 
-.search-input .MuiOutlinedInput-root:hover {
-  background-color: #ebebeb;
+/* --- Thông báo --- */
+.invite-member-dialog .MuiAlert-root {
+  margin-top: 6px;
 }
 
-.search-icon {
-  color: #607d8b;
-}
-
-/* --- Danh sách thành viên --- */
-.member-list {
-  padding: 0;
-  max-height: 220px;
-  overflow-y: auto;
-  border-top: 1px solid #e0e5e5;
-  border-bottom: 1px solid #e0e5e5;
-}
-
-.member-list .MuiListItem-root {
-  border-bottom: 1px solid #e8eded;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-.member-list .MuiListItem-root:last-child {
-  border-bottom: none;
-}
-
-/* --- Nút thêm --- */
-.add-btn {
-  background-color: #006b7f;
-  border-radius: 8px;
-  text-transform: none;
-  font-size: 0.8rem;
-  padding: 4px 12px;
-}
-
-.add-btn:hover {
-  background-color: #005966;
-}
-
-/* --- Footer --- */
-.footer {
+/* --- Actions --- */
+.invite-member-dialog .MuiDialogActions-root {
   display: flex;
   justify-content: flex-end;
-  margin-top: 14px;
+  padding: 12px 16px;
 }
 
-/* --- Nút hủy --- */
-.cancel-btn {
-  background-color: #c2d7d9;
+/* --- Nút Hủy --- */
+.invite-member-dialog .cancel-btn {
+  color: #666;
+  text-transform: none;
+}
+
+/* --- Nút Thêm --- */
+.invite-member-dialog .invite-btn {
+  background-color: #006b7f;
   color: white;
   text-transform: none;
   border-radius: 8px;
-  font-size: 0.8rem;
-  padding: 4px 14px;
+  padding: 6px 18px;
   transition: background-color 0.2s ease;
 }
 
-.cancel-btn:hover {
-  background-color: #b2cbcc;
-}
-
-.add-btn.MuiButton-contained {
-  background-color: #006b7f;
-  color: white;
-  border-radius: 8px;
-  text-transform: none;
-  font-size: 0.8rem;
-  padding: 4px 12px;
-}
-
-.add-btn.MuiButton-contained:hover {
+.invite-member-dialog .invite-btn:hover {
   background-color: #005966;
-}
-
-.cancel-btn.MuiButton-contained {
-  background-color: #006b7f;
-  color: white;
-  border-radius: 8px;
-  text-transform: none;
-  font-size: 0.8rem;
-  padding: 4px 14px;
-}
-
-.cancel-btn.MuiButton-contained:hover {
-  background-color: #b2cbcc;
 }

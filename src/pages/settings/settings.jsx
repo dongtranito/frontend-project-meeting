@@ -11,7 +11,7 @@ export default function Settings() {
         <CardHeader className="item-group-container-header" title="Hồ sơ" />
         <Divider />
         <CardContent>
-          <Typography variant="body2">
+          <Typography variant="body2" component="div">
             <AudioRecorder />
           </Typography>
         </CardContent>

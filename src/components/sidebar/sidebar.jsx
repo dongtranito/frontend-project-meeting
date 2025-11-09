@@ -97,7 +97,7 @@ export default function Sidebar() {
 
     switch (label) {
       case "Trang chủ":
-        navigate("/");
+        navigate("/home");
         break;
       case "Đã đăng ký":
         toggleGroups();

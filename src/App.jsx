@@ -1,5 +1,5 @@
 import UploadAudio from "./components/UploadAudio";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "./components/sidebar/sidebar";
 import Header from "./components/header/header";
 import Home from "./pages/home/home";
@@ -14,20 +14,33 @@ import { AuthProvider } from "./auth/auth-context";
 import TestBackend from "./pages/test/test";
 import { GroupContext, GroupProvider } from "./context/group-context";
 function App() {
+  const user = JSON.parse(localStorage.getItem("user"));
+
   return (
     <Router>
       <AuthProvider>
         <GroupProvider>
-      <div className="app-container" >
-        <Routes>
-          <Route path="/*" element={<MainLayout />} />
+          <div className="app-container" >
+            <Routes>
 
-          <Route path="/login" element={<LoginForm />} />
-          {/* <Route path="/test" element={<TestBackend />} /> */}
+              <Route
+                path="/"
+                element={
+                  user ? <Navigate to="/home" replace /> : <Navigate to="/login" replace />
+                }
+              />
 
-        </Routes>
-      </div>
-      </GroupProvider>
+              {/* <Route path="/" element={<Navigate to="/login" replace />} /> */}
+              <Route path="/login" element={<LoginForm />} />
+
+              <Route path="/*" element={<MainLayout />} />
+
+
+              {/* <Route path="/test" element={<TestBackend />} /> */}
+
+            </Routes>
+          </div>
+        </GroupProvider>
       </AuthProvider>
     </Router>
   );

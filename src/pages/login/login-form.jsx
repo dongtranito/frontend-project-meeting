@@ -59,7 +59,8 @@ export default function Login() {
       };
 
       login(userData);
-      navigate("/");
+      console.log('data user: ', userData);
+      navigate("/home");
 
     } catch (err) {
       console.error("Lỗi đăng nhập:", err);

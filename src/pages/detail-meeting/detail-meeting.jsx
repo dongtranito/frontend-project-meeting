@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   CircularProgress,
@@ -14,6 +15,7 @@ import { Mic, Stop, FolderOpen, CloudUpload, Description } from "@mui/icons-mate
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import ChatBox from "../../components/chatbox/chatbox";
 import "./detail-meeting.css";
+import MinuteActionsMenu from "./minute-action-menu/minute-action-menu";
 
 export default function DetailMeeting() {
   const { id } = useParams();
@@ -32,7 +34,11 @@ export default function DetailMeeting() {
   const [loadingMinute, setLoadingMinute] = useState(false);
   const [minuteURL, setMinuteURL] = useState(null);
   const [uploadedUrl, setUploadedUrl] = useState("");
-  const [aiResult, setAiResult] = useState(null);
+  const navigate = useNavigate();
+
+  const [signedMinute, setSignedMinute] = useState(null);
+
+  const [transcript, setTranscript] = useState(null);
 
   useEffect(() => {
     fetchMeetingDetail();
@@ -51,6 +57,34 @@ export default function DetailMeeting() {
       }
     } catch (err) {
       setMessage("❌ Không thể tải thông tin cuộc họp.");
+    }
+  };
+
+  const handleViewSignedMinute = async () => {
+    try {
+      setLoading(true);
+      setMessage("");
+
+      const res = await fetch(`http://localhost:3001/minute/${id}`, {
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await res.json();
+      console.log('data sign:', data);
+
+      if (data.success && data.data?.signedMinute) {
+        const signedUrl = data.data.signedMinute;
+        setSignedMinute(signedUrl); 
+        window.open(signedUrl, "_blank", "noopener,noreferrer"); 
+      } else {
+        setMessage("⚠️ Biên bản hiện chưa được ký."); 
+        setSignedMinute(null);
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("❌ Lỗi khi tải biên bản đã ký.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,13 +121,29 @@ export default function DetailMeeting() {
     mediaRecorderRef.current?.stop();
   };
 
+  // const handleUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   if (!file) return;
+  //   if (!file.type.startsWith("audio/mp3")) {
+  //     setMessage("Vui lòng chọn tệp âm thanh hợp lệ");
+  //     return;
+  //   }
+  //   setAudioBlob(file);
+  //   setAudioURL(URL.createObjectURL(file));
+  //   setFileName(file.name);
+  //   setUploaded(false);
+  // };
+
   const handleUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (!file.type.startsWith("audio/mp3")) {
+
+    // ✅ Chỉ kiểm tra audio
+    if (!file.type.startsWith("audio/")) {
       setMessage("Vui lòng chọn tệp âm thanh hợp lệ");
       return;
     }
+
     setAudioBlob(file);
     setAudioURL(URL.createObjectURL(file));
     setFileName(file.name);
@@ -128,24 +178,6 @@ export default function DetailMeeting() {
     }
   };
 
-  const createTranscript = async () => {
-    if (!uploaded) return setMessage("Cần upload mẫu giọng trước");
-    setLoading(true);
-    try {
-      const res = await fetch("http://localhost:3001/create-transcript", {
-        method: "POST",
-        credentials: "include",
-      });
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-      setMessage("Đã tạo transcript thành công!");
-    } catch (err) {
-      setMessage(`❌ ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   if (!meetingDetail)
     return (
       <Box className="loading-container">
@@ -157,12 +189,13 @@ export default function DetailMeeting() {
     const audioUrlToUse = uploadedUrl || meetingDetail?.audioUrl;
 
     if (!audioUrlToUse) {
-      showDialog("⚠️ Chưa có URL file ghi âm. Hãy upload record trước khi tạo biên bản!");
+      setMessage("⚠️ Hãy upload file ghi âm trước!");
       return;
     }
 
     try {
       setLoadingMinute(true);
+
       const res = await fetch("http://localhost:3001/create-minute", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -174,20 +207,30 @@ export default function DetailMeeting() {
       });
 
       const data = await res.json();
-      if (!res.ok || data.error)
-        throw new Error(data.error || "Lỗi khi tạo biên bản");
 
-      setMinuteURL(data.pdfUrl || "http://localhost:3001/uploads/minute.pdf");
-      showDialog("✅ Biên bản đã được tạo thành công!");
+      if (!res.ok || data.error) {
+        throw new Error(data.error || "Lỗi khi tạo biên bản");
+      }
+
+      const officialUrl = data.data?.url;
+      setMinuteURL(officialUrl);
+
+      setMeetingDetail(prev => ({
+        ...prev,
+        minutes: {
+          ...(prev?.minutes || {}),
+          officeMinute: officialUrl,
+        },
+      }));
+
+      setMessage("✅ Tạo biên bản thành công!");
+      console.log('message thanh cong');
     } catch (err) {
-      console.error("Lỗi tạo biên bản:", err);
-      showDialog("❌ Không thể tạo biên bản: " + err.message);
+      setMessage(`❌ ${err.message}`);
     } finally {
       setLoadingMinute(false);
     }
-
   };
-
 
   const handleUploadSampleMinute = async (e) => {
     const file = e.target.files[0];
@@ -223,6 +266,33 @@ export default function DetailMeeting() {
     } catch (err) {
       console.error(err);
       alert("❌ Lỗi khi upload file biên bản mẫu");
+    }
+  };
+
+
+  const createTranscript = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`http://localhost:3001/meeting/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include"
+      });
+
+      const data = await res.json();
+
+      if (data?.success && data?.data?.transcript) {
+        setTranscript(data.data.transcript);
+      } else {
+        alert("Không tìm thấy transcript cho cuộc họp này!");
+      }
+    } catch (error) {
+      console.error("Lỗi khi gọi API transcript:", error);
+      alert("Đã xảy ra lỗi khi lấy transcript!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -320,11 +390,44 @@ export default function DetailMeeting() {
                   variant="outlined"
                   startIcon={<Description />}
                   onClick={createTranscript}
-                  disabled={loading || (!uploaded && !meetingDetail?.audioUrl)}
+                  disabled={loading}
                 >
-                  Tạo transcript
+                  {loading ? "Đang tải..." : "Hiển thị transcript"}
                 </Button>
               </div>
+              {transcript && (
+                <div style={{ marginTop: "20px" }}>
+                  <Typography variant="h6" gutterBottom>
+                    Transcript:
+                  </Typography>
+
+                  <div
+                    style={{
+                      background: "#f9f9f9",
+                      padding: "12px",
+                      borderRadius: "8px",
+                      maxHeight: "400px",
+                      overflowY: "auto",
+                    }}
+                  >
+                    {transcript.segments?.map((seg, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          marginBottom: "8px",
+                          paddingBottom: "6px",
+                          borderBottom: "1px solid #eee",
+                        }}
+                      >
+                        <strong style={{ color: "#1976d2" }}>{seg.speaker}</strong>{" "}
+                        <span style={{ color: "#888" }}>[{seg.start}]</span>:
+                        <span style={{ marginLeft: "4px" }}>{seg.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
 
               {loading && (
                 <div className="loading-section">
@@ -348,103 +451,71 @@ export default function DetailMeeting() {
         {/* === TAB 2 === */}
         <TabPanel value="2">
           <div className="meeting-tab">
-            <div className="meeting-content">
+            <div className="meeting-minute-content">
+
               <div className="minute-header">
                 <h2>Biên bản</h2>
-
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={createMinute}
-                  disabled={loadingMinute}
-                  sx={{ mb: 2 }}
-                >
-                  {loadingMinute ? "Đang tạo biên bản..." : "Tạo biên bản"}
-                </Button>
+                <div className="minute-actions">
+                  <MinuteActionsMenu
+                    createMinute={createMinute}
+                    handleUploadSampleMinute={handleUploadSampleMinute}
+                    navigate={navigate}
+                    id={id}
+                    loadingMinute={loadingMinute}
+                  />
+                </div>
               </div>
 
-              {minuteURL ? (
-                <iframe
-                  src={minuteURL}
-                  title="Meeting Minute PDF"
-                  width="100%"
-                  height="600px"
-                  style={{
-                    border: "1px solid #ccc",
-                    borderRadius: "8px",
-                    marginTop: "12px",
-                  }}
-                />
-              ) : meetingDetail?.minutes?.sampleMinute ? (
-                <div
-                  style={{
-                    marginTop: "16px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "10px",
-                  }}
-                >
-                  <p>📄 Biên bản mẫu đã được tải lên:</p>
-
-                  <a
-                    href={meetingDetail.minutes.sampleMinute}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      color: "#1976d2",
-                      textDecoration: "underline",
-                      wordBreak: "break-all",
-                    }}
-                  >
-                    {meetingDetail.minutes.sampleMinute}
-                  </a>
-
+              <div className="minute-body">
+                {loadingMinute ? (
+                  <p style={{ color: "#555" }}>⏳ Đang tạo biên bản...</p>
+                ) : meetingDetail?.minutes?.signedMinute ? (
+                  <Typography variant="body2" color="text.secondary">
+                    Xem biên bản đã kí tại: {meetingDetail.minutes.signedMinute}
+                  </Typography>
+                ) : meetingDetail?.minutes?.officeMinute || minuteURL ? (
+                  <iframe
+                    src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
+                      minuteURL || meetingDetail.minutes.officeMinute || ""
+                    )}`}
+                    width="100%"
+                    height="100%"
+                    style={{ border: "none" }}
+                    title="Official Minute"
+                  />
+                ) : meetingDetail?.minutes?.sampleMinute ? (
                   <iframe
                     src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
                       meetingDetail.minutes.sampleMinute
                     )}`}
                     width="100%"
-                    height="600px"
-                    title="Sample Minute Preview"
-                    style={{
-                      border: "1px solid #ccc",
-                      borderRadius: "8px",
-                    }}
+                    height="100%"
+                    style={{ border: "none" }}
+                    title="Sample Minute"
                   />
-                </div>
-              ) : (
-                <div
-                  style={{
-                    marginTop: "16px",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    gap: "12px",
-                  }}
-                >
-                  <p style={{ color: "#777" }}>
-                    ⚠️ Chưa có biên bản mẫu nào được tải lên.
-                  </p>
+                ) : (
+                  <p style={{ color: "#777" }}>⚠️ Chưa có biên bản nào được tải lên.</p>
+                )}
+              </div>
 
+              <div className="minute-actions">
+                <div style={{ marginTop: "10px", textAlign: "center" }}>
                   <Button
-                    variant="outlined"
-                    component="label"
-                    color="secondary"
-                    startIcon={<Description />}
+                    variant="contained"
+                    color="primary"
+                    onClick={handleViewSignedMinute}
+                    disabled={loading}
                   >
-                    📎 Thêm mẫu biên bản
-                    <input
-                      type="file"
-                      accept=".docx"
-                      hidden
-                      onChange={handleUploadSampleMinute}
-                    />
+                    {loading ? "Đang tải..." : "Xem biên bản đã ký"}
                   </Button>
                 </div>
-              )}
+
+
+              </div>
             </div>
 
-            <ChatBox />
+            <div className="chatbox-wrapper">
+              <ChatBox /></div>
           </div>
         </TabPanel>
       </TabContext>

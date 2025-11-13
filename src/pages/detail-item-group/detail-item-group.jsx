@@ -6,10 +6,10 @@ import { AuthContext } from "../../auth/auth-context";
 
 import InviteMemberDialog from './invite-member-dialog/invite-member-dialog';
 import CreateMeetingDialog from './create-meeting-dialog/create-meeting-dialog';
-import ChatBox from '../../components/chatbox/chatbox';
 import MemberItem from "./item-member/item-member";
 import './detail-item-group.css';
 import MeetingItem from "./item-meeting/item-meeting";
+import FloatingChatStream from "../../components/floating-chatbot/floating-chatbot";
 
 export default function DetailItemGroup() {
   const { id } = useParams();
@@ -153,23 +153,6 @@ export default function DetailItemGroup() {
                   ) || groupDetail.owner_id === user?.email;
 
                 return (
-                  // <MemberItem
-                  //   key={index}
-                  //   member={member}
-                  //   groupId={id}
-                  //   isOwner={isOwner}
-                  //   currentUserEmail={user?.email}
-                  //   token={user?.token}
-                  //   onRemoved={() => {
-                  //     // Cập nhật lại danh sách sau khi xóa
-                  //     setGroupDetail((prev) => ({
-                  //       ...prev,
-                  //       members: prev.members.filter(
-                  //         (m) => m.user_id !== member.user_id
-                  //       ),
-                  //     }));
-                  //   }}
-                  // />
                   <MemberItem
                     key={index}
                     member={member}
@@ -241,9 +224,7 @@ export default function DetailItemGroup() {
               )}
             </div>
 
-            <div className="chatbox-wrapper">
-              <ChatBox />
-            </div>
+            <FloatingChatStream groupId={id} />
           </div>
         </TabPanel>
       </TabContext>

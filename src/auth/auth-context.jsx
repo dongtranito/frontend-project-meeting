@@ -1,40 +1,3 @@
-// import React, { createContext, useEffect, useState } from "react";
-
-// export const AuthContext = createContext();
-
-// export const AuthProvider = ({ children }) => {
-//   const [isLoggedIn, setIsLoggedIn] = useState(false);
-//   const [user, setUser] = useState(null);
-
-//   // Load user từ localStorage khi app khởi động
-//   useEffect(() => {
-//     const storedUser = localStorage.getItem("user");
-//     if (storedUser) {
-//       setUser(JSON.parse(storedUser));
-//       setIsLoggedIn(true);
-//     }
-//   }, []);
-
-//   // Lưu toàn bộ userData (có cả token) vào context
-//   const login = (userData) => {
-//     setUser(userData);
-//     setIsLoggedIn(true);
-//     localStorage.setItem("user", JSON.stringify(userData)); // lưu để load lại khi refresh
-//   };
-
-//   const logout = () => {
-//     setUser(null);
-//     setIsLoggedIn(false);
-//     localStorage.removeItem("user");
-//   };
-
-//   return (
-//     <AuthContext.Provider value={{ user, isLoggedIn, login, logout }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
-
 import { createContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 
@@ -46,42 +9,63 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [logoutTimer, setLogoutTimer] = useState(null);
 
-  // Khi app khởi động
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const userData = JSON.parse(storedUser);
-      const token = userData?.token;
-      if (token && !isTokenExpired(token)) {
-        setUser(userData);
-        setIsLoggedIn(true);
-        startAutoLogout(token);
-      } else {
-        handleLogout();
-      }
-    }
-  }, []);
-
-  // Kiểm tra token hết hạn
   const isTokenExpired = (token) => {
-    try {
-      const decoded = jwtDecode(token);
-      return decoded.exp * 1000 < Date.now();
-    } catch {
-      return true;
-    }
-  };
+  try {
+    const decoded = jwtDecode(token);
+    console.log("✅ Token decode:", decoded);
+    console.log("exp:", decoded.exp * 1000, "now:", Date.now());
+    return decoded.exp * 1000 < Date.now();
+  } catch (err) {
+    console.error("❌ Decode lỗi:", err);
+    return true;
+  }
+};
 
-  // Đặt timer tự động logout
+useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+  console.log("🔍 storedUser:", storedUser);
+
+  if (storedUser) {
+    const userData = JSON.parse(storedUser);
+    const token = userData?.token;
+    console.log("🔍 token:", token);
+
+    if (token && !isTokenExpired(token)) {
+      console.log("✅ Token hợp lệ, giữ đăng nhập");
+      setUser(userData);
+      setIsLoggedIn(true);
+      startAutoLogout(token);
+    } else {
+      console.warn("⚠️ Token hết hạn hoặc lỗi, logout");
+      // handleLogout();
+    }
+  } else {
+    console.warn("❌ Không tìm thấy user trong localStorage");
+  }
+}, []);
+
+
   const startAutoLogout = (token) => {
     const decoded = jwtDecode(token);
+    console.log("iat:", new Date(decoded.iat * 1000));
+    console.log("exp:", new Date(decoded.exp * 1000));
+    console.log("Token sống (phút):", (decoded.exp - decoded.iat) / 60);
+
     const expiresIn = decoded.exp * 1000 - Date.now();
+    console.log("Auto logout in (ms):", expiresIn);
     if (logoutTimer) clearTimeout(logoutTimer);
+    if (expiresIn <= 0) {
+      console.warn("Token expired already!");
+      handleLogout();
+      return;
+    }
     const timer = setTimeout(() => {
+      console.log("Token expired, logging out...");
       handleLogout();
     }, expiresIn);
     setLogoutTimer(timer);
   };
+
 
   // Login
   const login = (userData) => {

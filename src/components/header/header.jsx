@@ -16,17 +16,13 @@ export default function Header({ onGroupCreated }) {
       }}
 
       style={{
-        display: "flex", 
+        display: "flex",
         justifyContent: "end"
       }}
     >
-      {/* <div className="header-name">Group name</div> */}
 
       <div className="right-header-container">
         <CreateGroupDialog onGroupCreated={onGroupCreated} />
-        {/* <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-          NA
-        </Avatar> */}
       </div>
     </Box>
   );

@@ -22,6 +22,8 @@ import './item-group.css';
 import { AuthContext } from './../../auth/auth-context';
 import UpdateGroupDialog from "./update-group/update-group";
 
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+
 export default function ItemGroup({ id, title, subheader, description }) {
   const [openDialog, setOpenDialog] = useState(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
@@ -84,30 +86,6 @@ export default function ItemGroup({ id, title, subheader, description }) {
 
   const handleCloseUpdate = () => setOpenUpdateDialog(false);
 
-  // const handleUpdateGroup = async () => {
-  //   try {
-  //     const res = await fetch(`http://localhost:3001/update-group/${id}`, {
-  //       method: "PUT",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         // Authorization: `Bearer ${user.token}`,
-  //       },
-  //       credentials: "include",
-  //       body: JSON.stringify({
-  //         name: newName,
-  //         description: newDescription,
-  //       }),
-  //     });
-
-  //     if (!res.ok) throw new Error("Cập nhật nhóm thất bại");
-  //     alert("Nhóm đã được cập nhật thành công!");
-  //     setOpenUpdateDialog(false);
-  //     window.location.reload();
-  //   } catch (err) {
-  //     console.error(err);
-  //     alert("Có lỗi xảy ra khi cập nhật nhóm.");
-  //   }
-  // };
   const handleUpdateGroup = async ({ name, description }) => {
     setLoading(true);
     try {
@@ -165,7 +143,7 @@ export default function ItemGroup({ id, title, subheader, description }) {
           </Button>
         )}
         <IconButton aria-label="settings" onClick={handleOpenDialog}>
-          <MoreVertIcon />
+          <DeleteOutlinedIcon />
         </IconButton>
       </div>
 
@@ -192,39 +170,6 @@ export default function ItemGroup({ id, title, subheader, description }) {
         </DialogActions>
       </Dialog>
 
-      {/* <Dialog open={openUpdateDialog} onClose={handleCloseUpdate}>
-        <DialogTitle>Cập nhật nhóm</DialogTitle>
-        <DialogContent>
-          <TextField
-            margin="dense"
-            label="Tên nhóm"
-            fullWidth
-            variant="outlined"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="Mô tả nhóm"
-            fullWidth
-            multiline
-            rows={3}
-            variant="outlined"
-            value={newDescription}
-            onChange={(e) => setNewDescription(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseUpdate}>Hủy</Button>
-          <Button
-            onClick={handleUpdateGroup}
-            variant="contained"
-            color="primary"
-          >
-            Lưu thay đổi
-          </Button>
-        </DialogActions>
-      </Dialog> */}
       <UpdateGroupDialog
         open={openUpdateDialog}
         onClose={handleCloseUpdate}
@@ -234,6 +179,5 @@ export default function ItemGroup({ id, title, subheader, description }) {
         loading={loading}
       />
     </Card>
-
   );
 }

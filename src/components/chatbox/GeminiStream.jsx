@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 
@@ -26,7 +25,8 @@ export default function GeminiStream() {
       const res = await fetch("http://localhost:3001/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: input, meetingId: "6RyL9qPSdT3gYTgN92iJ"}),
+        body: JSON.stringify({ prompt: input, groupId: "mjwydpc1OCt3RKLhP0bL"}),
+        credentials: "include"
       });
 
       const reader = res.body.getReader();

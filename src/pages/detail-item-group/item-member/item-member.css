@@ -18,9 +18,9 @@
 
 .member-info {
   display: flex;
-  flex-direction: column; /* ✅ Xếp name-role trên, email dưới */
+  flex-direction: column; 
   align-items: flex-start;
-  gap: 4px; /* khoảng cách nhỏ giữa 2 phần */
+  gap: 4px; 
 }
 
 .name-role {

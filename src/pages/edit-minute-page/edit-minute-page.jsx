@@ -1,36 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TextField, Button, Box } from "@mui/material";
+import { SetMeal } from "@mui/icons-material";
 
 export default function EditMinutePage() {
   const { id } = useParams();    // meetingId
   const [formData, setFormData] = useState({});
   const [officialUrl, setOfficialUrl] = useState("");
+  
+    const [message, setMessage] = useState("");
 
-  // ✅ Lấy dữ liệu biên bản hiện có (minutes.aiResult + officeMinute URL)
-  // useEffect(() => {
-  //   const fetchDetail = async () => {
-  //     const res = await fetch(`http://localhost:3001/meeting/${id}`,
-  //       {
-  //           method: "GET",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           credentials: "include", // nếu bạn dùng cookie/session
-  //         }
-  //     );
-  //     const data = await res.json();
-  //     console.log('data: ', data);
-  //           console.log('data.data.title: ', data.data.title);
-  //           console.log('data.data.minute.officialMinute: ', data.data.minutes.officeMinute);
-
-  //     if (data?.data.minutes) {
-  //       setFormData(data.data.minutes.officeMinute || {});
-  //       setOfficialUrl(data.data.minutes.officeMinute);
-  //     }
-  //   };
-  //   fetchDetail();
-  // }, [id]);
   useEffect(() => {
     const fetchDetail = async () => {
       const res = await fetch(`http://localhost:3001/minute/${id}`,
@@ -39,7 +18,7 @@ export default function EditMinutePage() {
             headers: {
               "Content-Type": "application/json",
             },
-            credentials: "include", // nếu bạn dùng cookie/session
+            credentials: "include", 
           }
       );
       const data = await res.json();
@@ -58,7 +37,7 @@ export default function EditMinutePage() {
             headers: {
               "Content-Type": "application/json",
             },
-            credentials: "include", // nếu bạn dùng cookie/session
+            credentials: "include", 
           }
       );
       const data_ = await res_.json();
@@ -75,12 +54,10 @@ export default function EditMinutePage() {
     fetchDetail();
   }, [id]);
 
-  // ✅ Cập nhật dữ liệu từng input
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ✅ Gửi cập nhật lên server
   const handleSave = async () => {
     const res = await fetch(`http://localhost:3001/minute/${id}/update`, {
       method: "PUT",
@@ -90,13 +67,14 @@ export default function EditMinutePage() {
     });
 
     const result = await res.json();
-    if (result.success) alert("✅ Cập nhật thành công!");
-    else alert("❌ Lỗi cập nhật!");
+    if (result.success) setMessage("✅ Cập nhật thành công!");
+      // alert("✅ Cập nhật thành công!"); 
+    // else alert("❌ Lỗi cập nhật!");
+    else setMessage("❌ Lỗi cập nhật!");
   };
 
   return (
     <div style={{ display: "flex", height: "100vh", gap: "10px", padding: "10px" }}>
-      {/* ✅ BÊN TRÁI: Hiển thị biên bản gốc */}
       <div style={{ width: "55%", border: "1px solid #ddd" }}>
         {officialUrl ? (
           <iframe
@@ -113,7 +91,6 @@ export default function EditMinutePage() {
         )}
       </div>
 
-      {/* ✅ BÊN PHẢI: Form chỉnh sửa */}
       <div style={{ width: "45%", overflowY: "auto", padding: "10px" }}>
         <h2>✏️ Chỉnh sửa biên bản</h2>
 

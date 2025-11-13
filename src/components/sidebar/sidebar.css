@@ -5,7 +5,6 @@
   background-color: #f7f9fa;
 }
 
-/* Sidebar */
 .sidebar {
   width: var(--sidebar-width);
   background-color: #004b59;
@@ -23,12 +22,10 @@
   z-index: 10;
 }
 
-/* Khi thu gọn */
 .sidebar.collapsed {
   width: 80px;
 }
 
-/* Material UI icon alignment */
 .sidebar .MuiListItemIcon-root {
   min-width: 40px;
   justify-content: center;
@@ -44,7 +41,6 @@
   width: 80px;
 }
 
-/* Project / Header section in Sidebar */
 .project {
   height: 100px;
   display: flex;
@@ -65,7 +61,6 @@
   color: white;
 }
 
-/* Ẩn thông tin khi thu gọn */
 .project-meta {
   /* margin-left: 10px; */
   transition: opacity 0.3s ease;
@@ -88,18 +83,15 @@
   color: #b0bec5;
 }
 
-/* Ẩn mũi tên mở rộng khi thu gọn */
 .sidebar.collapsed .expand {
   display: none;
 }
 
-/* Nav item */
 .nav-item {
   color: white;
   transition: 0.2s ease;
 }
 
-/* Active states */
 .nav-item.active-border {
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 8px;
@@ -111,7 +103,6 @@
   border-radius: 8px;
 }
 
-/* Sub-item */
 .sub-item {
   padding-left: 32px;
   color: #cfd8dc;
@@ -130,19 +121,16 @@
   border-radius: 6px;
 }
 
-/* Icon màu khi hover hoặc active */
 .sub-item:hover .MuiSvgIcon-root,
 .active-sub .MuiSvgIcon-root {
   color: #4fc3f7 !important;
 }
 
-/* Separator */
 .sep {
   border-color: rgba(255, 255, 255, 0.2);
   margin: 10px 0;
 }
 
-/* Content (phần bên phải) */
 .main-content {
   position: absolute;
   top: var(--header-height);
@@ -156,7 +144,6 @@
   transition: left 0.3s ease, width 0.3s ease;
 }
 
-/* Hover effects */
 .MuiListItemButton-root:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
@@ -178,7 +165,6 @@
   margin-left: 10px;
 }
 
-/* Active state for MUI items */
 .sidebar .MuiListItemButton-root.Mui-selected {
   background-color: rgba(255, 255, 255, 0.25);
   border-radius: 8px;

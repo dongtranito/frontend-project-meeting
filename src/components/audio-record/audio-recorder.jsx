@@ -1,235 +1,3 @@
-// import React, { useState, useRef, useContext } from "react";
-// import {
-//   Card,
-//   CardContent,
-//   Typography,
-//   IconButton,
-//   Button,
-//   CircularProgress,
-// } from "@mui/material";
-// import { Mic, Stop, CloudUpload } from "@mui/icons-material";
-// import { AuthContext } from "../../auth/auth-context";
-// import "./audio-recorder.css";
-// export default function AudioRecorder() {
-//   const { user } = useContext(AuthContext);
-//   const userEmail = user?.email;
-
-//   const [isRecording, setIsRecording] = useState(false);
-//   const [audioURL, setAudioURL] = useState(null);
-//   const [loading, setLoading] = useState(false);
-//   const [message, setMessage] = useState("");
-//   const [uploadedAudioURL, setUploadedAudioURL] = useState(null);
-
-
-//   const mediaRecorderRef = useRef(null);
-//   const audioChunksRef = useRef([]);
-
-//   const handleStartRecording = async () => {
-//     setMessage("");
-//     try {
-//       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-//       mediaRecorderRef.current = new MediaRecorder(stream);
-//       audioChunksRef.current = [];
-
-//       mediaRecorderRef.current.ondataavailable = (event) => {
-//         if (event.data.size > 0) {
-//           audioChunksRef.current.push(event.data);
-//         }
-//       };
-
-//       mediaRecorderRef.current.onstop = () => {
-//         const mimeType = mediaRecorderRef.current.mimeType || "audio/mp3";
-//         const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
-//         const url = URL.createObjectURL(audioBlob);
-//         setAudioURL(url);
-//       };
-
-//       mediaRecorderRef.current.start();
-//       setIsRecording(true);
-//     } catch (err) {
-//       console.error("Không thể ghi âm:", err);
-//       setMessage("Trình duyệt không cho phép truy cập micro.");
-//     }
-//   };
-
-//   const handleStopRecording = () => {
-//     if (mediaRecorderRef.current) {
-//       mediaRecorderRef.current.stop();
-//       setIsRecording(false);
-//     }
-//   };
-
-//   const handleUpload = async () => {
-//     if (!audioURL) {
-//       setMessage("Bạn cần ghi âm trước khi upload!");
-//       return;
-//     }
-//     if (!userEmail) {
-//       setMessage("Không tìm thấy email người dùng.");
-//       return;
-//     }
-
-//     setLoading(true);
-//     setMessage("");
-
-//     try {
-//       const audioBlob = new Blob(audioChunksRef.current, {
-//         type: mediaRecorderRef.current.mimeType || "audio/mp3",
-//       });
-//       const formData = new FormData();
-//       formData.append("file", audioBlob, "sample.mp3");
-//       formData.append("email", userEmail);
-
-//       const res = await fetch("http://localhost:3001/create-sample-voice", {
-//         method: "POST",
-//         body: formData,
-//         credentials: "include",
-//       });
-
-//       const data = await res.json();
-
-//       if (res.ok) {
-//         setMessage("Upload thành công!");
-//         console.log("Server response:", data);
-//         setUploadedAudioURL(data.url);
-//       } else {
-//         setMessage(`Lỗi: ${data.error || "Không rõ"}`);
-//       }
-//     } catch (err) {
-//       console.error(err);
-//       setMessage(" Upload thất bại!");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     // <div className="audio-recorder-container">
-//     //   <h2>Tạo mẫu giọng nói</h2>
-//     //   {userEmail ? (
-//     //     <p>Email: <b>{userEmail}</b></p>
-//     //   ) : (
-//     //     <p className="warning-text">⚠️ Bạn chưa đăng nhập</p>
-//     //   )}
-
-//     //   <div className="recorder-controls">
-//     //     {!isRecording ? (
-//     //       <button
-//     //         onClick={handleStartRecording}
-//     //         disabled={loading || !userEmail}
-//     //         className="btn record-btn"
-//     //       >
-//     //         🎙️ Bắt đầu ghi âm
-//     //       </button>
-//     //     ) : (
-//     //       <button
-//     //         onClick={handleStopRecording}
-//     //         disabled={loading}
-//     //         className="btn stop-btn"
-//     //       >
-//     //         ⏹ Dừng ghi âm
-//     //       </button>
-//     //     )}
-//     //   </div>
-
-//     //   {audioURL && (
-//     //     <div className="audio-section">
-//     //       <audio src={audioURL} controls />
-//     //       <button
-//     //         onClick={handleUpload}
-//     //         disabled={loading}
-//     //         className="btn upload-btn"
-//     //       >
-//     //         {loading ? "Đang upload..." : "⬆️ Upload mẫu giọng nói"}
-//     //       </button>
-//     //     </div>
-//     //   )}
-
-//     //   {message && <p className="message-text">{message}</p>}
-//     // </div>
-//     <Card className="recorder-card">
-//       <CardContent>
-//         <Typography variant="h6" className="recorder-title">
-//           🎙️ Tạo mẫu giọng nói
-//         </Typography>
-
-//         {userEmail ? (
-//           <Typography variant="body2">
-//             Email: <b>{userEmail}</b>
-//           </Typography>
-//         ) : (
-//           <Typography variant="body2" color="error">
-//             ⚠️ Bạn chưa đăng nhập
-//           </Typography>
-//         )}
-
-//         {/* 🎛 Nút ghi âm */}
-//         <div className="recorder-actions">
-//           <IconButton
-//             onClick={isRecording ? handleStopRecording : handleStartRecording}
-//             disabled={loading || !userEmail}
-//             className={`record-btn ${isRecording ? "recording" : ""}`}
-//           >
-//             {isRecording ? <Stop /> : <Mic />}
-//           </IconButton>
-//           <Typography variant="body2">
-//             {isRecording ? "Dừng ghi" : "Ghi âm"}
-//           </Typography>
-//         </div>
-
-//         {/* 🔊 Hiển thị audio sau khi ghi */}
-//         {audioURL && (
-//           <div className="audio-preview">
-//             <Typography variant="body2" className="file-name">
-//               🎧 Đã ghi xong
-//             </Typography>
-//             <audio controls src={audioURL} style={{ width: "100%", marginTop: 8 }} />
-//           </div>
-//         )}
-
-//         {/* Audio đã upload */}
-//         {uploadedAudioURL && (
-//           <div className="audio-preview uploaded">
-//             <Typography variant="body2">🎵 Mẫu giọng nói đã upload</Typography>
-//             <audio controls src={uploadedAudioURL} style={{ width: "100%", marginTop: 8 }} />
-//           </div>
-//         )}
-
-//         {/* 📤 Nút upload */}
-//         {audioURL && (
-//           <div className="action-buttons">
-//             <Button
-//               variant="contained"
-//               startIcon={<CloudUpload />}
-//               onClick={handleUpload}
-//               disabled={loading}
-//             >
-//               {loading ? "Đang upload..." : "Upload mẫu giọng nói"}
-//             </Button>
-//           </div>
-//         )}
-
-//         {/* ⏳ Loading */}
-//         {loading && (
-//           <div className="loading-section">
-//             <CircularProgress size={30} />
-//           </div>
-//         )}
-
-//         {/* ✅ / ❌ Thông báo */}
-//         {message && (
-//           <Typography
-//             variant="body2"
-//             className={`message ${message.startsWith("✅") ? "success" : "error"}`}
-//           >
-//             {message}
-//           </Typography>
-//         )}
-//       </CardContent>
-//     </Card>
-//   );
-// }
-
 import React, { useState, useRef, useEffect, useContext } from "react";
 import {
   Card,
@@ -259,25 +27,26 @@ export default function AudioRecorder() {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
 
-  useEffect(() => {
-    const fetchUploadedAudio = async () => {
-      if (!userEmail) return;
-      try {
-        const res = await fetch(
-          `http://localhost:3001/getSampleVoice`,
-          { credentials: "include" }
-        );
-        const data = await res.json();
-        if (data.success && data.data?.sampleVoice) {
-          setUploadedAudioURL(data.data.sampleVoice);
-          setUploaded(true);
-        }
-      } catch (err) {
-        console.error("Không tải được file đã upload:", err);
-      }
-    };
-    fetchUploadedAudio();
-  }, [userEmail]);
+  const fetchUploadedAudio = async () => {
+  if (!userEmail) return;
+  try {
+    const res = await fetch(`http://localhost:3001/getSampleVoice`, {
+      credentials: "include",
+    });
+    const data = await res.json();
+    if (data.success && data.data?.sampleVoice) {
+      setUploadedAudioURL(data.data.sampleVoice);
+      setUploaded(true);
+    }
+  } catch (err) {
+    console.error("Không tải được file đã upload:", err);
+  }
+};
+
+useEffect(() => {
+  fetchUploadedAudio();
+}, [userEmail]);
+
 
   const startRecording = async () => {
     setMessage("");
@@ -314,7 +83,6 @@ export default function AudioRecorder() {
     }
   };
 
-  // === Upload lên server ===
   const uploadToServer = async () => {
     if (!audioBlob) {
       setMessage("❌ Chưa có file để upload");
@@ -340,11 +108,14 @@ export default function AudioRecorder() {
       });
 
       const data = await res.json();
+      console.log('data sample voice: ', data.data);
 
       if (res.ok && data.success) {
         setUploadedAudioURL(data.data.url);
         setUploaded(true);
         setMessage("✅ Upload thành công!");
+
+        await fetchUploadedAudio();
       } else {
         setMessage(`❌ Lỗi: ${data.error || "Không rõ"}`);
       }
@@ -380,19 +151,19 @@ export default function AudioRecorder() {
           </div>
         </div>
 
-        {audioURL && (
-          <div className="audio-preview">
-            <Typography className="file-name">🎧 File vừa ghi / chọn: {fileName}</Typography>
-            <audio controls src={audioURL} />
-          </div>
-        )}
-
-        {uploadedAudioURL && uploaded && (
+        {uploaded && uploadedAudioURL ? (
           <div className="audio-preview">
             <Typography>🎵 File đã upload:</Typography>
             <audio controls src={uploadedAudioURL} />
           </div>
-        )}
+        ) : audioURL ? (
+          // Nếu chưa upload mà có file ghi âm -> hiển thị file ghi âm
+          <div className="audio-preview">
+            <Typography className="file-name">🎧 File vừa ghi: {fileName}</Typography>
+            <audio controls src={audioURL} />
+          </div>
+        ) : null}
+
 
         <div className="action-buttons">
           <Button

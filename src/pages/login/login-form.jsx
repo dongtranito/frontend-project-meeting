@@ -21,7 +21,7 @@ const auth = getAuth(app);
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
-export default function Login() {
+export default function LoginForm() {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
   const [error, setError] = useState("");
@@ -55,7 +55,7 @@ export default function Login() {
         email: data.email,
         name: user.displayName,
         picture: user.photoURL,
-        // token: data.accessToken,
+        token: data.accessToken,
       };
 
       login(userData);

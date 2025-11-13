@@ -13,9 +13,9 @@ import {
 } from "@mui/material";
 import { Mic, Stop, FolderOpen, CloudUpload, Description } from "@mui/icons-material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import ChatBox from "../../components/chatbox/chatbox";
 import "./detail-meeting.css";
 import MinuteActionsMenu from "./minute-action-menu/minute-action-menu";
+import FloatingChatStream from "../../components/floating-chatbot/floating-chatbot";
 
 export default function DetailMeeting() {
   const { id } = useParams();
@@ -51,6 +51,7 @@ export default function DetailMeeting() {
         credentials: "include",
       });
       const data = await res.json();
+      console.log('data meeting audio:', data.data);
       setMeetingDetail(data.data);
       if (data.success && data.data?.audioUrl) {
         setUploaded(true);
@@ -74,10 +75,10 @@ export default function DetailMeeting() {
 
       if (data.success && data.data?.signedMinute) {
         const signedUrl = data.data.signedMinute;
-        setSignedMinute(signedUrl); 
-        window.open(signedUrl, "_blank", "noopener,noreferrer"); 
+        setSignedMinute(signedUrl);
+        window.open(signedUrl, "_blank", "noopener,noreferrer");
       } else {
-        setMessage("⚠️ Biên bản hiện chưa được ký."); 
+        setMessage("⚠️ Biên bản hiện chưa được ký.");
         setSignedMinute(null);
       }
     } catch (err) {
@@ -91,6 +92,10 @@ export default function DetailMeeting() {
   const handleChange = (e, newValue) => setValue(newValue);
 
   const startRecording = async () => {
+    // if (uploaded) {
+    //   setMessage("🚫 Bạn đã upload bản ghi âm này. Không thể ghi lại nữa.");
+    //   return;
+    // }
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
@@ -106,6 +111,7 @@ export default function DetailMeeting() {
         setAudioBlob(blob);
         setAudioURL(URL.createObjectURL(blob));
         setFileName("recorded_audio.mp3");
+        setUploaded(false);
       };
 
       recorder.start();
@@ -121,24 +127,11 @@ export default function DetailMeeting() {
     mediaRecorderRef.current?.stop();
   };
 
-  // const handleUpload = (e) => {
-  //   const file = e.target.files[0];
-  //   if (!file) return;
-  //   if (!file.type.startsWith("audio/mp3")) {
-  //     setMessage("Vui lòng chọn tệp âm thanh hợp lệ");
-  //     return;
-  //   }
-  //   setAudioBlob(file);
-  //   setAudioURL(URL.createObjectURL(file));
-  //   setFileName(file.name);
-  //   setUploaded(false);
-  // };
-
   const handleUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // ✅ Chỉ kiểm tra audio
+    // Chỉ kiểm tra audio
     if (!file.type.startsWith("audio/")) {
       setMessage("Vui lòng chọn tệp âm thanh hợp lệ");
       return;
@@ -167,10 +160,18 @@ export default function DetailMeeting() {
 
       const data = await res.json();
       if (data.error) throw new Error(data.error);
+      console.log('data record meeting:', data.data);
 
-      setUploadedUrl(data.data?.url || "");
-      setUploaded(true);
-      setMessage("Đã gửi mẫu giọng lên server");
+      if (res.ok && data.success) {
+        setUploadedUrl(data.data?.url || "");
+        setUploaded(true);
+        setMessage("Đã gửi đoạn ghi âm lên server");
+
+        await fetchMeetingDetail();
+
+      } else {
+        setMessage(`❌ Lỗi: ${data.error || "Không rõ"}`);
+      }
     } catch (err) {
       setMessage(`Lỗi: ${err.message}`);
     } finally {
@@ -257,15 +258,18 @@ export default function DetailMeeting() {
 
       const data = await res.json();
       if (!data.success) {
-        alert("❌ Upload thất bại: " + data.error);
+        // alert("❌ Upload thất bại: " + data.error);
+        setMessage(`Upload thất bại: ${data.error}`)
         return;
       }
 
-      alert("✅ Upload biên bản mẫu thành công!");
+      // alert("✅ Upload biên bản mẫu thành công!");
+      setMessage("✅ Upload biên bản mẫu thành công!");
       await fetchMeetingDetail();
     } catch (err) {
       console.error(err);
-      alert("❌ Lỗi khi upload file biên bản mẫu");
+      // alert("❌ Lỗi khi upload file biên bản mẫu");
+      setMessage("❌ Lỗi khi upload file biên bản mẫu");
     }
   };
 
@@ -317,7 +321,7 @@ export default function DetailMeeting() {
 
         {/* === TAB 1 === */}
         <TabPanel value="1">
-          <Card className="recorder-card">
+          <Card className="recorder-card" sx={{ borderRadius: "12px" }}>
             <CardContent>
               <Typography variant="h6" className="recorder-title">
                 🎙️ Ghi âm hoặc tải tệp âm thanh
@@ -384,7 +388,7 @@ export default function DetailMeeting() {
                   onClick={uploadToServer}
                   disabled={loading || uploaded}
                 >
-                  {uploaded ? "✅ Đã gửi mẫu giọng" : "Gửi lên server"}
+                  {uploaded ? "✅ Đã upload lên server" : "Gửi lên server"}
                 </Button>
                 <Button
                   variant="outlined"
@@ -514,10 +518,13 @@ export default function DetailMeeting() {
               </div>
             </div>
 
-            <div className="chatbox-wrapper">
-              <ChatBox /></div>
+            {/* <div className="chatbox-wrapper">
+              <ChatBox />
+            </div> */}
           </div>
         </TabPanel>
+        {/* <FloatingChatBox meetingId={id} /> */}
+        <FloatingChatStream meetingId={id} />
       </TabContext>
     </Box>
   );

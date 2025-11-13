@@ -23,7 +23,6 @@ export default function UpdateGroupDialog({
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Đồng bộ dữ liệu mỗi khi props thay đổi
   useEffect(() => {
     setName(initialName);
     setDescription(initialDescription);

@@ -88,106 +88,136 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
 
   return (
     <Card
-  className="meeting-item"
-  onClick={(e) => { if (openConfirm || openUpdate) return; navigate(`/meeting/${meeting.meetingId}`)}}
-  sx={{ cursor: "pointer" }}
->
-  <CardContent>
-    <div className="meeting-header">
-      <Typography variant="h6" className="meeting-title">
-        {meeting.title}
-      </Typography>
-      <Typography variant="h6" className="meeting-title">
-        {meeting.description}
-      </Typography>
-      <Typography variant="body2" color="text.secondary">
-        🕒 {new Date(meeting.scheduledAt).toLocaleString()}
-      </Typography>
-    </div>
+      className="meeting-item"
+      onClick={(e) => { if (openConfirm || openUpdate) return; navigate(`/meeting/${meeting.meetingId}`) }}
+      sx={{ borderRadius: "12px", cursor: "pointer" }}
+    >
+      <CardContent>
+        {/* <div className="meeting-header">
+          <Typography variant="h6" className="meeting-title">
+            {meeting.title}
+          </Typography>
+          <Typography variant="h6" className="meeting-title">
+            {meeting.description}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            🕒 {new Date(meeting.scheduledAt).toLocaleString()}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {meeting.status === "signed"
+              ? "Biên bản đã được ký"
+              : "Biên bản chưa được ký"}
+          </Typography>
+        </div> */}
+  <div className="meeting-header">
+    <Typography variant="h6" className="meeting-title">
+      {meeting.title}
+    </Typography>
 
-    <div className="meeting-actions">
-      <Button
-        variant="outlined"
-        color="primary"
-        size="small"
-        onClick={(e) => {
-          e.stopPropagation(); // ✅ Ngăn navigate khi click nút
-          setOpenUpdate(true);
+    <Typography variant="body1" className="meeting-description">
+      {meeting.description}
+    </Typography>
+
+    <Typography variant="body2" className="meeting-time">
+      🕒 {new Date(meeting.scheduledAt).toLocaleString()}
+    </Typography>
+
+    <Typography
+      variant="body2"
+      className={`meeting-status ${
+        meeting.status === "signed" ? "signed" : "unsigned"
+      }`}
+    >
+      {meeting.status === "signed"
+        ? "Biên bản đã được ký"
+        : "Biên bản chưa được ký"}
+    </Typography>
+  </div>
+
+
+        <div className="meeting-actions">
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            onClick={(e) => {
+              e.stopPropagation(); // Ngăn navigate khi click nút
+              setOpenUpdate(true);
+            }}
+            className="btn-update"
+          >
+            Cập nhật
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            size="small"
+            onClick={(e) => {
+              e.stopPropagation(); // Ngăn navigate khi click nút
+              setOpenConfirm(true);
+            }}
+            disabled={loading}
+            className="btn-delete"
+          >
+            Xóa
+          </Button>
+        </div>
+      </CardContent>
+
+      {/* Các dialog giữ nguyên */}
+      <UpdateMeetingDialog
+        open={openUpdate}
+        onClose={() => setOpenUpdate(false)}
+        loading={loading}
+        newTitle={newTitle}
+        newDescription={newDescription}
+        setNewTitle={setNewTitle}
+        setNewDescription={setNewDescription}
+        handleUpdateMeeting={handleUpdateMeeting}
+        message={message}
+      />
+
+      <Dialog
+        open={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: "16px",
+            padding: "8px 0",
+          },
         }}
-        className="btn-update"
       >
-        Cập nhật
-      </Button>
-      <Button
-        variant="contained"
-        color="error"
-        size="small"
-        onClick={(e) => {
-          e.stopPropagation(); // ✅ Ngăn navigate khi click nút
-          setOpenConfirm(true);
-        }}
-        disabled={loading}
-        className="btn-delete"
-      >
-        Xóa
-      </Button>
-    </div>
-  </CardContent>
+        <DialogTitle>Xác nhận xóa cuộc họp</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Bạn có chắc chắn muốn <strong>xóa</strong> cuộc họp{" "}
+            <span style={{ color: "#d32f2f" }}>{meeting.title}</span> không?
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={() => setOpenConfirm(false)}>Hủy</Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={(e) => {
+              e.stopPropagation(); //Ngăn click lan khi đang xóa
+              handleDeleteMeeting();
+            }}
+            disabled={loading}
+          >
+            {loading ? "Đang xóa..." : "Xóa"}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-  {/* Các dialog giữ nguyên */}
-  <UpdateMeetingDialog
-    open={openUpdate}
-    onClose={() => setOpenUpdate(false)}
-    loading={loading}
-    newTitle={newTitle}
-    newDescription={newDescription}
-    setNewTitle={setNewTitle}
-    setNewDescription={setNewDescription}
-    handleUpdateMeeting={handleUpdateMeeting}
-    message={message}
-  />
-
-  <Dialog
-    open={openConfirm}
-    onClose={() => setOpenConfirm(false)}
-    PaperProps={{
-      sx: {
-        borderRadius: "16px",
-        padding: "8px 0",
-      },
-    }}
-  >
-    <DialogTitle>Xác nhận xóa cuộc họp</DialogTitle>
-    <DialogContent>
-      <Typography>
-        Bạn có chắc chắn muốn <strong>xóa</strong> cuộc họp{" "}
-        <span style={{ color: "#d32f2f" }}>{meeting.title}</span> không?
-      </Typography>
-    </DialogContent>
-    <DialogActions sx={{ px: 3, pb: 2 }}>
-      <Button onClick={() => setOpenConfirm(false)}>Hủy</Button>
-      <Button
-        variant="contained"
-        color="error"
-        onClick={(e) => {
-          e.stopPropagation(); // ✅ Ngăn click lan khi đang xóa
-          handleDeleteMeeting();
-        }}
-        disabled={loading}
-      >
-        {loading ? "Đang xóa..." : "Xóa"}
-      </Button>
-    </DialogActions>
-  </Dialog>
-
-  <Snackbar
-    open={!!error}
-    autoHideDuration={4000}
-    onClose={() => setError("")}
-    message={error}
-    anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-  />
-</Card>
+      <Snackbar
+        open={!!error}
+        autoHideDuration={4000}
+        onClose={() => setError("")}
+        message={error}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      />
+    </Card>
 
   );
 }

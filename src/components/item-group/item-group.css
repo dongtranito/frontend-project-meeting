@@ -16,7 +16,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* ===== Header ===== */
 .item-group-header {
   background: #1e1e2f;
   color: #fff;
@@ -54,12 +53,11 @@
   text-overflow: ellipsis;
 }
 
-/* ===== Mô tả nhóm ===== */
 .item-group-description {
   flex-grow: 1;
   padding: 16px;
   height: 120px; 
-  overflow-y: auto; /* Cho phép scroll dọc khi nội dung dài */
+  overflow-y: auto;
   overflow-x: hidden;
   color: #555;
   line-height: 1.5;
@@ -67,7 +65,7 @@
 
 /* Tùy chỉnh thanh cuộn nhỏ gọn */
 .item-group-description::-webkit-scrollbar {
-  width: 6px; /* Độ rộng thanh cuộn */
+  width: 6px; 
 }
 
 .item-group-description::-webkit-scrollbar-thumb {
@@ -93,8 +91,6 @@
   white-space: normal;
 }
 
-
-/* ===== Khu vực nút dưới cùng ===== */
 .item-group-actions {
   display: flex;
   justify-content: flex-end;
@@ -107,18 +103,18 @@
 }
 
 .confirm-leave-btn {
-  border: 2px solid #d32f2f; /* viền đỏ */
-  color: #d32f2f;            /* chữ đỏ */
-  background-color: #ffffff; /* nền trắng */
+  border: 2px solid #d32f2f; 
+  color: #d32f2f;            
+  background-color: #ffffff; 
   font-weight: 600;
   text-transform: none;
   transition: all 0.25s ease;
 }
 
 .confirm-leave-btn:hover {
-  background-color: #d32f2f; /* nền đỏ khi hover */
-  color: #fff;               /* chữ trắng */
-  border-color: #b71c1c;     /* đậm hơn chút khi hover */
+  background-color: #d32f2f; 
+  color: #fff;               
+  border-color: #b71c1c;    
   transform: translateY(-1px);
   box-shadow: 0 3px 6px rgba(211, 47, 47, 0.3);
 }

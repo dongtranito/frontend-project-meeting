@@ -1,4 +1,3 @@
-/* Hộp thoại cập nhật nhóm */
 .update-group-dialog .MuiDialog-paper {
   width: 420px;
   border-radius: 16px;
@@ -7,7 +6,6 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* Tiêu đề */
 .update-group-dialog .MuiDialogTitle-root {
   font-weight: 600;
   font-size: 20px;
@@ -16,7 +14,6 @@
   padding-bottom: 8px;
 }
 
-/* Nội dung */
 .update-group-dialog .MuiDialogContent-root {
   padding-top: 4px;
 }
@@ -27,12 +24,10 @@
   margin-bottom: 6px;
 }
 
-/* Input */
 .update-group-dialog .MuiTextField-root {
   margin-top: 10px;
 }
 
-/* Hành động (Actions) */
 .update-group-dialog .MuiDialogActions-root {
   display: flex;
   justify-content: flex-end;
@@ -40,7 +35,6 @@
   gap: 8px;
 }
 
-/* Nút Hủy */
 .update-group-dialog .cancel-btn {
   color: #666;
   text-transform: none;
@@ -55,7 +49,6 @@
   background-color: #f5f5f5;
 }
 
-/* Nút Lưu thay đổi */
 .update-group-dialog .update-btn {
   background-color: #006b7f;
   color: white;
@@ -69,7 +62,6 @@
   background-color: #005966;
 }
 
-/* Thông báo lỗi & thành công */
 .update-group-dialog .error-text {
   color: #d32f2f;
   font-size: 14px;

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TextField, Button, Box } from "@mui/material";
-import { SetMeal } from "@mui/icons-material";
+// import { SetMeal } from "@mui/icons-material";
+import { API_URL } from "../../config/api";
 
 export default function EditMinutePage() {
   const { id } = useParams();    // meetingId
@@ -12,7 +13,8 @@ export default function EditMinutePage() {
 
   useEffect(() => {
     const fetchDetail = async () => {
-      const res = await fetch(`http://localhost:3001/minute/${id}`,
+      // const res = await fetch(`http://localhost:3001/minute/${id}`,
+      const res = await fetch(`${API_URL}/minute/${id}`,
         {
             method: "GET",
             headers: {
@@ -31,7 +33,8 @@ export default function EditMinutePage() {
       }
 
 
-      const res_ = await fetch(`http://localhost:3001/meeting/${id}`,
+      // const res_ = await fetch(`http://localhost:3001/meeting/${id}`,
+      const res_ = await fetch(`${API_URL}/meeting/${id}`,
         {
             method: "GET",
             headers: {
@@ -59,7 +62,8 @@ export default function EditMinutePage() {
   };
 
   const handleSave = async () => {
-    const res = await fetch(`http://localhost:3001/minute/${id}/update`, {
+    // const res = await fetch(`http://localhost:3001/minute/${id}/update`, {
+    const res = await fetch(`${API_URL}/minute/${id}/update`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ placeholder: formData }),

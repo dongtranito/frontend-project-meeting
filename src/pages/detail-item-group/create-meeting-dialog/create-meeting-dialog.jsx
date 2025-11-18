@@ -15,15 +15,12 @@ import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { AuthContext } from "../../../auth/auth-context";
 import { vi } from "date-fns/locale";
 import "./create-meeting-dialog.css";
-// import { AccessTimeIcon } from '@mui/icons-material/AccessTime';
-
-// import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-// 💡 Cần import các hàm render này
 import {
   renderTimeViewClock,
 } from '@mui/x-date-pickers/timeViewRenderers';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-// ...
+import { API_URL } from "../../../config/api.js";
+
 
 export default function CreateMeetingDialog({ groupId, onCreated }) {
   const { user } = useContext(AuthContext);
@@ -63,7 +60,8 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
     setLoading(true);
     try {
       // 🔹 1️⃣ Tạo meeting trước
-      const response = await fetch("http://localhost:3001/create-meeting", {
+      // const response = await fetch("http://localhost:3001/create-meeting", {
+      const response = await fetch(`${API_URL}/create-meeting`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -88,7 +86,8 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
         fileForm.append("file", metaFile);
         fileForm.append("meetingId", meetingId);
 
-        const uploadRes = await fetch("http://localhost:3001/upload/sample-minute", {
+        // const uploadRes = await fetch("http://localhost:3001/upload/sample-minute", {
+        const uploadRes = await fetch(`${API_URL}/upload/sample-minute`, {
           method: "POST",
           body: fileForm,
           credentials: "include",

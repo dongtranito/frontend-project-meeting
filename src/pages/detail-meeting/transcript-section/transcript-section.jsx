@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import { Description } from "@mui/icons-material";
+import { API_URL } from "../../../config/api.js";
+
+
 
 export default function TranscriptSection({ meetingId }) {
     const [loading, setLoading] = useState(false);
@@ -9,7 +12,8 @@ export default function TranscriptSection({ meetingId }) {
     const createTranscript = async () => {
         try {
             setLoading(true);
-            const res = await fetch(`http://localhost:3001/meeting/${meetingId}`, {
+            // const res = await fetch(`http://localhost:3001/meeting/${meetingId}`, {
+            const res = await fetch(`${API_URL}/meeting/${meetingId}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

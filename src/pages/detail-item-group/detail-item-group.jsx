@@ -10,6 +10,8 @@ import MemberItem from "./item-member/item-member";
 import './detail-item-group.css';
 import MeetingItem from "./item-meeting/item-meeting";
 import FloatingChatStream from "../../components/floating-chatbot/floating-chatbot";
+import { API_URL } from "../../config/api.js";
+
 
 export default function DetailItemGroup() {
   const { id } = useParams();
@@ -28,7 +30,8 @@ export default function DetailItemGroup() {
     if (!id) return;
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:3001/detail-group/${id}`, {
+      // const res = await fetch(`http://localhost:3001/detail-group/${id}`, {
+      const res = await fetch(`${API_URL}/detail-group/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -71,7 +74,8 @@ export default function DetailItemGroup() {
     if (!id) return;
     setLoadingMeetings(true);
     try {
-      const res = await fetch(`http://localhost:3001/get-list-meeting?groupId=${id}`,
+      // const res = await fetch(`http://localhost:3001/get-list-meeting?groupId=${id}`,
+      const res = await fetch(`${API_URL}/get-list-meeting?groupId=${id}`,
         {
           // headers: {
           //   Authorization: `Bearer ${user?.token || ""}`,

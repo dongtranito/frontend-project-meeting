@@ -1,5 +1,7 @@
 import React, { createContext, useState, useCallback, useContext } from "react";
 import { AuthContext } from "../auth/auth-context";
+import { API_URL } from "../config/api";
+
 
 export const GroupContext = createContext();
 
@@ -20,7 +22,8 @@ export const GroupProvider = ({ children }) => {
         setError("");
 
         try {
-            const res = await fetch("http://localhost:3001/get-list-group", {
+            // const res = await fetch("http://localhost:3001/get-list-group", {
+            const res = await fetch(`${API_URL}/get-list-group`, {
                 method: "GET",
                 // headers: {
                 //     "Content-Type": "application/json",

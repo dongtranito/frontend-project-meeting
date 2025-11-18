@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import { API_URL } from "../config/api.js";
 
 
 export const AuthContext = createContext();
@@ -78,7 +79,8 @@ useEffect(() => {
   // Logout (gọi API + xóa local)
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:3001/logout", {
+      // await fetch("http://localhost:3001/logout", {
+      await fetch(`${API_URL}/logout`, {
         method: "POST",
         credentials: "include", // gửi cookie nếu có
       });

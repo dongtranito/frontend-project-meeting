@@ -17,7 +17,7 @@ export default function Settings() {
         </CardContent>
       </Card>
 
-      <Card sx={{ width: '100%' }}>
+      {/* <Card sx={{ width: '100%' }}>
         <CardHeader className="item-group-container-header" title="Thông báo" />
         <Divider />
         <CardContent>
@@ -25,7 +25,7 @@ export default function Settings() {
             Các cài đặt thông báo!!
           </Typography>
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 }

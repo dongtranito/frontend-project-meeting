@@ -11,6 +11,7 @@ import {
   TextField,
   Alert,
   Typography,
+  DialogContentText,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -162,7 +163,7 @@ export default function MemberItem({
       </Dialog>
 
       {/* Dialog cập nhật */}
-      <Dialog
+      {/* <Dialog
         open={openUpdateDialog}
         onClose={() => setOpenUpdateDialog(false)}
         PaperProps={{ className: "update-dialog-paper" }}
@@ -196,7 +197,52 @@ export default function MemberItem({
             {loading ? <CircularProgress size={20} color="inherit" /> : "Lưu thay đổi"}
           </Button>
         </DialogActions>
+      </Dialog> */}
+
+      <Dialog
+        open={openUpdateDialog}
+        onClose={() => setOpenUpdateDialog(false)}
+        className="update-member-dialog"
+      >
+        <DialogTitle>Chỉnh sửa tên thành viên</DialogTitle>
+
+        <DialogContent>
+          <DialogContentText>Nhập tên mới cho thành viên:</DialogContentText>
+
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            label="Tên mới"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+          />
+
+          {message && (
+            <p className={message.type === "error" ? "error-text" : "success-text"}>
+              {message.text}
+            </p>
+          )}
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={() => setOpenUpdateDialog(false)} className="cancel-btn">
+            Hủy
+          </Button>
+
+          <Button
+            onClick={handleUpdateMember}
+            className="update-btn"
+            disabled={loading}
+          >
+            {loading ? "Đang lưu..." : "Lưu thay đổi"}
+          </Button>
+        </DialogActions>
       </Dialog>
+
     </div>
   );
 }

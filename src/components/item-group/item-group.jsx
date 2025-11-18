@@ -24,7 +24,7 @@ import UpdateGroupDialog from "./update-group/update-group";
 
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
-export default function ItemGroup({ id, title, subheader, description }) {
+export default function ItemGroup({ id, title, subheader, description, reload }) {
   const [openDialog, setOpenDialog] = useState(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [newName, setNewName] = useState(title || "");
@@ -100,6 +100,9 @@ export default function ItemGroup({ id, title, subheader, description }) {
       console.log("Cập nhật nhóm thành công:", data);
       setNewName(name);
       setNewDescription(description);
+
+      await reload();
+      
       handleCloseUpdate();
     } catch (err) {
       console.error(err);
@@ -107,6 +110,32 @@ export default function ItemGroup({ id, title, subheader, description }) {
       setLoading(false);
     }
   };
+
+  // const randomHex = "#" + Math.floor(Math.random() * 16777215).toString(16);
+
+  const avatarColors = [
+  "#e57373", // red
+  "#64b5f6", // blue
+  "#81c784", // green
+  "#ffb74d", // orange
+  "#ba68c8", // purple
+  "#4db6ac", // teal
+  "#7986cb", // indigo
+];
+
+
+const getColorFromSubheader = (text) => {
+  if (!text) return "#9e9e9e"; // màu default
+
+  let hash = 0;
+  for (let i = 0; i < text.length; i++) {
+    hash = text.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  const index = Math.abs(hash % avatarColors.length);
+  return avatarColors[index];
+};
+
 
 
   return (
@@ -117,8 +146,8 @@ export default function ItemGroup({ id, title, subheader, description }) {
         title={title || "Tên nhóm chưa có"}
         subheader={subheader || "Chưa có chủ nhóm"}
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="group">
-            {title ? title.charAt(0).toUpperCase() : "?"}
+          <Avatar sx={{ bgcolor: getColorFromSubheader(subheader) }} aria-label="group">
+            {subheader ? subheader.charAt(0).toUpperCase() : "?"}
           </Avatar>
         }
       />

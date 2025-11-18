@@ -4,7 +4,7 @@
   left: var(--sidebar-width);
   width: calc(100% - var(--sidebar-width));
   height: var(--header-height);
-  background-color: beige;
+  background-color: #F8E4CC;
   display: flex;
   align-items: center;
   padding: 0 20px;

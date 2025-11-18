@@ -1,6 +1,7 @@
 :root {
   --sidebar-width: 270px;
   --header-height: 80px;
+  --bg-color: #0C6B7F;
 }
 
 .app-container {

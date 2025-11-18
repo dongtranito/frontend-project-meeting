@@ -1,5 +1,5 @@
 .MuiCardHeader-root {
-  background-color: #1e1e2f;
+  background-color: var(--bg-color);
 }
 
 .recorder-card {

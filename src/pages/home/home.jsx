@@ -54,6 +54,7 @@ export default function Home() {
               title={group.name}
               subheader={group.owner_id}
               description={group.description}
+              reload={fetchGroups}
             />
           ))
         ) : (

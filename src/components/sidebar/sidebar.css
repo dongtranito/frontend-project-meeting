@@ -37,8 +37,21 @@
 }
 
 .MuiDrawer-paper.sidebar.collapsed {
-  background-color: #1e1e2f;
+  /* background-color: #1E1E2F;*/
+background: linear-gradient(to right, #243B55, #141E30); 
   width: 80px;
+}
+
+.sidebar-bg .MuiDrawer-paper {
+  /* background-color: #1E1E2F; */
+background: linear-gradient(to top, #243B55, #141E30); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  color: #fff;
+  border: none;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 2px;
 }
 
 .project {

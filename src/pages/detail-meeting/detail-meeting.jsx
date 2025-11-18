@@ -16,6 +16,8 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import "./detail-meeting.css";
 import MinuteActionsMenu from "./minute-action-menu/minute-action-menu";
 import FloatingChatStream from "../../components/floating-chatbot/floating-chatbot";
+import { API_URL } from "../../config/api.js";
+
 
 export default function DetailMeeting() {
   const { id } = useParams();
@@ -46,7 +48,8 @@ export default function DetailMeeting() {
 
   const fetchMeetingDetail = async () => {
     try {
-      const res = await fetch(`http://localhost:3001/meeting/${id}`, {
+      // const res = await fetch(`http://localhost:3001/meeting/${id}`, {
+      const res = await fetch(`${API_URL}/meeting/${id}`, {
         method: "GET",
         credentials: "include",
       });
@@ -66,7 +69,8 @@ export default function DetailMeeting() {
       setLoading(true);
       setMessage("");
 
-      const res = await fetch(`http://localhost:3001/minute/${id}`, {
+      // const res = await fetch(`http://localhost:3001/minute/${id}`, {
+      const res = await fetch(`${API_URL}/minute/${id}`, {
         method: "GET",
         credentials: "include",
       });
@@ -152,7 +156,8 @@ export default function DetailMeeting() {
       formData.append("file", audioBlob, fileName);
       formData.append("meetingId", id);
 
-      const res = await fetch("http://localhost:3001/upload/record", {
+      // const res = await fetch("http://localhost:3001/upload/record", {
+      const res = await fetch(`${API_URL}/upload/record`, {
         method: "POST",
         body: formData,
         credentials: "include",
@@ -197,7 +202,8 @@ export default function DetailMeeting() {
     try {
       setLoadingMinute(true);
 
-      const res = await fetch("http://localhost:3001/create-minute", {
+      // const res = await fetch("http://localhost:3001/create-minute", {
+      const res = await fetch(`${API_URL}/create-minute`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -250,7 +256,8 @@ export default function DetailMeeting() {
       formData.append("file", file);
       formData.append("meetingId", id);
 
-      const res = await fetch("http://localhost:3001/upload/sample-minute", {
+      // const res = await fetch("http://localhost:3001/upload/sample-minute", {
+      const res = await fetch(`${API_URL}/upload/sample-minute`, {
         method: "POST",
         body: formData,
         credentials: "include",
@@ -277,7 +284,8 @@ export default function DetailMeeting() {
   const createTranscript = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`http://localhost:3001/meeting/${id}`, {
+      // const res = await fetch(`http://localhost:3001/meeting/${id}`, {
+      const res = await fetch(`${API_URL}/meeting/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

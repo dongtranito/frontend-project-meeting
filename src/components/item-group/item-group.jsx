@@ -23,6 +23,8 @@ import { AuthContext } from './../../auth/auth-context';
 import UpdateGroupDialog from "./update-group/update-group";
 
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import { API_URL } from "../../config/api.js";
+
 
 export default function ItemGroup({ id, title, subheader, description, reload }) {
   const [openDialog, setOpenDialog] = useState(false);
@@ -46,7 +48,8 @@ export default function ItemGroup({ id, title, subheader, description, reload })
   const handleLeaveGroup = async () => {
     try {
       if (isOwner) {
-        const res = await fetch(`http://localhost:3001/delete-group/${id}`, {
+        // const res = await fetch(`http://localhost:3001/delete-group/${id}`, {
+        const res = await fetch(`${API_URL}/delete-group/${id}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -57,7 +60,8 @@ export default function ItemGroup({ id, title, subheader, description, reload })
         if (!res.ok) throw new Error("Xóa nhóm thất bại");
         alert(`Nhóm "${title}" đã được xóa thành công.`);
       } else {
-        const res = await fetch(`http://localhost:3001/leave-group`, {
+        // const res = await fetch(`http://localhost:3001/leave-group`, {
+        const res = await fetch(`${API_URL}/leave-group`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -89,7 +93,8 @@ export default function ItemGroup({ id, title, subheader, description, reload })
   const handleUpdateGroup = async ({ name, description }) => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:3001/update-group/${id}`, {
+      // const res = await fetch(`http://localhost:3001/update-group/${id}`, {
+      const res = await fetch(`${API_URL}/update-group/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

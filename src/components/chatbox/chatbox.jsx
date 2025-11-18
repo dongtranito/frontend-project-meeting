@@ -3,6 +3,9 @@ import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SendIcon from "@mui/icons-material/Send";
 import "./chatbox.css";
+import { API_URL } from "../../config/api.js";
+
+
 
 export default function ChatBox() {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -29,7 +32,8 @@ export default function ChatBox() {
 
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3001/upload/metadata", {
+      // const res = await fetch("http://localhost:3001/upload/metadata", {
+      const res = await fetch(`${API_URL}/upload/metadata`, {
         method: "POST",
         body: formData,
         credentials: "include",

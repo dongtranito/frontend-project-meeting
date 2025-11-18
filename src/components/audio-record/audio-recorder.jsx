@@ -10,6 +10,7 @@ import {
 import { Mic, Stop, CloudUpload, FolderOpen } from "@mui/icons-material";
 import './audio-recorder.css';
 import { AuthContext } from "../../auth/auth-context";
+import { API_URL } from "../../config/api.js";
 
 export default function AudioRecorder() {
   const { user } = useContext(AuthContext);
@@ -30,7 +31,8 @@ export default function AudioRecorder() {
   const fetchUploadedAudio = async () => {
     if (!userEmail) return;
     try {
-      const res = await fetch(`http://localhost:3001/getSampleVoice`, {
+      // const res = await fetch(`http://localhost:3001/getSampleVoice`, {
+      const res = await fetch(`${API_URL}/getSampleVoice`, {
         credentials: "include",
       });
       const data = await res.json();
@@ -108,7 +110,8 @@ export default function AudioRecorder() {
       formData.append("file", audioBlob, fileName);
       formData.append("email", userEmail);
 
-      const res = await fetch("http://localhost:3001/create-sample-voice", {
+      // const res = await fetch("http://localhost:3001/create-sample-voice", {
+      const res = await fetch(`${API_URL}/create-sample-voice`, {
         method: "POST",
         body: formData,
         credentials: "include",

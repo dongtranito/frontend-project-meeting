@@ -4,6 +4,7 @@ import { initializeApp } from "firebase/app";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../auth/auth-context";
 import "./login-form.css";
+import { API_URL } from "../../config/api";
 
 // === Firebase cấu hình ===
 const firebaseConfig = {
@@ -19,7 +20,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+// const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
 export default function LoginForm() {
   const navigate = useNavigate();

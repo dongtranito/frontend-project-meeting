@@ -12,6 +12,9 @@ import {
   Chip,
   Stack,
 } from "@mui/material";
+import { API_URL } from "../../../config/api.js";
+
+
 
 export default function SendMinuteDialog({ open, handleClose, meetingId }) {
   const [email, setEmail] = useState("");
@@ -46,7 +49,8 @@ export default function SendMinuteDialog({ open, handleClose, meetingId }) {
       setLoading(true);
       setMessage(null);
 
-      const res = await fetch(`http://localhost:3001/minute/${meetingId}/sign`, {
+      // const res = await fetch(`http://localhost:3001/minute/${meetingId}/sign`, {
+      const res = await fetch(`${API_URL}/minute/${meetingId}/sign`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

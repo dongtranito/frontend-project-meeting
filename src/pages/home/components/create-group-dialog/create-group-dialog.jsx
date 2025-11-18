@@ -9,6 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import './create-group-dialog.css';
 
 import { useState } from 'react';
+import { API_URL } from '../../../../config/api';
 
 export default function CreateGroupDialog({ onGroupCreated }) {
   const [open, setOpen] = useState(false);
@@ -35,7 +36,8 @@ export default function CreateGroupDialog({ onGroupCreated }) {
     const { groupName, nameOwner } = Object.fromEntries(formData.entries());
 
     try {
-      const response = await fetch("http://localhost:3001/creat-group", {
+      // const response = await fetch("http://localhost:3001/creat-group", {
+      const response = await fetch(`${API_URL}/creat-group`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

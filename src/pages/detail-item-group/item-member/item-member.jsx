@@ -16,6 +16,9 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import "./item-member.css";
+import { API_URL } from "../../../config/api.js";
+
+
 
 export default function MemberItem({
   member,
@@ -35,7 +38,8 @@ export default function MemberItem({
     setLoading(true);
     setMessage(null);
     try {
-      const res = await fetch("http://localhost:3001/remove-member", {
+      // const res = await fetch("http://localhost:3001/remove-member", {
+      const res = await fetch(`${API_URL}/remove-member`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -60,7 +64,8 @@ export default function MemberItem({
     setLoading(true);
     setMessage(null);
     try {
-      const res = await fetch("http://localhost:3001/update-member", {
+      // const res = await fetch("http://localhost:3001/update-member", {
+      const res = await fetch(`${API_URL}/update-member`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

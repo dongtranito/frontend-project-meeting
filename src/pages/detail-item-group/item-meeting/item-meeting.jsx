@@ -14,6 +14,8 @@ import {
 } from "@mui/material";
 import "./item-meeting.css";
 import UpdateMeetingDialog from "./update-meeting-dialog/update-meeting-dialog";
+import { API_URL } from "../../../config/api.js";
+
 
 export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
   const [openEdit, setOpenEdit] = useState(false);
@@ -35,7 +37,8 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
 
   const handleDeleteMeeting = async () => {
     try {
-      const res = await fetch(`http://localhost:3001/delete-meeting/${meeting.meetingId}`, {
+      // const res = await fetch(`http://localhost:3001/delete-meeting/${meeting.meetingId}`, {
+      const res = await fetch(`${API_URL}/delete-meeting/${meeting.meetingId}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -59,7 +62,8 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
     setLoading(true);
     setMessage(null);
     try {
-      const res = await fetch(`http://localhost:3001/update-meeting/${meeting.meetingId}`, {
+      // const res = await fetch(`http://localhost:3001/update-meeting/${meeting.meetingId}`, {
+      const res = await fetch(`${API_URL}/update-meeting/${meeting.meetingId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 import { AuthContext } from "../../../auth/auth-context";
 import './invite-member-dialog.css'
+import { API_URL } from "../../../config/api.js";
+
 
 export default function InviteMemberDialog({ groupId, refreshGroup }) {
   const [open, setOpen] = useState(false);
@@ -43,7 +45,8 @@ export default function InviteMemberDialog({ groupId, refreshGroup }) {
     setMessage(null);
 
     try {
-      const res = await fetch("http://localhost:3001/invite-member", {
+      // const res = await fetch("http://localhost:3001/invite-member", {
+      const res = await fetch(`${API_URL}/invite-member`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

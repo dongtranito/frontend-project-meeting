@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import api from "../../config/api";
+import { API_URL } from "../../config/api.js";
+
+
 
 export default function TestBackend() {
   const [message, setMessage] = useState("");

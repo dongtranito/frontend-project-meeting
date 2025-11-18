@@ -56,7 +56,8 @@ export default function FloatingChatStream({ groupId, meetingId }) {
     }
 
     try {
-      const res = await fetch("http://localhost:3001/chat", {
+      // const res = await fetch("http://localhost:3001/chat", {
+      const res = await fetch(`${API_URL}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

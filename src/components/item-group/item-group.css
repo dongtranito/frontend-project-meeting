@@ -17,7 +17,7 @@
 }
 
 .item-group-header {
-  background: #1e1e2f;
+  background: var(--bg-color);
   color: #fff;
   padding: 12px 16px;
   cursor: pointer;

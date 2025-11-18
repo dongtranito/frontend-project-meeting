@@ -15,6 +15,15 @@ import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { AuthContext } from "../../../auth/auth-context";
 import { vi } from "date-fns/locale";
 import "./create-meeting-dialog.css";
+// import { AccessTimeIcon } from '@mui/icons-material/AccessTime';
+
+// import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+// 💡 Cần import các hàm render này
+import {
+  renderTimeViewClock,
+} from '@mui/x-date-pickers/timeViewRenderers';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+// ...
 
 export default function CreateMeetingDialog({ groupId, onCreated }) {
   const { user } = useContext(AuthContext);
@@ -142,7 +151,7 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
               />
 
               <DialogContentText>Nhập giờ:</DialogContentText>
-              <TimePicker
+              {/* <TimePicker
                 label="Chọn giờ"
                 ampm
                 value={selectedTime}
@@ -150,6 +159,24 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
                 slotProps={{
                   textField: { fullWidth: true, margin: "dense", variant: "outlined" },
                 }}
+              /> */}
+              <TimePicker
+                label="Chọn giờ"
+                ampm
+                value={selectedTime}
+                onChange={(newValue) => setSelectedTime(newValue)}
+                viewRenderers={{
+                  hours: renderTimeViewClock,
+                  minutes: renderTimeViewClock,
+                }}
+                slots={{
+                  openPickerIcon: AccessTimeIcon,
+                }}
+                slotProps={{
+                  textField: { fullWidth: true, margin: "dense", variant: "outlined" },
+                  
+                }}
+                
               />
             </LocalizationProvider>
 

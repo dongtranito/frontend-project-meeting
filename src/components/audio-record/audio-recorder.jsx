@@ -28,24 +28,24 @@ export default function AudioRecorder() {
   const audioChunksRef = useRef([]);
 
   const fetchUploadedAudio = async () => {
-  if (!userEmail) return;
-  try {
-    const res = await fetch(`http://localhost:3001/getSampleVoice`, {
-      credentials: "include",
-    });
-    const data = await res.json();
-    if (data.success && data.data?.sampleVoice) {
-      setUploadedAudioURL(data.data.sampleVoice);
-      setUploaded(true);
+    if (!userEmail) return;
+    try {
+      const res = await fetch(`http://localhost:3001/getSampleVoice`, {
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (data.success && data.data?.sampleVoice) {
+        setUploadedAudioURL(data.data.sampleVoice);
+        setUploaded(true);
+      }
+    } catch (err) {
+      console.error("Không tải được file đã upload:", err);
     }
-  } catch (err) {
-    console.error("Không tải được file đã upload:", err);
-  }
-};
+  };
 
-useEffect(() => {
-  fetchUploadedAudio();
-}, [userEmail]);
+  useEffect(() => {
+    fetchUploadedAudio();
+  }, [userEmail]);
 
 
   const startRecording = async () => {
@@ -70,6 +70,13 @@ useEffect(() => {
 
       recorder.start();
       setIsRecording(true);
+
+      //  ⏱️ Auto stop after 10 second
+    setTimeout(() => {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+        stopRecording();
+      }
+    }, 10_000);
     } catch (err) {
       console.error(err);
       setMessage("⚠️ Không thể truy cập microphone");
@@ -137,6 +144,10 @@ useEffect(() => {
         ) : (
           <Typography variant="body2" color="error">⚠️ Bạn chưa đăng nhập</Typography>
         )}
+
+        <Typography variant="body2">
+          Hãy tạo mẫu giọng nói, bạn có thể sử dụng mẫu câu sau: Chào bạn, tôi tên là Nguyễn Văn A.
+        </Typography>
 
         <div className="recorder-actions">
           <div className="recorder-action">

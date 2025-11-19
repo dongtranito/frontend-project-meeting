@@ -14,8 +14,6 @@ import {
 } from "@mui/material";
 import { API_URL } from "../../../config/api.js";
 
-
-
 export default function SendMinuteDialog({ open, handleClose, meetingId }) {
   const [email, setEmail] = useState("");
   const [signers, setSigners] = useState([]);
@@ -54,9 +52,10 @@ export default function SendMinuteDialog({ open, handleClose, meetingId }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token || ""}`,
         },
         body: JSON.stringify({ signers }),
-        credentials: "include"
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -126,7 +125,11 @@ export default function SendMinuteDialog({ open, handleClose, meetingId }) {
           Hủy
         </Button>
         <Button onClick={handleSend} variant="contained" disabled={loading}>
-          {loading ? <CircularProgress size={20} color="inherit" /> : "Gửi biên bản"}
+          {loading ? (
+            <CircularProgress size={20} color="inherit" />
+          ) : (
+            "Gửi biên bản"
+          )}
         </Button>
       </DialogActions>
     </Dialog>

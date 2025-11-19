@@ -17,6 +17,7 @@ export default function TranscriptSection({ meetingId }) {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${user?.token || ""}`,
                 },
                 credentials: "include"
             });

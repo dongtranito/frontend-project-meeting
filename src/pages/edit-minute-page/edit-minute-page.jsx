@@ -19,6 +19,8 @@ export default function EditMinutePage() {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${user?.token || ""}`,
+
             },
             credentials: "include", 
           }
@@ -39,6 +41,8 @@ export default function EditMinutePage() {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${user?.token || ""}`,
+
             },
             credentials: "include", 
           }
@@ -65,7 +69,10 @@ export default function EditMinutePage() {
     // const res = await fetch(`http://localhost:3001/minute/${id}/update`, {
     const res = await fetch(`${API_URL}/minute/${id}/update`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user?.token || ""}`,
+       },
       body: JSON.stringify({ placeholder: formData }),
       credentials: "include"
     });

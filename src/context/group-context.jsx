@@ -25,10 +25,10 @@ export const GroupProvider = ({ children }) => {
             // const res = await fetch("http://localhost:3001/get-list-group", {
             const res = await fetch(`${API_URL}/get-list-group`, {
                 method: "GET",
-                // headers: {
-                //     "Content-Type": "application/json",
-                //     Authorization: `Bearer ${user.token}`,
-                // },
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${user.token}`,
+                },
                 credentials: "include",
             });
 

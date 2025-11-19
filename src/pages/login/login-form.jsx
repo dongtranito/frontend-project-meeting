@@ -41,7 +41,10 @@ export default function LoginForm() {
       // Gửi token Firebase sang backend để xác minh & nhận accessToken mới
       const res = await fetch(`${API_URL}/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",           
+          Authorization: `Bearer ${user?.token || ""}`,
+        },
         body: JSON.stringify({ idToken }),
         credentials: "include",
       });

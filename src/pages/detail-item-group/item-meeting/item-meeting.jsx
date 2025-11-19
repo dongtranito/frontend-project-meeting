@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -16,7 +16,6 @@ import "./item-meeting.css";
 import UpdateMeetingDialog from "./update-meeting-dialog/update-meeting-dialog";
 import { API_URL } from "../../../config/api.js";
 
-
 export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
   const [openEdit, setOpenEdit] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -29,7 +28,6 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
 
   const navigate = useNavigate();
 
-
   const handleClose = () => {
     setOpenUpdate(false);
     setMessage(null);
@@ -38,14 +36,19 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
   const handleDeleteMeeting = async () => {
     try {
       // const res = await fetch(`http://localhost:3001/delete-meeting/${meeting.meetingId}`, {
-      const res = await fetch(`${API_URL}/delete-meeting/${meeting.meetingId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${API_URL}/delete-meeting/${meeting.meetingId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${user?.token || ""}`,
+          },
+          credentials: "include",
+        }
+      );
       const data = await res.json();
 
       if (!res.ok || !data.success) throw new Error(data.message);
-
 
       onDeleted(meeting.meetingId);
 
@@ -63,15 +66,18 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
     setMessage(null);
     try {
       // const res = await fetch(`http://localhost:3001/update-meeting/${meeting.meetingId}`, {
-      const res = await fetch(`${API_URL}/update-meeting/${meeting.meetingId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          title: newTitle,
-          description: newDescription
-        }),
-      });
+      const res = await fetch(
+        `${API_URL}/update-meeting/${meeting.meetingId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            title: newTitle,
+            description: newDescription,
+          }),
+        }
+      );
 
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.message);
@@ -93,7 +99,10 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
   return (
     <Card
       className="meeting-item"
-      onClick={(e) => { if (openConfirm || openUpdate) return; navigate(`/meeting/${meeting.meetingId}`) }}
+      onClick={(e) => {
+        if (openConfirm || openUpdate) return;
+        navigate(`/meeting/${meeting.meetingId}`);
+      }}
       sx={{ borderRadius: "12px", cursor: "pointer" }}
     >
       <CardContent>
@@ -113,31 +122,30 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
               : "Biên bản chưa được ký"}
           </Typography>
         </div> */}
-  <div className="meeting-header">
-    <Typography variant="h6" className="meeting-title">
-      {meeting.title}
-    </Typography>
+        <div className="meeting-header">
+          <Typography variant="h6" className="meeting-title">
+            {meeting.title}
+          </Typography>
 
-    <Typography variant="body1" className="meeting-description">
-      {meeting.description}
-    </Typography>
+          <Typography variant="body1" className="meeting-description">
+            {meeting.description}
+          </Typography>
 
-    <Typography variant="body2" className="meeting-time">
-      🕒 {new Date(meeting.scheduledAt).toLocaleString()}
-    </Typography>
+          <Typography variant="body2" className="meeting-time">
+            🕒 {new Date(meeting.scheduledAt).toLocaleString()}
+          </Typography>
 
-    <Typography
-      variant="body2"
-      className={`meeting-status ${
-        meeting.status === "signed" ? "signed" : "unsigned"
-      }`}
-    >
-      {meeting.status === "signed"
-        ? "Biên bản đã được ký"
-        : "Biên bản chưa được ký"}
-    </Typography>
-  </div>
-
+          <Typography
+            variant="body2"
+            className={`meeting-status ${
+              meeting.status === "signed" ? "signed" : "unsigned"
+            }`}
+          >
+            {meeting.status === "signed"
+              ? "Biên bản đã được ký"
+              : "Biên bản chưa được ký"}
+          </Typography>
+        </div>
 
         <div className="meeting-actions">
           <Button
@@ -222,6 +230,5 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       />
     </Card>
-
   );
 }

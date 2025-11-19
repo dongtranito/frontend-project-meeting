@@ -11,13 +11,18 @@ import {
   CardContent,
   Button,
 } from "@mui/material";
-import { Mic, Stop, FolderOpen, CloudUpload, Description } from "@mui/icons-material";
+import {
+  Mic,
+  Stop,
+  FolderOpen,
+  CloudUpload,
+  Description,
+} from "@mui/icons-material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import "./detail-meeting.css";
 import MinuteActionsMenu from "./minute-action-menu/minute-action-menu";
 import FloatingChatStream from "../../components/floating-chatbot/floating-chatbot";
 import { API_URL } from "../../config/api.js";
-
 
 export default function DetailMeeting() {
   const { id } = useParams();
@@ -51,10 +56,13 @@ export default function DetailMeeting() {
       // const res = await fetch(`http://localhost:3001/meeting/${id}`, {
       const res = await fetch(`${API_URL}/meeting/${id}`, {
         method: "GET",
+        headers: {
+          Authorization: `Bearer ${user?.token || ""}`,
+        },
         credentials: "include",
       });
       const data = await res.json();
-      console.log('data meeting audio:', data.data);
+      console.log("data meeting audio:", data.data);
       setMeetingDetail(data.data);
       if (data.success && data.data?.audioUrl) {
         setUploaded(true);
@@ -72,10 +80,13 @@ export default function DetailMeeting() {
       // const res = await fetch(`http://localhost:3001/minute/${id}`, {
       const res = await fetch(`${API_URL}/minute/${id}`, {
         method: "GET",
+        headers: {
+          Authorization: `Bearer ${user?.token || ""}`,
+        },
         credentials: "include",
       });
       const data = await res.json();
-      console.log('data sign:', data);
+      console.log("data sign:", data);
 
       if (data.success && data.data?.signedMinute) {
         const signedUrl = data.data.signedMinute;
@@ -159,13 +170,16 @@ export default function DetailMeeting() {
       // const res = await fetch("http://localhost:3001/upload/record", {
       const res = await fetch(`${API_URL}/upload/record`, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${user?.token || ""}`,
+        },
         body: formData,
         credentials: "include",
       });
 
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      console.log('data record meeting:', data.data);
+      console.log("data record meeting:", data.data);
 
       if (res.ok && data.success) {
         setUploadedUrl(data.data?.url || "");
@@ -173,7 +187,6 @@ export default function DetailMeeting() {
         setMessage("Đã gửi đoạn ghi âm lên server");
 
         await fetchMeetingDetail();
-
       } else {
         setMessage(`❌ Lỗi: ${data.error || "Không rõ"}`);
       }
@@ -205,7 +218,10 @@ export default function DetailMeeting() {
       // const res = await fetch("http://localhost:3001/create-minute", {
       const res = await fetch(`${API_URL}/create-minute`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token || ""}`,
+        },
         credentials: "include",
         body: JSON.stringify({
           meetingId: id,
@@ -222,7 +238,7 @@ export default function DetailMeeting() {
       const officialUrl = data.data?.url;
       setMinuteURL(officialUrl);
 
-      setMeetingDetail(prev => ({
+      setMeetingDetail((prev) => ({
         ...prev,
         minutes: {
           ...(prev?.minutes || {}),
@@ -231,7 +247,7 @@ export default function DetailMeeting() {
       }));
 
       setMessage("✅ Tạo biên bản thành công!");
-      console.log('message thanh cong');
+      console.log("message thanh cong");
     } catch (err) {
       setMessage(`❌ ${err.message}`);
     } finally {
@@ -259,6 +275,9 @@ export default function DetailMeeting() {
       // const res = await fetch("http://localhost:3001/upload/sample-minute", {
       const res = await fetch(`${API_URL}/upload/sample-minute`, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${user?.token || ""}`,
+        },
         body: formData,
         credentials: "include",
       });
@@ -266,7 +285,7 @@ export default function DetailMeeting() {
       const data = await res.json();
       if (!data.success) {
         // alert("❌ Upload thất bại: " + data.error);
-        setMessage(`Upload thất bại: ${data.error}`)
+        setMessage(`Upload thất bại: ${data.error}`);
         return;
       }
 
@@ -280,7 +299,6 @@ export default function DetailMeeting() {
     }
   };
 
-
   const createTranscript = async () => {
     try {
       setLoading(true);
@@ -289,8 +307,9 @@ export default function DetailMeeting() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token || ""}`,
         },
-        credentials: "include"
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -359,7 +378,11 @@ export default function DetailMeeting() {
                     disabled={loading}
                   />
                   <label htmlFor="upload-audio">
-                    <IconButton component="span" disabled={loading} className="upload-btn">
+                    <IconButton
+                      component="span"
+                      disabled={loading}
+                      className="upload-btn"
+                    >
                       <FolderOpen fontSize="large" />
                     </IconButton>
                   </label>
@@ -431,7 +454,9 @@ export default function DetailMeeting() {
                           borderBottom: "1px solid #eee",
                         }}
                       >
-                        <strong style={{ color: "#1976d2" }}>{seg.speaker}</strong>{" "}
+                        <strong style={{ color: "#1976d2" }}>
+                          {seg.speaker}
+                        </strong>{" "}
                         <span style={{ color: "#888" }}>[{seg.start}]</span>:
                         <span style={{ marginLeft: "4px" }}>{seg.text}</span>
                       </div>
@@ -439,7 +464,6 @@ export default function DetailMeeting() {
                   </div>
                 </div>
               )}
-
 
               {loading && (
                 <div className="loading-section">
@@ -450,7 +474,9 @@ export default function DetailMeeting() {
               {message && (
                 <Typography
                   variant="body2"
-                  className={`message ${message.startsWith("✅") ? "success" : "error"}`}
+                  className={`message ${
+                    message.startsWith("✅") ? "success" : "error"
+                  }`}
                 >
                   {message}
                 </Typography>
@@ -459,12 +485,10 @@ export default function DetailMeeting() {
           </Card>
         </TabPanel>
 
-
         {/* === TAB 2 === */}
         <TabPanel value="2">
           <div className="meeting-tab">
             <div className="meeting-minute-content">
-
               <div className="minute-header">
                 <h2>Biên bản</h2>
                 <div className="minute-actions">
@@ -506,7 +530,9 @@ export default function DetailMeeting() {
                     title="Sample Minute"
                   />
                 ) : (
-                  <p style={{ color: "#777" }}>⚠️ Chưa có biên bản nào được tải lên.</p>
+                  <p style={{ color: "#777" }}>
+                    ⚠️ Chưa có biên bản nào được tải lên.
+                  </p>
                 )}
               </div>
 
@@ -521,8 +547,6 @@ export default function DetailMeeting() {
                     {loading ? "Đang tải..." : "Xem biên bản đã ký"}
                   </Button>
                 </div>
-
-
               </div>
             </div>
 
@@ -537,5 +561,3 @@ export default function DetailMeeting() {
     </Box>
   );
 }
-
-

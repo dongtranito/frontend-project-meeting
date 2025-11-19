@@ -35,7 +35,7 @@ export default function DetailItemGroup() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer ${user?.token || ""}`,
+          Authorization: `Bearer ${user?.token || ""}`,
         },
         credentials: "include",
       });
@@ -77,9 +77,9 @@ export default function DetailItemGroup() {
       // const res = await fetch(`http://localhost:3001/get-list-meeting?groupId=${id}`,
       const res = await fetch(`${API_URL}/get-list-meeting?groupId=${id}`,
         {
-          // headers: {
-          //   Authorization: `Bearer ${user?.token || ""}`,
-          // },
+          headers: {
+            Authorization: `Bearer ${user?.token || ""}`,
+          },
           credentials: "include",
         }
       );

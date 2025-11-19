@@ -18,8 +18,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import "./item-member.css";
 import { API_URL } from "../../../config/api.js";
 
-
-
 export default function MemberItem({
   member,
   groupId,
@@ -41,7 +39,10 @@ export default function MemberItem({
       // const res = await fetch("http://localhost:3001/remove-member", {
       const res = await fetch(`${API_URL}/remove-member`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token || ""}`,
+        },
         credentials: "include",
         body: JSON.stringify({
           groupId: groupId,
@@ -54,7 +55,10 @@ export default function MemberItem({
       onRemoved?.();
       setOpenDeleteDialog(false);
     } catch (err) {
-      setMessage({ type: "error", text: err.message || "Không thể xóa thành viên." });
+      setMessage({
+        type: "error",
+        text: err.message || "Không thể xóa thành viên.",
+      });
     } finally {
       setLoading(false);
     }
@@ -69,6 +73,7 @@ export default function MemberItem({
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token || ""}`,
         },
         credentials: "include",
         body: JSON.stringify({
@@ -106,8 +111,6 @@ export default function MemberItem({
     setMessage(null);
   };
 
-
-
   return (
     <div className="member-item">
       <div className="member-info">
@@ -129,29 +132,43 @@ export default function MemberItem({
         </div>
       </div>
 
-      {isOwner && member.role !== "owner" && member.user_id !== currentUserEmail && (
-        <div className="member-actions">
-          <Tooltip title="Chỉnh sửa tên">
-            <IconButton color="primary" size="small" onClick={() => setOpenUpdateDialog(true)}>
-              <EditIcon />
-            </IconButton>
-          </Tooltip>
+      {isOwner &&
+        member.role !== "owner" &&
+        member.user_id !== currentUserEmail && (
+          <div className="member-actions">
+            <Tooltip title="Chỉnh sửa tên">
+              <IconButton
+                color="primary"
+                size="small"
+                onClick={() => setOpenUpdateDialog(true)}
+              >
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
 
-          <Tooltip title="Xóa thành viên">
-            <IconButton color="error" size="small" onClick={() => setOpenDeleteDialog(true)}>
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        </div>
-      )}
+            <Tooltip title="Xóa thành viên">
+              <IconButton
+                color="error"
+                size="small"
+                onClick={() => setOpenDeleteDialog(true)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
+        )}
 
       {/* Dialog xóa */}
-      <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+      >
         <DialogTitle>Xác nhận xóa thành viên</DialogTitle>
         <DialogContent>
           <Typography>
             Bạn có chắc muốn xóa{" "}
-            <strong style={{ color: "#d32f2f" }}>{member.user_id}</strong> khỏi nhóm không?
+            <strong style={{ color: "#d32f2f" }}>{member.user_id}</strong> khỏi
+            nhóm không?
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -227,14 +244,21 @@ export default function MemberItem({
           />
 
           {message && (
-            <p className={message.type === "error" ? "error-text" : "success-text"}>
+            <p
+              className={
+                message.type === "error" ? "error-text" : "success-text"
+              }
+            >
               {message.text}
             </p>
           )}
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={() => setOpenUpdateDialog(false)} className="cancel-btn">
+          <Button
+            onClick={() => setOpenUpdateDialog(false)}
+            className="cancel-btn"
+          >
             Hủy
           </Button>
 
@@ -247,7 +271,6 @@ export default function MemberItem({
           </Button>
         </DialogActions>
       </Dialog>
-
     </div>
   );
 }

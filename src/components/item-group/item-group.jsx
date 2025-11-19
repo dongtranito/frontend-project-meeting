@@ -18,15 +18,20 @@ import {
 import { red } from "@mui/material/colors";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
-import './item-group.css';
-import { AuthContext } from './../../auth/auth-context';
+import "./item-group.css";
+import { AuthContext } from "./../../auth/auth-context";
 import UpdateGroupDialog from "./update-group/update-group";
 
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { API_URL } from "../../config/api.js";
 
-
-export default function ItemGroup({ id, title, subheader, description, reload }) {
+export default function ItemGroup({
+  id,
+  title,
+  subheader,
+  description,
+  reload,
+}) {
   const [openDialog, setOpenDialog] = useState(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [newName, setNewName] = useState(title || "");
@@ -53,7 +58,7 @@ export default function ItemGroup({ id, title, subheader, description, reload })
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            // Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${user.token}`,
           },
           credentials: "include",
         });
@@ -65,7 +70,7 @@ export default function ItemGroup({ id, title, subheader, description, reload })
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            // Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${user.token}`,
           },
           credentials: "include",
           body: JSON.stringify({ groupId: id, userId: user.uid }),
@@ -96,7 +101,10 @@ export default function ItemGroup({ id, title, subheader, description, reload })
       // const res = await fetch(`http://localhost:3001/update-group/${id}`, {
       const res = await fetch(`${API_URL}/update-group/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token || ""}`,
+        },
         credentials: "include",
         body: JSON.stringify({ name, description }),
       });
@@ -107,7 +115,7 @@ export default function ItemGroup({ id, title, subheader, description, reload })
       setNewDescription(description);
 
       await reload();
-      
+
       handleCloseUpdate();
     } catch (err) {
       console.error(err);
@@ -119,29 +127,26 @@ export default function ItemGroup({ id, title, subheader, description, reload })
   // const randomHex = "#" + Math.floor(Math.random() * 16777215).toString(16);
 
   const avatarColors = [
-  "#e57373", // red
-  "#64b5f6", // blue
-  "#81c784", // green
-  "#ffb74d", // orange
-  "#ba68c8", // purple
-  "#4db6ac", // teal
-  "#7986cb", // indigo
-];
+    "#e57373", // red
+    "#64b5f6", // blue
+    "#81c784", // green
+    "#ffb74d", // orange
+    "#ba68c8", // purple
+    "#4db6ac", // teal
+    "#7986cb", // indigo
+  ];
 
+  const getColorFromSubheader = (text) => {
+    if (!text) return "#9e9e9e"; // màu default
 
-const getColorFromSubheader = (text) => {
-  if (!text) return "#9e9e9e"; // màu default
+    let hash = 0;
+    for (let i = 0; i < text.length; i++) {
+      hash = text.charCodeAt(i) + ((hash << 5) - hash);
+    }
 
-  let hash = 0;
-  for (let i = 0; i < text.length; i++) {
-    hash = text.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  const index = Math.abs(hash % avatarColors.length);
-  return avatarColors[index];
-};
-
-
+    const index = Math.abs(hash % avatarColors.length);
+    return avatarColors[index];
+  };
 
   return (
     <Card className="item-group-card">
@@ -151,7 +156,10 @@ const getColorFromSubheader = (text) => {
         title={title || "Tên nhóm chưa có"}
         subheader={subheader || "Chưa có chủ nhóm"}
         avatar={
-          <Avatar sx={{ bgcolor: getColorFromSubheader(subheader) }} aria-label="group">
+          <Avatar
+            sx={{ bgcolor: getColorFromSubheader(subheader) }}
+            aria-label="group"
+          >
             {subheader ? subheader.charAt(0).toUpperCase() : "?"}
           </Avatar>
         }
@@ -198,7 +206,11 @@ const getColorFromSubheader = (text) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Hủy</Button>
-          <Button onClick={handleLeaveGroup} className="confirm-leave-btn" variant="contained">
+          <Button
+            onClick={handleLeaveGroup}
+            className="confirm-leave-btn"
+            variant="contained"
+          >
             {isOwner ? "Xóa nhóm" : "Rời khỏi nhóm"}
           </Button>
         </DialogActions>

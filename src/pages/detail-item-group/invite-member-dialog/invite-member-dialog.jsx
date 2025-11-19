@@ -11,9 +11,8 @@ import {
   DialogContentText,
 } from "@mui/material";
 import { AuthContext } from "../../../auth/auth-context";
-import './invite-member-dialog.css'
+import "./invite-member-dialog.css";
 import { API_URL } from "../../../config/api.js";
-
 
 export default function InviteMemberDialog({ groupId, refreshGroup }) {
   const [open, setOpen] = useState(false);
@@ -50,7 +49,7 @@ export default function InviteMemberDialog({ groupId, refreshGroup }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${user?.token}`,
         },
         credentials: "include",
         body: JSON.stringify({
@@ -63,7 +62,9 @@ export default function InviteMemberDialog({ groupId, refreshGroup }) {
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        throw new Error(data.error || data.message || "Mời thành viên thất bại");
+        throw new Error(
+          data.error || data.message || "Mời thành viên thất bại"
+        );
       }
 
       setMessage({ type: "success", text: "Mời thành viên thành công!" });
@@ -92,56 +93,62 @@ export default function InviteMemberDialog({ groupId, refreshGroup }) {
 
   return (
     <>
-  <Button variant="outlined" onClick={() => setOpen(true)}>
-    Mời thành viên
-  </Button>
-
-  <Dialog open={open} onClose={handleClose} className="invite-member-dialog">
-    <DialogTitle>Mời thành viên vào nhóm</DialogTitle>
-
-    <DialogContent>
-      <DialogContentText>Nhập email thành viên:</DialogContentText>
-      <TextField
-        label="Email"
-        placeholder="vd: example@gmail.com"
-        fullWidth
-        variant="outlined"
-        value={gmailInvite}
-        onChange={(e) => setGmailInvite(e.target.value)}
-        disabled={loading}
-      />
-
-      <DialogContentText>Nhập tên gợi nhớ cho thành viên:</DialogContentText>
-      <TextField
-        label="Tên thành viên"
-        placeholder="Tên gợi nhớ"
-        fullWidth
-        variant="outlined"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        disabled={loading}
-      />
-
-      {message && (
-        <Alert severity={message.type}>{message.text}</Alert>
-      )}
-    </DialogContent>
-
-    <DialogActions>
-      <Button onClick={handleClose} className="cancel-btn" disabled={loading}>
-        Hủy
+      <Button variant="outlined" onClick={() => setOpen(true)}>
+        Mời thành viên
       </Button>
-      <Button
-        onClick={handleInvite}
-        className="invite-btn"
-        disabled={loading}
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        className="invite-member-dialog"
       >
-        {loading ? <CircularProgress size={20} color="inherit" /> : "Thêm"}
-      </Button>
-    </DialogActions>
-  </Dialog>
-</>
+        <DialogTitle>Mời thành viên vào nhóm</DialogTitle>
 
+        <DialogContent>
+          <DialogContentText>Nhập email thành viên:</DialogContentText>
+          <TextField
+            label="Email"
+            placeholder="vd: example@gmail.com"
+            fullWidth
+            variant="outlined"
+            value={gmailInvite}
+            onChange={(e) => setGmailInvite(e.target.value)}
+            disabled={loading}
+          />
+
+          <DialogContentText>
+            Nhập tên gợi nhớ cho thành viên:
+          </DialogContentText>
+          <TextField
+            label="Tên thành viên"
+            placeholder="Tên gợi nhớ"
+            fullWidth
+            variant="outlined"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            disabled={loading}
+          />
+
+          {message && <Alert severity={message.type}>{message.text}</Alert>}
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            onClick={handleClose}
+            className="cancel-btn"
+            disabled={loading}
+          >
+            Hủy
+          </Button>
+          <Button
+            onClick={handleInvite}
+            className="invite-btn"
+            disabled={loading}
+          >
+            {loading ? <CircularProgress size={20} color="inherit" /> : "Thêm"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
-

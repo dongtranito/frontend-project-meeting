@@ -8,7 +8,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { Mic, Stop, CloudUpload, FolderOpen } from "@mui/icons-material";
-import './audio-recorder.css';
+import "./audio-recorder.css";
 import { AuthContext } from "../../auth/auth-context";
 import { API_URL } from "../../config/api.js";
 
@@ -33,6 +33,9 @@ export default function AudioRecorder() {
     try {
       // const res = await fetch(`http://localhost:3001/getSampleVoice`, {
       const res = await fetch(`${API_URL}/getSampleVoice`, {
+        headers: {
+          Authorization: `Bearer ${user?.token || ""}`,
+        },
         credentials: "include",
       });
       const data = await res.json();
@@ -48,7 +51,6 @@ export default function AudioRecorder() {
   useEffect(() => {
     fetchUploadedAudio();
   }, [userEmail]);
-
 
   const startRecording = async () => {
     setMessage("");
@@ -74,11 +76,14 @@ export default function AudioRecorder() {
       setIsRecording(true);
 
       //  ⏱️ Auto stop after 10 second
-    setTimeout(() => {
-      if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
-        stopRecording();
-      }
-    }, 10_000);
+      setTimeout(() => {
+        if (
+          mediaRecorderRef.current &&
+          mediaRecorderRef.current.state === "recording"
+        ) {
+          stopRecording();
+        }
+      }, 10_000);
     } catch (err) {
       console.error(err);
       setMessage("⚠️ Không thể truy cập microphone");
@@ -113,12 +118,15 @@ export default function AudioRecorder() {
       // const res = await fetch("http://localhost:3001/create-sample-voice", {
       const res = await fetch(`${API_URL}/create-sample-voice`, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${user?.token || ""}`,
+        },
         body: formData,
         credentials: "include",
       });
 
       const data = await res.json();
-      console.log('data sample voice: ', data.data);
+      console.log("data sample voice: ", data.data);
 
       if (res.ok && data.success) {
         setUploadedAudioURL(data.data.url);
@@ -140,16 +148,23 @@ export default function AudioRecorder() {
   return (
     <Card className="recorder-card">
       <CardContent>
-        <Typography variant="h6" className="recorder-title">🎙️ Tạo mẫu giọng nói</Typography>
+        <Typography variant="h6" className="recorder-title">
+          🎙️ Tạo mẫu giọng nói
+        </Typography>
 
         {userEmail ? (
-          <Typography variant="body2">Email: <b>{userEmail}</b></Typography>
+          <Typography variant="body2">
+            Email: <b>{userEmail}</b>
+          </Typography>
         ) : (
-          <Typography variant="body2" color="error">⚠️ Bạn chưa đăng nhập</Typography>
+          <Typography variant="body2" color="error">
+            ⚠️ Bạn chưa đăng nhập
+          </Typography>
         )}
 
         <Typography variant="body2">
-          Hãy tạo mẫu giọng nói, bạn có thể sử dụng mẫu câu sau: Chào bạn, tôi tên là Nguyễn Văn A.
+          Hãy tạo mẫu giọng nói, bạn có thể sử dụng mẫu câu sau: Chào bạn, tôi
+          tên là Nguyễn Văn A.
         </Typography>
 
         <div className="recorder-actions">
@@ -161,7 +176,9 @@ export default function AudioRecorder() {
             >
               {isRecording ? <Stop /> : <Mic />}
             </IconButton>
-            <Typography variant="body2">{isRecording ? "Dừng ghi" : "Ghi âm"}</Typography>
+            <Typography variant="body2">
+              {isRecording ? "Dừng ghi" : "Ghi âm"}
+            </Typography>
           </div>
         </div>
 
@@ -173,11 +190,12 @@ export default function AudioRecorder() {
         ) : audioURL ? (
           // Nếu chưa upload mà có file ghi âm -> hiển thị file ghi âm
           <div className="audio-preview">
-            <Typography className="file-name">🎧 File vừa ghi: {fileName}</Typography>
+            <Typography className="file-name">
+              🎧 File vừa ghi: {fileName}
+            </Typography>
             <audio controls src={audioURL} />
           </div>
         ) : null}
-
 
         <div className="action-buttons">
           <Button
@@ -190,11 +208,17 @@ export default function AudioRecorder() {
           </Button>
         </div>
 
-        {loading && <div className="loading-section"><CircularProgress size={30} /></div>}
+        {loading && (
+          <div className="loading-section">
+            <CircularProgress size={30} />
+          </div>
+        )}
 
         {message && (
           <Typography
-            className={`message ${message.startsWith("✅") ? "success" : "error"}`}
+            className={`message ${
+              message.startsWith("✅") ? "success" : "error"
+            }`}
           >
             {message}
           </Typography>

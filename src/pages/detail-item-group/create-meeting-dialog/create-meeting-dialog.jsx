@@ -15,12 +15,9 @@ import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { AuthContext } from "../../../auth/auth-context";
 import { vi } from "date-fns/locale";
 import "./create-meeting-dialog.css";
-import {
-  renderTimeViewClock,
-} from '@mui/x-date-pickers/timeViewRenderers';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { API_URL } from "../../../config/api.js";
-
 
 export default function CreateMeetingDialog({ groupId, onCreated }) {
   const { user } = useContext(AuthContext);
@@ -65,6 +62,7 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token || ""}`,
         },
         credentials: "include",
         body: JSON.stringify({
@@ -76,7 +74,8 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
       });
 
       const result = await response.json();
-      if (!result.success) throw new Error(result.error || "Không thể tạo cuộc họp");
+      if (!result.success)
+        throw new Error(result.error || "Không thể tạo cuộc họp");
 
       const meetingId = result.data.meetingId; // 🔹 lấy ID meeting vừa tạo
 
@@ -89,12 +88,16 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
         // const uploadRes = await fetch("http://localhost:3001/upload/sample-minute", {
         const uploadRes = await fetch(`${API_URL}/upload/sample-minute`, {
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${user?.token || ""}`,
+          },
           body: fileForm,
           credentials: "include",
         });
 
         const uploadData = await uploadRes.json();
-        if (!uploadData.success) throw new Error("Upload biên bản mẫu thất bại");
+        if (!uploadData.success)
+          throw new Error("Upload biên bản mẫu thất bại");
       }
 
       // 🔹 3️⃣ Đóng dialog và refresh danh sách
@@ -113,7 +116,11 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
         Tạo cuộc họp
       </Button>
 
-      <Dialog open={open} onClose={handleClose} className="create-meeting-dialog">
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        className="create-meeting-dialog"
+      >
         <form onSubmit={handleSubmit}>
           <DialogTitle>Tạo cuộc họp</DialogTitle>
 
@@ -138,14 +145,21 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
               margin="dense"
             />
 
-            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={vi}>
+            <LocalizationProvider
+              dateAdapter={AdapterDateFns}
+              adapterLocale={vi}
+            >
               <DialogContentText>Nhập ngày:</DialogContentText>
               <DatePicker
                 label="Chọn ngày"
                 value={selectedDate}
                 onChange={(newValue) => setSelectedDate(newValue)}
                 slotProps={{
-                  textField: { fullWidth: true, margin: "dense", variant: "outlined" },
+                  textField: {
+                    fullWidth: true,
+                    margin: "dense",
+                    variant: "outlined",
+                  },
                 }}
               />
 
@@ -172,10 +186,12 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
                   openPickerIcon: AccessTimeIcon,
                 }}
                 slotProps={{
-                  textField: { fullWidth: true, margin: "dense", variant: "outlined" },
-                  
+                  textField: {
+                    fullWidth: true,
+                    margin: "dense",
+                    variant: "outlined",
+                  },
                 }}
-                
               />
             </LocalizationProvider>
 
@@ -210,6 +226,5 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       />
     </React.Fragment>
-
   );
 }

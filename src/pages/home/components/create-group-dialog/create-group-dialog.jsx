@@ -39,7 +39,10 @@ export default function CreateGroupDialog({ onGroupCreated }) {
       // const response = await fetch("http://localhost:3001/creat-group", {
       const response = await fetch(`${API_URL}/creat-group`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",           
+          Authorization: `Bearer ${user?.token || ""}`,
+        },
         credentials: "include",
         body: JSON.stringify({ name: groupName, nameOwner: nameOwner }),
       });

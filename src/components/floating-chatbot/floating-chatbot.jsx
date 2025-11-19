@@ -10,11 +10,15 @@ export default function FloatingChatStream({ groupId, meetingId }) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState([
-    { id: 0, sender: "system", text: "💬 Xin chào! Tôi có thể giúp gì cho bạn?" },
+    {
+      id: 0,
+      sender: "system",
+      text: "💬 Xin chào! Tôi có thể giúp gì cho bạn?",
+    },
   ]);
   const [loading, setLoading] = useState(false);
   const chatEndRef = useRef(null);
-  const messageIdRef = useRef(1); 
+  const messageIdRef = useRef(1);
 
   const toggleChat = () => setOpen((prev) => !prev);
 
@@ -49,7 +53,11 @@ export default function FloatingChatStream({ groupId, meetingId }) {
     if (!chatTargetId) {
       setChatHistory((prev) => [
         ...prev,
-        { id: messageIdRef.current++, sender: "system", text: "⚠️ Không tìm thấy groupId hoặc meetingId." },
+        {
+          id: messageIdRef.current++,
+          sender: "system",
+          text: "⚠️ Không tìm thấy groupId hoặc meetingId.",
+        },
       ]);
       setLoading(false);
       return;
@@ -59,7 +67,10 @@ export default function FloatingChatStream({ groupId, meetingId }) {
       // const res = await fetch("http://localhost:3001/chat", {
       const res = await fetch(`${API_URL}/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token || ""}`,
+        },
         credentials: "include",
         body: JSON.stringify({
           prompt: currentMessage,
@@ -76,7 +87,7 @@ export default function FloatingChatStream({ groupId, meetingId }) {
         if (value) {
           const chunk = decoder.decode(value, { stream: true });
 
-          // update correctly chat bot by ID 
+          // update correctly chat bot by ID
           setChatHistory((prev) =>
             prev.map((msg) =>
               msg.id === botMsgId
@@ -89,7 +100,11 @@ export default function FloatingChatStream({ groupId, meetingId }) {
     } catch (err) {
       setChatHistory((prev) => [
         ...prev,
-        { id: messageIdRef.current++, sender: "system", text: `❌ Lỗi khi gọi API: ${err.message}` },
+        {
+          id: messageIdRef.current++,
+          sender: "system",
+          text: `❌ Lỗi khi gọi API: ${err.message}`,
+        },
       ]);
     } finally {
       setLoading(false);

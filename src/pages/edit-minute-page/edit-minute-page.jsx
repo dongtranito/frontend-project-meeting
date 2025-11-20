@@ -19,7 +19,7 @@ export default function EditMinutePage() {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${user?.token || ""}`,
+              // Authorization: `Bearer ${user?.token || ""}`,
 
             },
             credentials: "include", 
@@ -41,7 +41,7 @@ export default function EditMinutePage() {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${user?.token || ""}`,
+              // Authorization: `Bearer ${user?.token || ""}`,
 
             },
             credentials: "include", 
@@ -71,7 +71,7 @@ export default function EditMinutePage() {
       method: "PUT",
       headers: { 
         "Content-Type": "application/json",
-        Authorization: `Bearer ${user?.token || ""}`,
+        // Authorization: `Bearer ${user?.token || ""}`,
        },
       body: JSON.stringify({ placeholder: formData }),
       credentials: "include"

@@ -52,7 +52,7 @@ export default function SendMinuteDialog({ open, handleClose, meetingId }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token || ""}`,
+          // Authorization: `Bearer ${user?.token || ""}`,
         },
         body: JSON.stringify({ signers }),
         credentials: "include",

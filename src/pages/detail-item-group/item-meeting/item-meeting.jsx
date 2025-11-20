@@ -41,7 +41,7 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${user?.token || ""}`,
+            // Authorization: `Bearer ${user?.token || ""}`,
           },
           credentials: "include",
         }

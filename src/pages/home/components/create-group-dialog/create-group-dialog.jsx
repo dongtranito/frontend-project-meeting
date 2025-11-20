@@ -41,7 +41,7 @@ export default function CreateGroupDialog({ onGroupCreated }) {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",           
-          Authorization: `Bearer ${user?.token || ""}`,
+          // Authorization: `Bearer ${user?.token || ""}`,
         },
         credentials: "include",
         body: JSON.stringify({ name: groupName, nameOwner: nameOwner }),

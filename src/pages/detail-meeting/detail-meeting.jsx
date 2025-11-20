@@ -57,7 +57,7 @@ export default function DetailMeeting() {
       const res = await fetch(`${API_URL}/meeting/${id}`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${user?.token || ""}`,
+          // Authorization: `Bearer ${user?.token || ""}`,
         },
         credentials: "include",
       });
@@ -81,7 +81,7 @@ export default function DetailMeeting() {
       const res = await fetch(`${API_URL}/minute/${id}`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${user?.token || ""}`,
+          // Authorization: `Bearer ${user?.token || ""}`,
         },
         credentials: "include",
       });
@@ -171,7 +171,7 @@ export default function DetailMeeting() {
       const res = await fetch(`${API_URL}/upload/record`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${user?.token || ""}`,
+          // Authorization: `Bearer ${user?.token || ""}`,
         },
         body: formData,
         credentials: "include",
@@ -220,7 +220,7 @@ export default function DetailMeeting() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token || ""}`,
+          // Authorization: `Bearer ${user?.token || ""}`,
         },
         credentials: "include",
         body: JSON.stringify({
@@ -276,7 +276,7 @@ export default function DetailMeeting() {
       const res = await fetch(`${API_URL}/upload/sample-minute`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${user?.token || ""}`,
+          // Authorization: `Bearer ${user?.token || ""}`,
         },
         body: formData,
         credentials: "include",
@@ -307,7 +307,7 @@ export default function DetailMeeting() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token || ""}`,
+          // Authorization: `Bearer ${user?.token || ""}`,
         },
         credentials: "include",
       });

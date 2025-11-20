@@ -33,9 +33,9 @@ export default function ChatBox() {
       // const res = await fetch("http://localhost:3001/upload/metadata", {
       const res = await fetch(`${API_URL}/upload/metadata`, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${user?.token || ""}`,
-        },
+        // headers: {
+        //   Authorization: `Bearer ${user?.token || ""}`,
+        // },
         body: formData,
         credentials: "include",
       });

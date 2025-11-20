@@ -5,6 +5,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import { motion, AnimatePresence } from "framer-motion";
 import "./floating-chatbot.css";
+import { API_URL } from "../../config/api.js";
 
 export default function FloatingChatStream({ groupId, meetingId }) {
   const [open, setOpen] = useState(false);
@@ -69,7 +70,7 @@ export default function FloatingChatStream({ groupId, meetingId }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token || ""}`,
+          // Authorization: `Bearer ${user?.token || ""}`,
         },
         credentials: "include",
         body: JSON.stringify({

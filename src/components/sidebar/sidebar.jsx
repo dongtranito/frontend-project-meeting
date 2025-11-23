@@ -139,8 +139,8 @@ export default function Sidebar() {
           <MenuIcon className="icon-menu" />
           {!collapsed && (
             <div className="project-meta">
-              <div className="name">DocFU</div>
-              <div className="sub">Documented. Defined. Yours.</div>
+              <div className="name">DYD</div>
+              <div className="sub">Idea - Ideal -Ido</div>
             </div>
           )}
         </div>

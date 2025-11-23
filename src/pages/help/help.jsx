@@ -6,10 +6,10 @@ export default function Help() {
   return (
     <Box className="help-container" sx={{ p: 3, maxWidth: 900, margin: "0 auto" }}>
       <Typography variant="h4" gutterBottom fontWeight="bold">
-        📘 Hướng dẫn sử dụng DocFu
+        📘 Hướng dẫn sử dụng DYD
       </Typography>
       <Typography variant="body1" gutterBottom>
-        Chào mừng bạn đến với DocFu! Dưới đây là hướng dẫn chi tiết giúp bạn dễ dàng sử dụng các chức năng chính của hệ thống.
+        Chào mừng bạn đến với DYD! Dưới đây là hướng dẫn chi tiết giúp bạn dễ dàng sử dụng các chức năng chính của hệ thống.
       </Typography>
 
       {/* 1. Đăng nhập */}
@@ -84,7 +84,7 @@ export default function Help() {
 
       <Divider sx={{ my: 3 }} />
       <Typography variant="body2" color="text.secondary" align="center">
-        📩 Cần thêm trợ giúp? Liên hệ: <b>support@docfu.com</b>
+        📩 Cần thêm trợ giúp? Liên hệ: <b>support@dyd.com</b>
       </Typography>
     </Box>
   );

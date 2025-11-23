@@ -195,9 +195,9 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
               />
             </LocalizationProvider>
 
-            <DialogContentText>Meta data:</DialogContentText>
+            <DialogContentText>Biên bản mẫu:</DialogContentText>
             <Button variant="outlined" component="label" fullWidth>
-              Chọn file meta data
+              Chọn file biên bản mẫu
               <input
                 hidden
                 type="file"

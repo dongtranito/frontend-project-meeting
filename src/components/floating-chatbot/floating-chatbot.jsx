@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext  } from "react";
 import { IconButton, CircularProgress } from "@mui/material";
 import ChatIcon from "@mui/icons-material/Chat";
 import CloseIcon from "@mui/icons-material/Close";
@@ -6,8 +6,10 @@ import SendIcon from "@mui/icons-material/Send";
 import { motion, AnimatePresence } from "framer-motion";
 import "./floating-chatbot.css";
 import { API_URL } from "../../config/api.js";
-
+import { AuthContext } from "../../auth/auth-context"
 export default function FloatingChatStream({ groupId, meetingId }) {
+  
+  const { user } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState([
@@ -70,7 +72,7 @@ export default function FloatingChatStream({ groupId, meetingId }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer ${user?.token || ""}`,
+          Authorization: `Bearer ${user?.token || ""}`,
         },
         credentials: "include",
         body: JSON.stringify({

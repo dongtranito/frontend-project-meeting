@@ -146,10 +146,11 @@ background: linear-gradient(to top, #243B55, #141E30); /* W3C, IE 10+/ Edge, Fir
 
 .main-content {
   position: absolute;
-  top: var(--header-height);
+  /* top: var(--header-height); */
   left: var(--sidebar-width);
   width: calc(100% - var(--sidebar-width));
-  height: calc(100vh - var(--header-height));
+  /* height: calc(100vh - var(--header-height)); */
+  height: 100%;
   background-color: #f5f5f5;
   padding: 20px;
   overflow-y: auto;

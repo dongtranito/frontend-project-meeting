@@ -23,6 +23,7 @@ import "./detail-meeting.css";
 import MinuteActionsMenu from "./minute-action-menu/minute-action-menu";
 import FloatingChatStream from "../../components/floating-chatbot/floating-chatbot";
 import { API_URL } from "../../config/api.js";
+import Header from "../../components/header/header.jsx";
 
 export default function DetailMeeting() {
   const { id } = useParams();
@@ -330,11 +331,13 @@ export default function DetailMeeting() {
   return (
     <Box className="detail-meeting-container">
       <Box className="meeting-header">
-        <Typography variant="h5" fontWeight="bold">
+        {/* <Typography variant="h5" fontWeight="bold">
           {meetingDetail.title || "Không có tiêu đề"}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {meetingDetail.description || ""}
+        </Typography> */}
+        <Header title={meetingDetail?.title || "Chi tiết cuộc họp"} />
+
+        <Typography variant="body2" color="text.secondary" className="sub-detail-meeting">
+          Mô tả: {meetingDetail.description || ""}
         </Typography>
       </Box>
 

@@ -11,6 +11,7 @@ import './detail-item-group.css';
 import MeetingItem from "./item-meeting/item-meeting";
 import FloatingChatStream from "../../components/floating-chatbot/floating-chatbot";
 import { API_URL } from "../../config/api.js";
+import Header from "../../components/header/header.jsx";
 
 
 export default function DetailItemGroup() {
@@ -125,11 +126,13 @@ export default function DetailItemGroup() {
 
   return (
     <Box sx={{ width: "100%", typography: "body1", height: "100%" }}>
-      <Box sx={{ mb: 2, borderBottom: "1px solid #ddd", pb: 1 }}>
-        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+      <Box sx={{ mb: 2, borderBottom: "1px solid #ddd"}}>
+        {/* <Typography variant="h5" sx={{ fontWeight: "bold" }}>
           {groupDetail.name}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
+        </Typography> */}
+        <Header title={groupDetail?.name || "Chi tiết nhóm"} />
+
+        <Typography variant="body2" color="text.secondary" className="sub-detail-group">
           Chủ nhóm: {groupDetail.owner_id || "Không xác định"}
         </Typography>
       </Box>

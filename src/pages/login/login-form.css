@@ -1,4 +1,4 @@
-.login-container {
+/* .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -105,5 +105,151 @@
 
   .login-button span {
     font-size: 0.9rem;
+  }
+} */
+
+/* Giữ background gradient cũ */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #001C44, #0C5776, #2D99AE, #BCFEFE);
+  background-size: 300% 300%;
+  animation: gradientMove 6s ease infinite;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.login-card {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 45px 55px;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  max-width: 430px;
+  width: 90%;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.22);
+}
+
+.login-card h2 {
+  margin-bottom: 22px;
+  color: #001c44;
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+
+/* -------- INTRO CARD -------- */
+
+.intro-card {
+  background: #f7fafc;
+  border-radius: 18px;
+  padding: 25px 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin-bottom: 32px;
+  transition: all 0.25s ease;
+}
+
+.intro-card:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.intro-logo {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+}
+
+.intro-text {
+  text-align: left;
+  flex: 1;
+}
+
+.intro-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #001c44;
+  margin: 0;
+}
+
+.intro-slogan {
+  font-size: 0.95rem;
+  margin: 5px 0 10px;
+  color: #0C5776;
+  font-weight: 500;
+}
+
+.intro-description {
+  font-size: 0.85rem;
+  color: #4b5563;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* -------- BUTTON -------- */
+
+.login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 18px;
+  background-color: #ffffff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  transition: all 0.25s ease;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.login-button:hover {
+  background-color: #f9fafb;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+.login-button img {
+  width: 22px;
+  height: 22px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+/* -------- ERROR -------- */
+
+.login-card p.error {
+  color: #ef4444;
+  font-size: 0.9rem;
+  margin-top: 15px;
+}
+
+/* -------- MOBILE -------- */
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 35px 30px;
+  }
+
+  .intro-card {
+    padding: 18px 15px;
+  }
+
+  .intro-title {
+    font-size: 1.35rem;
+  }
+
+  .intro-description {
+    font-size: 0.8rem;
   }
 }

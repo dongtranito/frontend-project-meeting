@@ -1,5 +1,6 @@
 .MuiTypography-root {
   overflow: hidden;
+  /* padding: 12px 20px; */
 }
 .list-btn {
     display: flex;
@@ -21,3 +22,6 @@
   /* padding-bottom: 80px; Tạo khoảng trống để không bị chatbox che */
 }
 
+.sub-detail-group {
+  padding: 12px 24px;
+}

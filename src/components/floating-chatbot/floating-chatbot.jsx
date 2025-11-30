@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import "./floating-chatbot.css";
 import { API_URL } from "../../config/api.js";
 
-export default function FloatingChatStream({ groupId, meetingId }) {
+export default function FloatingChatStream({ groupId, meetingId, nameChat, headerColor }) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState([
@@ -116,7 +116,12 @@ export default function FloatingChatStream({ groupId, meetingId }) {
     <div className="chatbox-wrapper">
       <>
         <IconButton onClick={toggleChat} className="chat-toggle-btn">
-          {open ? <CloseIcon /> : <ChatIcon />}
+          {/* {open ? <CloseIcon /> : <ChatIcon />} */}
+          <img
+            src="/chatbot.png"
+            alt="Chat Toggle"
+            className="chat-toggle-img"
+          />
         </IconButton>
 
         <AnimatePresence>
@@ -128,14 +133,17 @@ export default function FloatingChatStream({ groupId, meetingId }) {
               transition={{ duration: 0.3 }}
               className="chatbox-container"
             >
-              <div className="chatbox-header">
-                <span>Chat hỗ trợ</span>
+              <div
+                className="chatbox-header"
+                style={{ backgroundColor: headerColor }}
+              >
+                <span>{nameChat}</span>
                 <IconButton
                   onClick={toggleChat}
                   size="small"
                   className="chatbox-close-btn"
                 >
-                  <CloseIcon fontSize="small" />
+                  <CloseIcon fontSize="small" style={{ color: "white" }} />
                 </IconButton>
               </div>
 
@@ -143,9 +151,8 @@ export default function FloatingChatStream({ groupId, meetingId }) {
                 {chatHistory.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`chat-message ${
-                      msg.sender === "user" ? "user" : "system"
-                    }`}
+                    className={`chat-message ${msg.sender === "user" ? "user" : "system"
+                      }`}
                   >
                     <div className="chat-bubble">{msg.text}</div>
                   </div>
@@ -166,7 +173,7 @@ export default function FloatingChatStream({ groupId, meetingId }) {
                   disabled={loading}
                   className="chatbox-send-btn"
                 >
-                  {loading ? <CircularProgress size={18} /> : <SendIcon />}
+                  {loading ? <CircularProgress size={18} /> : <SendIcon style={{color: headerColor}}/>}
                 </IconButton>
               </div>
             </motion.div>

@@ -16,7 +16,7 @@ import "./item-meeting.css";
 import UpdateMeetingDialog from "./update-meeting-dialog/update-meeting-dialog";
 import { API_URL } from "../../../config/api.js";
 
-export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
+export default function MeetingItem({ meeting, onUpdated, onDeleted, isOwner }) {
   const [openEdit, setOpenEdit] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -106,22 +106,6 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
       sx={{ borderRadius: "12px", cursor: "pointer" }}
     >
       <CardContent>
-        {/* <div className="meeting-header">
-          <Typography variant="h6" className="meeting-title">
-            {meeting.title}
-          </Typography>
-          <Typography variant="h6" className="meeting-title">
-            {meeting.description}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            🕒 {new Date(meeting.scheduledAt).toLocaleString()}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {meeting.status === "signed"
-              ? "Biên bản đã được ký"
-              : "Biên bản chưa được ký"}
-          </Typography>
-        </div> */}
         <div className="meeting-header">
           <Typography variant="h6" className="meeting-title">
             {meeting.title}
@@ -137,9 +121,8 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
 
           <Typography
             variant="body2"
-            className={`meeting-status ${
-              meeting.status === "signed" ? "signed" : "unsigned"
-            }`}
+            className={`meeting-status ${meeting.status === "signed" ? "signed" : "unsigned"
+              }`}
           >
             {meeting.status === "signed"
               ? "Biên bản đã được ký"
@@ -147,7 +130,7 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
           </Typography>
         </div>
 
-        <div className="meeting-actions">
+        {/* <div className="meeting-actions">
           <Button
             variant="outlined"
             color="primary"
@@ -173,10 +156,40 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
           >
             Xóa
           </Button>
-        </div>
+        </div> */}
+        {isOwner && (
+          <div className="meeting-actions">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenUpdate(true);
+              }}
+              className="btn-update"
+            >
+              Cập nhật
+            </Button>
+
+            <Button
+              variant="contained"
+              color="error"
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenConfirm(true);
+              }}
+              disabled={loading}
+              className="btn-delete"
+            >
+              Xóa
+            </Button>
+          </div>
+        )}
+
       </CardContent>
 
-      {/* Các dialog giữ nguyên */}
       <UpdateMeetingDialog
         open={openUpdate}
         onClose={() => setOpenUpdate(false)}
@@ -212,7 +225,7 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted }) {
             variant="contained"
             color="error"
             onClick={(e) => {
-              e.stopPropagation(); //Ngăn click lan khi đang xóa
+              e.stopPropagation(); 
               handleDeleteMeeting();
             }}
             disabled={loading}

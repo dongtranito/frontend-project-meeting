@@ -14,7 +14,9 @@ import {
   Button,
   Typography,
   TextField,
+  Box,
 } from "@mui/material";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { red } from "@mui/material/colors";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
@@ -188,27 +190,40 @@ export default function ItemGroup({
           <DeleteOutlinedIcon />
         </IconButton>
       </div>
-
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Xác nhận</DialogTitle>
+      
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        className="create-prompt-dialog confirmation-dialog"
+        fullWidth
+        maxWidth="xs"
+      >
+        <DialogTitle>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <WarningAmberIcon sx={{ mr: 1 }} />
+            Xác nhận
+          </Box>
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
             {isOwner ? (
               <>
-                Bạn có chắc chắn muốn <b>xóa nhóm</b> <b>{title}</b> không?
+                Bạn có chắc chắn muốn xóa nhóm {title} không?
               </>
             ) : (
               <>
-                Bạn có chắc chắn muốn <b>rời khỏi nhóm</b> <b>{title}</b> không?
+                Bạn có chắc chắn muốn rời khỏi nhóm {title} không?
               </>
             )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Hủy</Button>
+          <Button onClick={handleCloseDialog} className="cancel-btn">
+            Hủy
+          </Button>
           <Button
             onClick={handleLeaveGroup}
-            className="confirm-leave-btn"
+            className="create-btn"
             variant="contained"
           >
             {isOwner ? "Xóa nhóm" : "Rời khỏi nhóm"}

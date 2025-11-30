@@ -122,11 +122,14 @@ export default function DetailItemGroup() {
       </Typography>
     );
 
+  const isCurrentUserOwner = groupDetail.owner_id === user?.email;
+  console.log("owner:", isCurrentUserOwner);
+
   console.log("📘 groupDetail nhận được từ backend:", groupDetail);
 
   return (
     <Box sx={{ width: "100%", typography: "body1", height: "100%" }}>
-      <Box sx={{ mb: 2, borderBottom: "1px solid #ddd"}}>
+      <Box sx={{ mb: 2, borderBottom: "1px solid #ddd" }}>
         {/* <Typography variant="h5" sx={{ fontWeight: "bold" }}>
           {groupDetail.name}
         </Typography> */}
@@ -148,23 +151,27 @@ export default function DetailItemGroup() {
         <TabPanel value="1">
           <div className="list-btn">
             <h2>Danh sách thành viên:</h2>
-            <InviteMemberDialog groupId={id} refreshGroup={fetchGroupDetail} />
+            {/* <InviteMemberDialog groupId={id} refreshGroup={fetchGroupDetail} /> */}
+            {isCurrentUserOwner && (
+              <InviteMemberDialog groupId={id} refreshGroup={fetchGroupDetail} />
+            )}
           </div>
 
           <div className="list-members">
             {groupDetail.members?.length > 0 ? (
               groupDetail.members.map((member, index) => {
-                const isOwner =
-                  groupDetail.members.some(
-                    (m) => m.user_id === user?.email && m.role === "owner"
-                  ) || groupDetail.owner_id === user?.email;
+                // const isOwner =
+                //   groupDetail.members.some(
+                //     (m) => m.user_id === user?.email && m.role === "owner"
+                //   ) || groupDetail.owner_id === user?.email;
 
                 return (
                   <MemberItem
                     key={index}
                     member={member}
                     groupId={id}
-                    isOwner={isOwner}
+                    // isOwner={isOwner}
+                    isOwner={isCurrentUserOwner}
                     currentUserEmail={user?.email}
                     token={user?.token}
                     onRemoved={() => {
@@ -198,7 +205,10 @@ export default function DetailItemGroup() {
             <div className="meeting-content">
               <div className="list-btn">
                 <h2>Danh sách cuộc họp:</h2>
-                <CreateMeetingDialog groupId={id} onCreated={fetchMeetings} />
+                {isCurrentUserOwner && (
+                  <CreateMeetingDialog groupId={id} onCreated={fetchMeetings} />
+                )}
+                {/* <CreateMeetingDialog groupId={id} onCreated={fetchMeetings} /> */}
               </div>
 
               {loadingMeetings ? (
@@ -207,22 +217,31 @@ export default function DetailItemGroup() {
                 // meetings.map((meeting) => (
                 //   <MeetingItem key={meeting.meetingId} meeting={meeting} />
                 // ))
-                meetings.map((meeting) => (
-                  <MeetingItem
-                    key={meeting.meetingId}
-                    meeting={meeting}
-                    onDeleted={(deletedId) => {
-                      setMeetings((prev) => prev.filter((m) => m.meetingId !== deletedId));
-                    }}
-                    onUpdated={(updatedMeeting) => {
-                      setMeetings((prev) =>
-                        prev.map((m) =>
-                          m.meetingId === updatedMeeting.meetingId ? updatedMeeting : m
-                        )
-                      );
-                    }}
-                  />
-                ))
+                meetings.map((meeting) => {
+                  // const isOwner =
+                  //   groupDetail.members.some(
+                  //     (m) => m.user_id === user?.email && m.role === "owner"
+                  //   ) || groupDetail.owner_id === user?.email;
+
+                  return (
+                    <MeetingItem
+                      key={meeting.meetingId}
+                      meeting={meeting}
+                      // isOwner={isOwner}  
+                      isOwner={isCurrentUserOwner}
+                      onDeleted={(deletedId) => {
+                        setMeetings((prev) => prev.filter((m) => m.meetingId !== deletedId));
+                      }}
+                      onUpdated={(updatedMeeting) => {
+                        setMeetings((prev) =>
+                          prev.map((m) =>
+                            m.meetingId === updatedMeeting.meetingId ? updatedMeeting : m
+                          )
+                        );
+                      }}
+                    />
+                  );
+                })
 
               ) : (
                 <Typography color="text.secondary">
@@ -231,7 +250,7 @@ export default function DetailItemGroup() {
               )}
             </div>
 
-            <FloatingChatStream groupId={id} />
+            <FloatingChatStream groupId={id} nameChat='Chat hỗ trợ nhóm' headerColor="#243B55" />
           </div>
         </TabPanel>
       </TabContext>

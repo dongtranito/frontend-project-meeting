@@ -14,6 +14,7 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import EditIcon from "@mui/icons-material/Edit";
 import SendIcon from "@mui/icons-material/Send";
 import SendMinuteDialog from "../send-minute-dialog/send-minute-dialog";
+import CreateMinutePromptDialog from "../create-minute-prompt-dialog/create-minute-prompt-dialog";
 
 export default function MinuteActionsMenu({
   createMinute,
@@ -29,6 +30,7 @@ export default function MinuteActionsMenu({
   const handleClose = () => setAnchorEl(null);
 
   const [openSendDialog, setOpenSendDialog] = useState(false);
+  const [openPromptDialog, setOpenPromptDialog] = useState(false);
 
   const handleSendMinute = () => {
     setOpenSendDialog(true);
@@ -43,8 +45,7 @@ export default function MinuteActionsMenu({
 
       {/* Menu popup */}
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        {/* Tạo biên bản */}
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             createMinute();
             handleClose();
@@ -57,9 +58,19 @@ export default function MinuteActionsMenu({
           <ListItemText>
             {loadingMinute ? "Đang tạo..." : "Tạo biên bản"}
           </ListItemText>
+        </MenuItem> */}
+        <MenuItem
+          onClick={() => {
+            setOpenPromptDialog(true);  // mở dialog
+            handleClose();              // đóng popup menu
+          }}
+        >
+          <ListItemIcon>
+            <CreateIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Tạo biên bản</ListItemText>
         </MenuItem>
 
-        {/* Thêm / Cập nhật mẫu biên bản */}
         <MenuItem component="label">
           <ListItemIcon>
             <UploadFileIcon fontSize="small" />
@@ -68,7 +79,6 @@ export default function MinuteActionsMenu({
           <input type="file" hidden onChange={handleUploadSampleMinute} />
         </MenuItem>
 
-        {/* Chỉnh sửa biên bản */}
         <MenuItem
           onClick={() => {
             navigate(`/meeting/${id}/edit-minute`);
@@ -83,7 +93,6 @@ export default function MinuteActionsMenu({
 
         <Divider />
 
-        {/* Gửi biên bản */}
         <MenuItem onClick={handleSendMinute}>
           <ListItemIcon>
             <SendIcon fontSize="small" />
@@ -92,11 +101,20 @@ export default function MinuteActionsMenu({
         </MenuItem>
 
       </Menu>
-        <SendMinuteDialog
-          open={openSendDialog}
-          handleClose={() => setOpenSendDialog(false)}
-          meetingId={id}
-        />
+      <SendMinuteDialog
+        open={openSendDialog}
+        handleClose={() => setOpenSendDialog(false)}
+        meetingId={id}
+      />
+      <CreateMinutePromptDialog
+        open={openPromptDialog}
+        onClose={() => setOpenPromptDialog(false)}
+        onSubmit={(prompt) => {
+          setOpenPromptDialog(false);
+          createMinute(prompt);
+        }}
+      />
+
     </div>
   );
 }

@@ -47,7 +47,7 @@ export default function Header({ onGroupCreated, title }) {
         justifyContent: "space-between",
         alignItems: "center",
       }}
-      style={{ padding: "12px 20px", borderBottom: "1px solid #eee" }}
+      style={{ padding: "12px 20px", borderBottom: "1px solid #eee"}}
     >
       {/* Left: Back + Title */}
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>

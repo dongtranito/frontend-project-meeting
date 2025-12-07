@@ -33,8 +33,10 @@ export default function AudioRecorder() {
     try {
       // const res = await fetch(`http://localhost:3001/getSampleVoice`, {
       const res = await fetch(`${API_URL}/getSampleVoice`, {
+        method: "GET",
         headers: {
-          Authorization: `Bearer ${user?.token || ""}`,
+          // Authorization: `Bearer ${user?.token || ""}`,
+          "Content-Type": "application/json" 
         },
         credentials: "include",
       });
@@ -195,14 +197,22 @@ export default function AudioRecorder() {
             </Typography>
             <audio controls src={audioURL} />
           </div>
-        ) : null}
+        ) : (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: "center" }}
+          >
+            Bạn chưa có mẫu giọng nói.
+          </Typography>
+        )}
 
         <div className="action-buttons">
           <Button
             variant="outlined"
             startIcon={<CloudUpload />}
             onClick={uploadToServer}
-            disabled={loading || uploaded}
+            disabled={loading || !audioBlob || uploaded}
           >
             {uploaded ? "✅ Đã upload" : "Upload lên server"}
           </Button>
@@ -216,9 +226,8 @@ export default function AudioRecorder() {
 
         {message && (
           <Typography
-            className={`message ${
-              message.startsWith("✅") ? "success" : "error"
-            }`}
+            className={`message ${message.startsWith("✅") ? "success" : "error"
+              }`}
           >
             {message}
           </Typography>

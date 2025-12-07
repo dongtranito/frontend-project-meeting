@@ -15,6 +15,7 @@ import {
   Typography,
   TextField,
   Box,
+  Alert,
 } from "@mui/material";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { red } from "@mui/material/colors";
@@ -40,6 +41,8 @@ export default function ItemGroup({
   const [newDescription, setNewDescription] = useState(description || "");
   const [loading, setLoading] = useState(false);
 
+  const [message, setMessage] = useState(null);
+
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
@@ -52,10 +55,51 @@ export default function ItemGroup({
   };
   const handleCloseDialog = () => setOpenDialog(false);
 
+  // const handleLeaveGroup = async () => {
+  //   setMessage(null);
+  //   try {
+  //     if (isOwner) {
+  //       // const res = await fetch(`http://localhost:3001/delete-group/${id}`, {
+  //       const res = await fetch(`${API_URL}/delete-group/${id}`, {
+  //         method: "DELETE",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${user.token}`,
+  //         },
+  //         credentials: "include",
+  //       });
+  //       if (!res.ok) throw new Error("Xóa nhóm thất bại");
+  //       // alert(`Nhóm "${title}" đã được xóa thành công.`);
+  //       setMessage(`Nhóm ${title} đã được xóa thành công.`);
+  //     } else {
+  //       // const res = await fetch(`http://localhost:3001/leave-group`, {
+  //       const res = await fetch(`${API_URL}/leave-group`, {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${user.token}`,
+  //         },
+  //         credentials: "include",
+  //         body: JSON.stringify({ groupId: id, userId: user.uid }),
+  //       });
+  //       if (!res.ok) throw new Error("Rời nhóm thất bại");
+  //       // alert(`🚪 Bạn đã rời khỏi nhóm "${title}".`);
+  //       setMessage(`Bạn đã rời khỏi nhóm ${title}.`);
+  //     }
+  //     setOpenDialog(false);
+  //     window.location.reload();
+  //   } catch (error) {
+  //     console.error(error);
+  //     // alert("Có lỗi xảy ra khi xử lý yêu cầu.");
+  //     setMessage("Đã xảy ra lỗi khi xử lý yêu cầu. Vui lòng thử lại sau!");
+  //   }
+  // };
   const handleLeaveGroup = async () => {
+    setMessage(null);
     try {
+      let successText = "";
+
       if (isOwner) {
-        // const res = await fetch(`http://localhost:3001/delete-group/${id}`, {
         const res = await fetch(`${API_URL}/delete-group/${id}`, {
           method: "DELETE",
           headers: {
@@ -64,10 +108,11 @@ export default function ItemGroup({
           },
           credentials: "include",
         });
+
         if (!res.ok) throw new Error("Xóa nhóm thất bại");
-        alert(`Nhóm "${title}" đã được xóa thành công.`);
+        successText = `Nhóm "${title}" đã được xóa thành công.`;
+
       } else {
-        // const res = await fetch(`http://localhost:3001/leave-group`, {
         const res = await fetch(`${API_URL}/leave-group`, {
           method: "POST",
           headers: {
@@ -77,16 +122,26 @@ export default function ItemGroup({
           credentials: "include",
           body: JSON.stringify({ groupId: id, userId: user.uid }),
         });
+
         if (!res.ok) throw new Error("Rời nhóm thất bại");
-        alert(`🚪 Bạn đã rời khỏi nhóm "${title}".`);
+        successText = `Bạn đã rời khỏi nhóm "${title}".`;
       }
+
+      setMessage({ type: "success", text: successText });
       setOpenDialog(false);
-      window.location.reload();
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       console.error(error);
-      alert("Có lỗi xảy ra khi xử lý yêu cầu.");
+      setMessage({
+        type: "error",
+        text: "Đã xảy ra lỗi khi xử lý yêu cầu. Vui lòng thử lại sau!",
+      });
     }
   };
+
 
   const handleOpenUpdate = (e) => {
     e.stopPropagation();
@@ -175,6 +230,18 @@ export default function ItemGroup({
         </Typography>
       </CardContent>
 
+      {message && (
+        <Box sx={{ px: 2, pb: 1 }}>
+          <Alert
+            severity={message.type}
+            onClose={() => setMessage(null)}
+            sx={{ mb: 1 }}
+          >
+            {message.text}
+          </Alert>
+        </Box>
+      )}
+
       <div className="item-group-actions">
         {isOwner && (
           <Button
@@ -190,7 +257,7 @@ export default function ItemGroup({
           <DeleteOutlinedIcon />
         </IconButton>
       </div>
-      
+
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}

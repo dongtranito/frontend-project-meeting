@@ -21,11 +21,7 @@
 .create-prompt-dialog .MuiDialogContentText-root {
   font-size: 14px;
   color: #555;
-  margin-bottom: 6px;
-}
-
-.create-prompt-dialog .MuiTextField-root {
-  margin-top: 10px;
+  margin-bottom: 26px;
 }
 
 .create-prompt-dialog .MuiDialogActions-root {

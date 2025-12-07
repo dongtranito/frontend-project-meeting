@@ -109,19 +109,13 @@ export default function DetailMeeting() {
       setLoading(true);
       setMessage("");
 
-      // Kiểm tra chưa có biên bản official
-      if (!meetingDetail?.officialMinute) {
-        setMessage("⚠️ Chưa có biên bản chính thức để xem bản ký.");
-        return;
-      }
-
       const res = await fetch(`${API_URL}/minute/${id}`, {
         method: "GET",
         credentials: "include",
       });
 
       const data = await res.json();
-      console.log("data sign:", data);
+      console.log("data sign:", data.data);
 
       // Có official nhưng chưa ký
       if (!data.data?.signedMinute) {
@@ -403,11 +397,13 @@ export default function DetailMeeting() {
       if (data?.success && data?.data?.transcript) {
         setTranscript(data.data.transcript);
       } else {
-        alert("Không tìm thấy transcript cho cuộc họp này!");
+        // alert("Không tìm thấy transcript cho cuộc họp này!");
+        setMessage("Chưa có transcript cho cuộc họp này!")
       }
     } catch (error) {
       console.error("Lỗi khi gọi API transcript:", error);
-      alert("Đã xảy ra lỗi khi lấy transcript!");
+      // alert("Đã xảy ra lỗi khi lấy transcript!");
+      setMessage("Đã xảy ra lỗi khi lấy transcript!")
     } finally {
       setLoading(false);
     }
@@ -505,15 +501,16 @@ export default function DetailMeeting() {
                   variant="outlined"
                   startIcon={<CloudUpload />}
                   onClick={uploadToServer}
-                  disabled={loading || uploaded}
+                  disabled={loading || !audioBlob || uploaded}
                 >
-                  {uploaded ? "✅ Đã upload lên server" : "Gửi lên server"}
+                  {uploaded ? "Đã upload lên server" : "Gửi lên server"}
                 </Button>
+                
                 <Button
                   variant="outlined"
                   startIcon={<Description />}
                   onClick={createTranscript}
-                  disabled={loading}
+                  disabled={loading || !meetingDetail.minutes.officeMinute}
                 >
                   {loading ? "Đang tải..." : "Hiển thị transcript"}
                 </Button>
@@ -629,7 +626,7 @@ export default function DetailMeeting() {
                     variant="contained"
                     color="primary"
                     onClick={handleViewSignedMinute}
-                    disabled={loading || !meetingDetail?.officialMinute}
+                    disabled={loading || !meetingDetail.minutes.signedMinute}
                   >
                     {loading ? "Đang tải..." : "Xem biên bản đã ký"}
                   </Button>

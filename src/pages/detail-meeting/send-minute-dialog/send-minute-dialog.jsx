@@ -235,9 +235,9 @@ import {
   CircularProgress,
   Chip,
   Stack,
-  Box, 
+  Box,
 } from "@mui/material";
-import EmailIcon from "@mui/icons-material/Email"; 
+import EmailIcon from "@mui/icons-material/Email";
 import { API_URL } from "../../../config/api.js";
 import "./send-minute-dialog.css";
 
@@ -290,11 +290,15 @@ export default function SendMinuteDialog({ open, handleClose, meetingId }) {
       if (data.success) {
         setMessage({
           type: "success",
-          text: `Gửi biên bản thành công! Mã giao dịch: ${data.result}`,
+          text: `Gửi biên bản thành công! Biên bản đã được gửi đến: ${data.result.signerEmails}`,
         });
         setSigners([]);
+
+        setTimeout(() => {
+          handleClose();
+        }, 5000);
       } else {
-        throw new Error(data.message || "Không thể gửi biên bản.");
+        throw new Error(data.error || "Không thể gửi biên bản.");
       }
     } catch (err) {
       setMessage({ type: "error", text: err.message });
@@ -336,8 +340,8 @@ export default function SendMinuteDialog({ open, handleClose, meetingId }) {
           <Button
             onClick={handleAddEmail}
             variant="contained"
-            disabled={loading}
-            className="add-signer-btn" 
+            disabled={loading || !email}
+            className="add-signer-btn"
           >
             Thêm
           </Button>
@@ -349,7 +353,7 @@ export default function SendMinuteDialog({ open, handleClose, meetingId }) {
               key={idx}
               label={e}
               onDelete={() => handleRemoveEmail(e)}
-              color="primary" 
+              color="primary"
               variant="outlined"
             />
           ))}
@@ -362,7 +366,7 @@ export default function SendMinuteDialog({ open, handleClose, meetingId }) {
         <Button onClick={handleClose} disabled={loading} className="cancel-btn">
           Hủy
         </Button>
-        <Button onClick={handleSend} variant="contained" disabled={loading} className="create-btn">
+        <Button onClick={handleSend} variant="contained" disabled={loading || signers.length === 0} className="create-btn">
           {loading ? (
             <CircularProgress size={20} color="inherit" />
           ) : (

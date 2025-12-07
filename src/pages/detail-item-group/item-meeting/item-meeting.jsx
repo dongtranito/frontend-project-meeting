@@ -11,10 +11,13 @@ import {
   DialogActions,
   TextField,
   Snackbar,
+  DialogContentText,
+  Box,
 } from "@mui/material";
 import "./item-meeting.css";
 import UpdateMeetingDialog from "./update-meeting-dialog/update-meeting-dialog";
 import { API_URL } from "../../../config/api.js";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 export default function MeetingItem({ meeting, onUpdated, onDeleted, isOwner }) {
   const [openEdit, setOpenEdit] = useState(false);
@@ -119,15 +122,31 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted, isOwner }) 
             🕒 {new Date(meeting.scheduledAt).toLocaleString()}
           </Typography>
 
-          <Typography
+          {/* <Typography
             variant="body2"
             className={`meeting-status ${meeting.status === "signed" ? "signed" : "unsigned"
               }`}
-          >
+          > 
             {meeting.status === "signed"
               ? "Biên bản đã được ký"
               : "Biên bản chưa được ký"}
+          </Typography> */}
+          <Typography
+            variant="body2"
+            className={`meeting-status ${meeting.minutes
+                ? meeting.status === "signed"
+                  ? "signed"
+                  : "unsigned"
+                : "no-minutes"
+              }`}
+          >
+            {meeting.minutes
+              ? meeting.status === "signed"
+                ? "Biên bản đã được ký"
+                : "Biên bản chưa được ký"
+              : "Chưa có biên bản"}
           </Typography>
+
         </div>
 
         {/* <div className="meeting-actions">
@@ -202,7 +221,7 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted, isOwner }) 
         message={message}
       />
 
-      <Dialog
+      {/* <Dialog
         open={openConfirm}
         onClose={() => setOpenConfirm(false)}
         PaperProps={{
@@ -231,6 +250,38 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted, isOwner }) 
             disabled={loading}
           >
             {loading ? "Đang xóa..." : "Xóa"}
+          </Button>
+        </DialogActions>
+      </Dialog> */}
+      <Dialog
+        open={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+        className="create-prompt-dialog confirmation-dialog"
+        fullWidth
+        maxWidth="xs"
+      >
+        <DialogTitle>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <WarningAmberIcon sx={{ mr: 1 }} />
+            Xác nhận
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Bạn có muốn xóa cuộc họp <strong>{meeting.title}</strong> khỏi nhóm không?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenConfirm(false)} className="cancel-btn">
+            Hủy
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleDeleteMeeting}
+            className="create-btn"
+            disabled={loading}
+          >
+            {loading ? <CircularProgress size={20} color="inherit" /> : "Xóa"}
           </Button>
         </DialogActions>
       </Dialog>

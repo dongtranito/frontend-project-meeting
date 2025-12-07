@@ -12,11 +12,13 @@ import {
   Alert,
   Typography,
   DialogContentText,
+  Box,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import "./item-member.css";
 import { API_URL } from "../../../config/api.js";
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 export default function MemberItem({
   member,
@@ -159,7 +161,7 @@ export default function MemberItem({
         )}
 
       {/* Dialog xóa */}
-      <Dialog
+      {/* <Dialog
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}
       >
@@ -182,44 +184,39 @@ export default function MemberItem({
             {loading ? <CircularProgress size={20} color="inherit" /> : "Xóa"}
           </Button>
         </DialogActions>
-      </Dialog>
-
-      {/* Dialog cập nhật */}
-      {/* <Dialog
-        open={openUpdateDialog}
-        onClose={() => setOpenUpdateDialog(false)}
-        PaperProps={{ className: "update-dialog-paper" }}
+      </Dialog> */}
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+        className="create-prompt-dialog confirmation-dialog"
+        fullWidth
+        maxWidth="xs"
       >
-        <DialogTitle>Chỉnh sửa tên thành viên</DialogTitle>
-        <DialogContent className="update-dialog-content">
-          <TextField
-            fullWidth
-            label="Tên mới"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            variant="outlined"
-          />
-
-          {message && (
-            <Alert severity={message.type} sx={{ mt: 2 }}>
-              {message.text}
-            </Alert>
-          )}
+        <DialogTitle>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <WarningAmberIcon sx={{ mr: 1 }} />
+            Xác nhận
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Bạn có muốn xóa thành viên <strong>{member.name}</strong> khỏi nhóm không?
+          </DialogContentText>
         </DialogContent>
-        <DialogActions className="update-dialog-actions">
-          <Button onClick={() => setOpenUpdateDialog(false)} color="inherit">
+        <DialogActions>
+          <Button onClick={() => setOpenDeleteDialog(false)} className="cancel-btn">
             Hủy
           </Button>
           <Button
-            onClick={handleUpdateMember}
             variant="contained"
-            color="primary"
+            onClick={handleRemoveMember}
+            className="create-btn"
             disabled={loading}
           >
-            {loading ? <CircularProgress size={20} color="inherit" /> : "Lưu thay đổi"}
+            {loading ? <CircularProgress size={20} color="inherit" /> : "Xóa"}
           </Button>
         </DialogActions>
-      </Dialog> */}
+      </Dialog>
 
       <Dialog
         open={openUpdateDialog}

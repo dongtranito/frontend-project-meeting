@@ -306,7 +306,7 @@ export default function DetailMeeting() {
         body: JSON.stringify({
           meetingId: id,
           url: audioUrlToUse,
-          prompt: prompt || ""     
+          prompt: prompt || ""
         }),
       });
 
@@ -505,7 +505,7 @@ export default function DetailMeeting() {
                 >
                   {uploaded ? "Đã upload lên server" : "Gửi lên server"}
                 </Button>
-                
+
                 <Button
                   variant="outlined"
                   startIcon={<Description />}
@@ -573,72 +573,86 @@ export default function DetailMeeting() {
         <TabPanel value="2">
           <div className="meeting-tab">
             <div className="meeting-minute-content">
+
               <div className="minute-header">
                 <h2>Biên bản</h2>
-                <div className="minute-actions">
-                  <MinuteActionsMenu
-                    createMinute={createMinute}
-                    handleUploadSampleMinute={handleUploadSampleMinute}
-                    navigate={navigate}
-                    id={id}
-                    loadingMinute={loadingMinute}
-                  />
-                </div>
-              </div>
 
-              <div className="minute-body">
-                {loadingMinute ? (
-                  <p style={{ color: "#555" }}>⏳ Đang tạo biên bản...</p>
-                ) : meetingDetail?.minutes?.signedMinute ? (
-                  <Typography variant="body2" color="text.secondary">
-                    Xem biên bản đã kí tại: {meetingDetail.minutes.signedMinute}
+                {meetingDetail.status === "signed" && (
+                  <Typography variant="body2" color="success.main">
+                    Đã gửi ký cho: {meetingDetail.minutes?.signerEmails?.join(", ")}
                   </Typography>
-                ) : meetingDetail?.minutes?.officeMinute || minuteURL ? (
-                  <iframe
-                    src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
-                      minuteURL || meetingDetail.minutes.officeMinute || ""
-                    )}`}
-                    width="100%"
-                    height="100%"
-                    style={{ border: "none" }}
-                    title="Official Minute"
-                  />
-                ) : meetingDetail?.minutes?.sampleMinute ? (
-                  <iframe
-                    src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
-                      meetingDetail.minutes.sampleMinute
-                    )}`}
-                    width="100%"
-                    height="100%"
-                    style={{ border: "none" }}
-                    title="Sample Minute"
-                  />
-                ) : (
-                  <p style={{ color: "#777" }}>
-                    ⚠️ Chưa có biên bản nào được tải lên.
-                  </p>
+                )}
+
+                {meetingDetail.status !== "signed" && (
+                  <div className="minute-actions">
+                    <MinuteActionsMenu
+                      createMinute={createMinute}
+                      handleUploadSampleMinute={handleUploadSampleMinute}
+                      navigate={navigate}
+                      id={id}
+                      loadingMinute={loadingMinute}
+                    />
+                  </div>
                 )}
               </div>
 
-              <div className="minute-actions">
-                <div style={{ marginTop: "10px", textAlign: "center" }}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleViewSignedMinute}
-                    disabled={loading || !meetingDetail.minutes.signedMinute}
-                  >
-                    {loading ? "Đang tải..." : "Xem biên bản đã ký"}
-                  </Button>
-                </div>
-              </div>
-            </div>
+              <div className="minute-body">
+                {loadingMinute && (
+                  <p style={{ color: "#555" }}>⏳ Đang tạo biên bản...</p>
+                )}
 
-            {/* <div className="chatbox-wrapper">
-              <ChatBox />
-            </div> */}
+                {meetingDetail.status === "signed" ? (
+                  <p style={{ color: "#4caf50", marginTop: "10px" }}>
+                    ✔ Biên bản đã hoàn tất và được ký đầy đủ.
+                  </p>
+                ) : (
+                  <>
+                    {meetingDetail?.minutes?.signedMinute ? (
+                      <Typography variant="body2" color="text.secondary">
+                        Xem biên bản đã ký tại: {meetingDetail.minutes.signedMinute}
+                      </Typography>
+                    ) : meetingDetail?.minutes?.officeMinute || minuteURL ? (
+                      <iframe
+                        src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
+                          minuteURL || meetingDetail.minutes.officeMinute || ""
+                        )}`}
+                        width="100%"
+                        height="100%"
+                        style={{ border: "none" }}
+                        title="Official Minute"
+                      />
+                    ) : meetingDetail?.minutes?.sampleMinute ? (
+                      <iframe
+                        src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
+                          meetingDetail.minutes.sampleMinute
+                        )}`}
+                        width="100%"
+                        height="100%"
+                        style={{ border: "none" }}
+                        title="Sample Minute"
+                      />
+                    ) : (
+                      <p style={{ color: "#777" }}>⚠️ Chưa có biên bản nào được tải lên.</p>
+                    )}
+                  </>
+                )}
+              </div>
+
+              <div style={{ marginTop: "10px", textAlign: "center" }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleViewSignedMinute}
+                  disabled={loading || !meetingDetail.minutes?.signedMinute}
+                >
+                  {loading ? "Đang tải..." : "Xem biên bản đã ký"}
+                </Button>
+              </div>
+
+            </div>
           </div>
         </TabPanel>
+
         {/* <FloatingChatBox meetingId={id} /> */}
         <FloatingChatStream meetingId={id} nameChat="Chat hỗ trợ cuộc họp" headerColor="#006b7f" />
       </TabContext>

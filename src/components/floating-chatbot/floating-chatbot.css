@@ -2,7 +2,7 @@
   position: fixed;
   bottom: 24px;
   right: 24px;
-  background: linear-gradient(135deg, #0C6B7F 0%, #0a5566 100%);
+  /* background: linear-gradient(135deg, #0C6B7F 0%, #0a5566 100%); */
   color: white !important;
   box-shadow: 0 6px 20px rgba(12, 107, 127, 0.4);
   z-index: 1000;
@@ -35,7 +35,7 @@
 }
 
 .chatbox-header {
-  background: linear-gradient(135deg, #0C6B7F 0%, #0a5566 100%);
+  /* background: linear-gradient(135deg, #0C6B7F 0%, #0a5566 100%); */
   color: white;
   padding: 16px 20px;
   font-weight: 600;

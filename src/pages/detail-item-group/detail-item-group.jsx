@@ -130,9 +130,6 @@ export default function DetailItemGroup() {
   return (
     <Box sx={{ width: "100%", typography: "body1", height: "100%" }}>
       <Box sx={{ mb: 2, borderBottom: "1px solid #ddd" }}>
-        {/* <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-          {groupDetail.name}
-        </Typography> */}
         <Header title={groupDetail?.name || "Chi tiết nhóm"} />
 
         <Typography variant="body2" color="text.secondary" className="sub-detail-group">
@@ -151,7 +148,6 @@ export default function DetailItemGroup() {
         <TabPanel value="1">
           <div className="list-btn">
             <h2>Danh sách thành viên:</h2>
-            {/* <InviteMemberDialog groupId={id} refreshGroup={fetchGroupDetail} /> */}
             {isCurrentUserOwner && (
               <InviteMemberDialog groupId={id} refreshGroup={fetchGroupDetail} />
             )}
@@ -160,17 +156,12 @@ export default function DetailItemGroup() {
           <div className="list-members">
             {groupDetail.members?.length > 0 ? (
               groupDetail.members.map((member, index) => {
-                // const isOwner =
-                //   groupDetail.members.some(
-                //     (m) => m.user_id === user?.email && m.role === "owner"
-                //   ) || groupDetail.owner_id === user?.email;
 
                 return (
                   <MemberItem
                     key={index}
                     member={member}
                     groupId={id}
-                    // isOwner={isOwner}
                     isOwner={isCurrentUserOwner}
                     currentUserEmail={user?.email}
                     token={user?.token}
@@ -208,26 +199,17 @@ export default function DetailItemGroup() {
                 {isCurrentUserOwner && (
                   <CreateMeetingDialog groupId={id} onCreated={fetchMeetings} />
                 )}
-                {/* <CreateMeetingDialog groupId={id} onCreated={fetchMeetings} /> */}
               </div>
 
               {loadingMeetings ? (
                 <CircularProgress />
               ) : meetings.length > 0 ? (
-                // meetings.map((meeting) => (
-                //   <MeetingItem key={meeting.meetingId} meeting={meeting} />
-                // ))
                 meetings.map((meeting) => {
-                  // const isOwner =
-                  //   groupDetail.members.some(
-                  //     (m) => m.user_id === user?.email && m.role === "owner"
-                  //   ) || groupDetail.owner_id === user?.email;
 
                   return (
                     <MeetingItem
                       key={meeting.meetingId}
                       meeting={meeting}
-                      // isOwner={isOwner}  
                       isOwner={isCurrentUserOwner}
                       onDeleted={(deletedId) => {
                         setMeetings((prev) => prev.filter((m) => m.meetingId !== deletedId));

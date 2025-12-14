@@ -73,37 +73,6 @@ export default function DetailMeeting() {
     }
   };
 
-  // const handleViewSignedMinute = async () => {
-  //   try {
-  //     setLoading(true);
-  //     setMessage("");
-
-  //     // const res = await fetch(`http://localhost:3001/minute/${id}`, {
-  //     const res = await fetch(`${API_URL}/minute/${id}`, {
-  //       method: "GET",
-  //       headers: {
-  //         // Authorization: `Bearer ${user?.token || ""}`,
-  //       },
-  //       credentials: "include",
-  //     });
-  //     const data = await res.json();
-  //     console.log("data sign:", data);
-
-  //     if (data.success && data.data?.signedMinute) {
-  //       const signedUrl = data.data.signedMinute;
-  //       setSignedMinute(signedUrl);
-  //       window.open(signedUrl, "_blank", "noopener,noreferrer");
-  //     } else {
-  //       setMessage("⚠️ Biên bản hiện chưa được ký.");
-  //       setSignedMinute(null);
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //     setMessage("❌ Lỗi khi tải biên bản đã ký.");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   const handleViewSignedMinute = async () => {
     try {
       setLoading(true);
@@ -141,10 +110,6 @@ export default function DetailMeeting() {
   const handleChange = (e, newValue) => setValue(newValue);
 
   const startRecording = async () => {
-    // if (uploaded) {
-    //   setMessage("🚫 Bạn đã upload bản ghi âm này. Không thể ghi lại nữa.");
-    //   return;
-    // }
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
@@ -205,7 +170,7 @@ export default function DetailMeeting() {
       const res = await fetch(`${API_URL}/upload/record`, {
         method: "POST",
         headers: {
-          // Authorization: `Bearer ${user?.token || ""}`,
+          "Content-Type": "application/json",
         },
         body: formData,
         credentials: "include",
@@ -238,56 +203,6 @@ export default function DetailMeeting() {
       </Box>
     );
 
-  // const createMinute = async () => {
-  //   const audioUrlToUse = uploadedUrl || meetingDetail?.audioUrl;
-
-  //   if (!audioUrlToUse) {
-  //     setMessage("⚠️ Hãy upload file ghi âm trước!");
-  //     return;
-  //   }
-
-  //   try {
-  //     setLoadingMinute(true);
-
-  //     // const res = await fetch("http://localhost:3001/create-minute", {
-  //     const res = await fetch(`${API_URL}/create-minute`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         // Authorization: `Bearer ${user?.token || ""}`,
-  //       },
-  //       credentials: "include",
-  //       body: JSON.stringify({
-  //         meetingId: id,
-  //         url: audioUrlToUse,
-  //       }),
-  //     });
-
-  //     const data = await res.json();
-
-  //     if (!res.ok || data.error) {
-  //       throw new Error(data.error || "Lỗi khi tạo biên bản");
-  //     }
-
-  //     const officialUrl = data.data?.url;
-  //     setMinuteURL(officialUrl);
-
-  //     setMeetingDetail((prev) => ({
-  //       ...prev,
-  //       minutes: {
-  //         ...(prev?.minutes || {}),
-  //         officeMinute: officialUrl,
-  //       },
-  //     }));
-
-  //     setMessage("✅ Tạo biên bản thành công!");
-  //     console.log("message thanh cong");
-  //   } catch (err) {
-  //     setMessage(`❌ ${err.message}`);
-  //   } finally {
-  //     setLoadingMinute(false);
-  //   }
-  // };
   const createMinute = async (prompt) => {
     const audioUrlToUse = uploadedUrl || meetingDetail?.audioUrl;
 
@@ -356,7 +271,7 @@ export default function DetailMeeting() {
       const res = await fetch(`${API_URL}/upload/sample-minute`, {
         method: "POST",
         headers: {
-          // Authorization: `Bearer ${user?.token || ""}`,
+          "Content-Type": "application/json",
         },
         body: formData,
         credentials: "include",
@@ -364,17 +279,14 @@ export default function DetailMeeting() {
 
       const data = await res.json();
       if (!data.success) {
-        // alert("❌ Upload thất bại: " + data.error);
         setMessage(`Upload thất bại: ${data.error}`);
         return;
       }
 
-      // alert("✅ Upload biên bản mẫu thành công!");
       setMessage("✅ Upload biên bản mẫu thành công!");
       await fetchMeetingDetail();
     } catch (err) {
       console.error(err);
-      // alert("❌ Lỗi khi upload file biên bản mẫu");
       setMessage("❌ Lỗi khi upload file biên bản mẫu");
     }
   };
@@ -653,7 +565,6 @@ export default function DetailMeeting() {
           </div>
         </TabPanel>
 
-        {/* <FloatingChatBox meetingId={id} /> */}
         <FloatingChatStream meetingId={id} nameChat="Chat hỗ trợ cuộc họp" headerColor="#006b7f" />
       </TabContext>
     </Box>

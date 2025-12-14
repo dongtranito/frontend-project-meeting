@@ -13,10 +13,6 @@ export const GroupProvider = ({ children }) => {
     const [error, setError] = useState("");
 
     const fetchGroups = useCallback(async () => {
-        // if (!user?.token) {
-        //     console.warn("⚠️ Không có token, không gọi API.");
-        //     return;
-        // }
 
         setLoading(true);
         setError("");

@@ -45,24 +45,11 @@ export default function MinuteActionsMenu({
 
       {/* Menu popup */}
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        {/* <MenuItem
-          onClick={() => {
-            createMinute();
-            handleClose();
-          }}
-          disabled={loadingMinute}
-        >
-          <ListItemIcon>
-            <CreateIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>
-            {loadingMinute ? "Đang tạo..." : "Tạo biên bản"}
-          </ListItemText>
-        </MenuItem> */}
+        
         <MenuItem
           onClick={() => {
-            setOpenPromptDialog(true);  // mở dialog
-            handleClose();              // đóng popup menu
+            setOpenPromptDialog(true);  
+            handleClose();             
           }}
         >
           <ListItemIcon>

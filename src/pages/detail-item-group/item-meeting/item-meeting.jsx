@@ -122,15 +122,6 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted, isOwner }) 
             🕒 {new Date(meeting.scheduledAt).toLocaleString()}
           </Typography>
 
-          {/* <Typography
-            variant="body2"
-            className={`meeting-status ${meeting.status === "signed" ? "signed" : "unsigned"
-              }`}
-          > 
-            {meeting.status === "signed"
-              ? "Biên bản đã được ký"
-              : "Biên bản chưa được ký"}
-          </Typography> */}
           <Typography
             variant="body2"
             className={`meeting-status ${meeting.minutes
@@ -149,33 +140,6 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted, isOwner }) 
 
         </div>
 
-        {/* <div className="meeting-actions">
-          <Button
-            variant="outlined"
-            color="primary"
-            size="small"
-            onClick={(e) => {
-              e.stopPropagation(); // Ngăn navigate khi click nút
-              setOpenUpdate(true);
-            }}
-            className="btn-update"
-          >
-            Cập nhật
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            size="small"
-            onClick={(e) => {
-              e.stopPropagation(); // Ngăn navigate khi click nút
-              setOpenConfirm(true);
-            }}
-            disabled={loading}
-            className="btn-delete"
-          >
-            Xóa
-          </Button>
-        </div> */}
         {isOwner && (
           <div className="meeting-actions">
             <Button
@@ -221,38 +185,6 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted, isOwner }) 
         message={message}
       />
 
-      {/* <Dialog
-        open={openConfirm}
-        onClose={() => setOpenConfirm(false)}
-        PaperProps={{
-          sx: {
-            borderRadius: "16px",
-            padding: "8px 0",
-          },
-        }}
-      >
-        <DialogTitle>Xác nhận xóa cuộc họp</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Bạn có chắc chắn muốn <strong>xóa</strong> cuộc họp{" "}
-            <span style={{ color: "#d32f2f" }}>{meeting.title}</span> không?
-          </Typography>
-        </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setOpenConfirm(false)}>Hủy</Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={(e) => {
-              e.stopPropagation(); 
-              handleDeleteMeeting();
-            }}
-            disabled={loading}
-          >
-            {loading ? "Đang xóa..." : "Xóa"}
-          </Button>
-        </DialogActions>
-      </Dialog> */}
       <Dialog
         open={openConfirm}
         onClose={() => setOpenConfirm(false)}

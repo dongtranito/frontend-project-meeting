@@ -16,16 +16,6 @@ export default function Settings() {
           </Typography>
         </CardContent>
       </Card>
-
-      {/* <Card sx={{ width: '100%' }}>
-        <CardHeader className="item-group-container-header" title="Thông báo" />
-        <Divider />
-        <CardContent>
-          <Typography variant="body2">
-            Các cài đặt thông báo!!
-          </Typography>
-        </CardContent>
-      </Card> */}
     </div>
   );
 }

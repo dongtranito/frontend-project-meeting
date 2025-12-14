@@ -89,6 +89,7 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
         const uploadRes = await fetch(`${API_URL}/upload/sample-minute`, {
           method: "POST",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${user?.token || ""}`,
           },
           body: fileForm,
@@ -164,15 +165,6 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
               />
 
               <DialogContentText>Nhập giờ:</DialogContentText>
-              {/* <TimePicker
-                label="Chọn giờ"
-                ampm
-                value={selectedTime}
-                onChange={(newValue) => setSelectedTime(newValue)}
-                slotProps={{
-                  textField: { fullWidth: true, margin: "dense", variant: "outlined" },
-                }}
-              /> */}
               <TimePicker
                 label="Chọn giờ"
                 ampm

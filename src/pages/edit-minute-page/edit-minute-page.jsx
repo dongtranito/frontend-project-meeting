@@ -43,8 +43,7 @@ export default function EditMinutePage() {
         {
           method: "GET",
           headers: {
-            "Content-Type": "application/json",
-            // Authorization: `Bearer ${user?.token || ""}`,
+            "Content-Type": "application/json"
 
           },
           credentials: "include",

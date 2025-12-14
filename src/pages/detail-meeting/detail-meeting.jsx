@@ -128,7 +128,6 @@ export default function DetailMeeting() {
       const signedUrl = data.data.signedMinute;
       setSignedMinute(signedUrl);
       window.open(signedUrl, "_blank", "noopener,noreferrer");
-
     } catch (err) {
       console.error(err);
       setMessage("❌ Lỗi khi tải biên bản đã ký.");
@@ -136,7 +135,6 @@ export default function DetailMeeting() {
       setLoading(false);
     }
   };
-
 
   const handleChange = (e, newValue) => setValue(newValue);
 
@@ -306,7 +304,7 @@ export default function DetailMeeting() {
         body: JSON.stringify({
           meetingId: id,
           url: audioUrlToUse,
-          prompt: prompt || ""
+          prompt: prompt || "",
         }),
       });
 
@@ -398,12 +396,12 @@ export default function DetailMeeting() {
         setTranscript(data.data.transcript);
       } else {
         // alert("Không tìm thấy transcript cho cuộc họp này!");
-        setMessage("Chưa có transcript cho cuộc họp này!")
+        setMessage("Chưa có transcript cho cuộc họp này!");
       }
     } catch (error) {
       console.error("Lỗi khi gọi API transcript:", error);
       // alert("Đã xảy ra lỗi khi lấy transcript!");
-      setMessage("Đã xảy ra lỗi khi lấy transcript!")
+      setMessage("Đã xảy ra lỗi khi lấy transcript!");
     } finally {
       setLoading(false);
     }
@@ -417,7 +415,11 @@ export default function DetailMeeting() {
         </Typography> */}
         <Header title={meetingDetail?.title || "Chi tiết cuộc họp"} />
 
-        <Typography variant="body2" color="text.secondary" className="sub-detail-meeting">
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          className="sub-detail-meeting"
+        >
           Mô tả: {meetingDetail.description || ""}
         </Typography>
       </Box>
@@ -559,8 +561,9 @@ export default function DetailMeeting() {
               {message && (
                 <Typography
                   variant="body2"
-                  className={`message ${message.startsWith("✅") ? "success" : "error"
-                    }`}
+                  className={`message ${
+                    message.startsWith("✅") ? "success" : "error"
+                  }`}
                 >
                   {message}
                 </Typography>
@@ -571,19 +574,36 @@ export default function DetailMeeting() {
 
         {/* === TAB 2 === */}
         <TabPanel value="2">
-          <div className="meeting-tab">
-            <div className="meeting-minute-content">
-
+          <Card
+            className="meeting-tab"
+            sx={{ borderRadius: "12px", boxShadow: 3 }}
+          >
+            <CardContent className="meeting-minute-content">
               <div className="minute-header">
-                <h2>Biên bản</h2>
+                <Typography variant="h5" fontWeight="600" color="#006b7f">
+                  📄 Biên bản cuộc họp
+                </Typography>
 
-                {meetingDetail.status === "signed" && (
-                  <Typography variant="body2" color="success.main">
-                    Đã gửi ký cho: {meetingDetail.minutes?.signerEmails?.join(", ")}
-                  </Typography>
-                )}
-
-                {meetingDetail.status !== "signed" && (
+                {meetingDetail.minutes?.signedMinute ? (
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Box
+                      sx={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: "50%",
+                        bgcolor: "#4caf50",
+                        animation: "pulse 2s infinite",
+                      }}
+                    />
+                    <Typography
+                      variant="body2"
+                      color="success.main"
+                      fontWeight="500"
+                    >
+                      ✓ Đã ký hoàn tất
+                    </Typography>
+                  </Box>
+                ) : (
                   <div className="minute-actions">
                     <MinuteActionsMenu
                       createMinute={createMinute}
@@ -596,65 +616,174 @@ export default function DetailMeeting() {
                 )}
               </div>
 
-              <div className="minute-body">
-                {loadingMinute && (
-                  <p style={{ color: "#555" }}>⏳ Đang tạo biên bản...</p>
-                )}
-
-                {meetingDetail.status === "signed" ? (
-                  <p style={{ color: "#4caf50", marginTop: "10px" }}>
-                    ✔ Biên bản đã hoàn tất và được ký đầy đủ.
-                  </p>
-                ) : (
-                  <>
-                    {meetingDetail?.minutes?.signedMinute ? (
-                      <Typography variant="body2" color="text.secondary">
-                        Xem biên bản đã ký tại: {meetingDetail.minutes.signedMinute}
-                      </Typography>
-                    ) : meetingDetail?.minutes?.officeMinute || minuteURL ? (
-                      <iframe
-                        src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
-                          minuteURL || meetingDetail.minutes.officeMinute || ""
-                        )}`}
-                        width="100%"
-                        height="100%"
-                        style={{ border: "none" }}
-                        title="Official Minute"
-                      />
-                    ) : meetingDetail?.minutes?.sampleMinute ? (
-                      <iframe
-                        src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
-                          meetingDetail.minutes.sampleMinute
-                        )}`}
-                        width="100%"
-                        height="100%"
-                        style={{ border: "none" }}
-                        title="Sample Minute"
-                      />
-                    ) : (
-                      <p style={{ color: "#777" }}>⚠️ Chưa có biên bản nào được tải lên.</p>
-                    )}
-                  </>
-                )}
-              </div>
-
-              <div style={{ marginTop: "10px", textAlign: "center" }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleViewSignedMinute}
-                  disabled={loading || !meetingDetail.minutes?.signedMinute}
+              {meetingDetail.minutes?.signerEmails?.length > 0 && (
+                <Box
+                  sx={{
+                    bgcolor: "#e8f5e9",
+                    px: 2, 
+                    py: 0.5, 
+                    borderRadius: 2,
+                    mb: 1,
+                    border: "1px solid #4caf50",
+                  }}
                 >
-                  {loading ? "Đang tải..." : "Xem biên bản đã ký"}
-                </Button>
+                  <Typography
+                    variant="body2"
+                    color="success.dark"
+                    fontWeight="500"
+                  >
+                    Người ký: {meetingDetail.minutes.signerEmails.join(", ")}
+                  </Typography>
+                </Box>
+              )}
+
+              <div className="minute-body">
+                {loadingMinute ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%",
+                      gap: 2,
+                    }}
+                  >
+                    <CircularProgress size={50} sx={{ color: "#006b7f" }} />
+                    <Typography variant="body1" color="text.secondary">
+                      ⏳ Đang tạo biên bản, vui lòng đợi...
+                    </Typography>
+                  </Box>
+                ) : meetingDetail.minutes?.signedMinute ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%",
+                      gap: 2,
+                      textAlign: "center",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: 80,
+                        height: 80,
+                        borderRadius: "50%",
+                        bgcolor: "#4caf50",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Typography variant="h3" color="white">
+                        ✓
+                      </Typography>
+                    </Box>
+                    <Typography
+                      variant="h6"
+                      color="success.main"
+                      fontWeight="600"
+                    >
+                      Biên bản đã được ký hoàn tất
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      File đã ký có sẵn để xem và tải xuống
+                    </Typography>
+                  </Box>
+                ) : meetingDetail?.minutes?.officeMinute || minuteURL ? (
+                  <iframe
+                    src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
+                      minuteURL || meetingDetail.minutes.officeMinute || ""
+                    )}`}
+                    width="100%"
+                    height="100%"
+                    style={{ border: "none", borderRadius: "8px" }}
+                    title="Official Minute"
+                  />
+                ) : meetingDetail?.minutes?.sampleMinute ? (
+                  <>
+                    <Box
+                      sx={{
+                        bgcolor: "#fff3cd",
+                        padding: 1.5,
+                        borderRadius: 1,
+                        mb: 1,
+                        border: "1px solid #ffc107",
+                      }}
+                    >
+                      <Typography variant="body2" color="warning.dark">
+                        📋 Đây là biên bản mẫu. Vui lòng tạo biên bản chính
+                        thức.
+                      </Typography>
+                    </Box>
+                    <iframe
+                      src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
+                        meetingDetail.minutes.sampleMinute
+                      )}`}
+                      width="100%"
+                      height="100%"
+                      style={{ border: "none", borderRadius: "8px" }}
+                      title="Sample Minute"
+                    />
+                  </>
+                ) : (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%",
+                      gap: 2,
+                      color: "#999",
+                    }}
+                  >
+                    <Description sx={{ fontSize: 80, color: "#ddd" }} />
+                    <Typography variant="h6" color="text.secondary">
+                      Chưa có biên bản
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Hãy tạo biên bản hoặc tải lên file mẫu
+                    </Typography>
+                  </Box>
+                )}
               </div>
 
-            </div>
-          </div>
+              {meetingDetail.minutes?.signedMinute && (
+                <Box sx={{ mt: 2, textAlign: "center" }}>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    onClick={handleViewSignedMinute}
+                    disabled={loading}
+                    sx={{
+                      bgcolor: "#006b7f",
+                      "&:hover": { bgcolor: "#005566" },
+                      borderRadius: 2,
+                      px: 4,
+                      py: 1.5,
+                    }}
+                  >
+                    {loading ? (
+                      <CircularProgress size={20} sx={{ color: "white" }} />
+                    ) : (
+                      "Xem biên bản đã ký"
+                    )}
+                  </Button>
+                </Box>
+              )}
+            </CardContent>
+          </Card>
         </TabPanel>
 
         {/* <FloatingChatBox meetingId={id} /> */}
-        <FloatingChatStream meetingId={id} nameChat="Chat hỗ trợ cuộc họp" headerColor="#006b7f" />
+        <FloatingChatStream
+          meetingId={id}
+          nameChat="Chat hỗ trợ cuộc họp"
+          headerColor="#006b7f"
+        />
       </TabContext>
     </Box>
   );

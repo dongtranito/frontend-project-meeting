@@ -172,7 +172,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 4px;
 }
 
 .minute-header h2 {
@@ -201,17 +201,27 @@
   flex-direction: column;
   background: #fff;
   border-radius: 12px;
-  padding: 16px;
+  padding: 0px;
   box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
 }
 
 .minute-body {
   flex: 1;
   overflow-y: auto;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
   background: #fafafa;
+  min-height: 400px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .minute-actions {
@@ -219,4 +229,10 @@
   justify-content: flex-end;
   gap: 10px;
   margin-top: 12px;
+}
+
+.MuiTabPanel-root {
+  width: 80%;
+  margin: auto;
+  padding: 0 80px !important; /* top/bottom 20px, left/right 0 */
 }

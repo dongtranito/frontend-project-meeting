@@ -160,31 +160,6 @@ export default function MemberItem({
           </div>
         )}
 
-      {/* Dialog xóa */}
-      {/* <Dialog
-        open={openDeleteDialog}
-        onClose={() => setOpenDeleteDialog(false)}
-      >
-        <DialogTitle>Xác nhận xóa thành viên</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Bạn có chắc muốn xóa{" "}
-            <strong style={{ color: "#d32f2f" }}>{member.user_id}</strong> khỏi
-            nhóm không?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDeleteDialog(false)}>Hủy</Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={handleRemoveMember}
-            disabled={loading}
-          >
-            {loading ? <CircularProgress size={20} color="inherit" /> : "Xóa"}
-          </Button>
-        </DialogActions>
-      </Dialog> */}
       <Dialog
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}

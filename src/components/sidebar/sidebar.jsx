@@ -126,13 +126,6 @@ export default function Sidebar() {
         variant="permanent"
         anchor="left"
         classes={{ paper: collapsed ? "sidebar collapsed" : "sidebar" }}
-        // sx={{
-        //   "& .MuiDrawer-paper": {
-        //     backgroundColor: "#1e1e2f",
-        //     color: "#fff",
-        //     border: "none",
-        //   },
-        // }}
         className="sidebar-bg"
       >
         <div className="project" onClick={toggleCollapse}>

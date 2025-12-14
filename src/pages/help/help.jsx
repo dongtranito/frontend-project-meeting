@@ -15,12 +15,13 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import MicIcon from "@mui/icons-material/Mic";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+import DescriptionIcon from "@mui/icons-material/Description";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 import EmailIcon from "@mui/icons-material/Email";
 import PsychologyAltIcon from "@mui/icons-material/PsychologyAlt";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import EventNoteIcon from "@mui/icons-material/EventNote";
-import ChatIcon from '@mui/icons-material/Chat'; 
+import ChatIcon from '@mui/icons-material/Chat';
 
 export default function Help() {
   return (
@@ -46,7 +47,7 @@ export default function Help() {
         📖 Hướng Dẫn Sử Dụng
       </Typography>
 
-      <Accordion defaultExpanded>
+      <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ fontWeight: 'bold' }}>
           <AccountCircleIcon sx={{ mr: 1, color: 'primary.main' }} /> 1. Đăng nhập và Thiết lập Hồ sơ Giọng nói
         </AccordionSummary>
@@ -77,7 +78,7 @@ export default function Help() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography variant="body2" sx={{ lineHeight: 1.8 }}>
-            • Trong trang Chi tiết cuộc họp, chọn tab <b>Ghi âm</b>:
+            • Trong trang Chi tiết cuộc họp, chọn tab <b>Record & Transcript</b>:
             <ul>
               <li>Nhấn “Bắt đầu Ghi âm” hoặc “Tải file” âm thanh có sẵn.</li>
               <li>Sau khi gửi xử lý và thực hiện tạo biên bản, hệ thống sẽ chuyển đổi thành văn bản (transcript) và sử dụng mẫu giọng nói của nhóm để gán nhãn Tên gợi nhớ chính xác cho từng đoạn hội thoại.</li>
@@ -92,7 +93,7 @@ export default function Help() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography variant="body2" sx={{ lineHeight: 1.8 }}>
-            • Chuyển sang tab "Xử lý Biên bản", sử dụng hộp thoại "Tạo Biên bản AI".<br />
+            • Chuyển sang tab "Biên bản", sử dụng hộp thoại "Tạo Biên bản".<br />
             • Nhập lệnh tóm tắt (Prompt) (ví dụ: "Tóm tắt các quyết định và hành động chính") để AI tự động tạo bản nháp biên bản.<br />
             • Bạn có thể chỉnh sửa thủ công nội dung, hoặc "Tải lên Biên bản Mẫu (.docx)" chuẩn của tổ chức để bắt đầu.
           </Typography>
@@ -101,7 +102,37 @@ export default function Help() {
 
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ fontWeight: 'bold' }}>
-          <EventNoteIcon sx={{ mr: 1, color: 'primary.main' }} /> 5. Gửi Ký Điện tử và Theo dõi Trạng thái
+          <DescriptionIcon sx={{ mr: 1, color: 'primary.main' }} /> 5. Tạo Biên bản mẫu
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography variant="body2" sx={{ lineHeight: 1.8 }}>
+            Bạn soạn sẵn một nội dung biên bản với các thông tin cố định, thường không thay đổi giữa các cuộc họp
+            (ví dụ: tiêu đề, cấu trúc, mục nội dung).
+            <br />
+            Với những thông tin sẽ thay đổi theo từng cuộc họp, hãy đặt chúng trong dấu ngoặc nhọn {"{ }"}.
+            <br /><br />
+
+            <strong>Ví dụ:</strong>
+            <br />
+            Biên bản số: {"{so}"}
+            <br />
+            Thời gian họp: {"{thoigian}"}
+            <br />
+            Địa điểm: {"{diadiem}"}
+            <br />
+            Người chủ trì: {"{chutri}"}
+            <br /><br />
+
+            Khi sử dụng biên bản mẫu, hệ thống sẽ dựa trên nội dung này để tạo biên bản chính thức.
+            Các phần trong dấu {"{ }"} sẽ được thay thế bằng thông tin thực tế của từng cuộc họp.
+          </Typography>
+
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ fontWeight: 'bold' }}>
+          <EventNoteIcon sx={{ mr: 1, color: 'primary.main' }} /> 6. Gửi Ký Điện tử và Theo dõi Trạng thái
         </AccordionSummary>
         <AccordionDetails>
           <Typography variant="body2" sx={{ lineHeight: 1.8 }}>
@@ -115,7 +146,7 @@ export default function Help() {
 
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ fontWeight: 'bold' }}>
-          <ChatIcon sx={{ mr: 1, color: 'primary.main' }} /> 6. Tra cứu Thông tin Nhanh bằng Chatbot AI
+          <ChatIcon sx={{ mr: 1, color: 'primary.main' }} /> 7. Tra cứu Thông tin Nhanh bằng Chatbot AI
         </AccordionSummary>
         <AccordionDetails>
           <Typography variant="body2" sx={{ lineHeight: 1.8 }}>

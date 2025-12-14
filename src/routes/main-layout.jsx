@@ -48,7 +48,6 @@ export default function MainLayout() {
       <Sidebar />
 
       <div className="main-wrapper" style={{ flex: 1 }}>
-        {/* <Header title={getHeaderTitle()} /> */}
 
         <main className="main-content">
           <Routes>

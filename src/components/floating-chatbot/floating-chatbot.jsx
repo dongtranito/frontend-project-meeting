@@ -4,6 +4,7 @@ import ChatIcon from "@mui/icons-material/Chat";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import { motion, AnimatePresence } from "framer-motion";
+import ReactMarkdown from "react-markdown";
 import "./floating-chatbot.css";
 import { API_URL } from "../../config/api.js";
 
@@ -154,7 +155,9 @@ export default function FloatingChatStream({ groupId, meetingId, nameChat, heade
                     className={`chat-message ${msg.sender === "user" ? "user" : "system"
                       }`}
                   >
-                    <div className="chat-bubble">{msg.text}</div>
+                    <div className="chat-bubble">
+                      <ReactMarkdown>{msg.text}</ReactMarkdown>
+                    </div>
                   </div>
                 ))}
                 <div ref={chatEndRef}></div>

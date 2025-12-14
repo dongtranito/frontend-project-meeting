@@ -131,10 +131,10 @@ export default function EditMinutePage() {
 
         <Box mt={2} display="flex" gap={2}>
           <Button variant="contained" color="primary" disabled={!isChanged} onClick={handleSave}>
-            💾 Lưu
+            Lưu thay đổi
           </Button>
           <Button variant="outlined" color="secondary" onClick={() => window.history.back()}>
-            🔙 Quay lại
+            Quay lại
           </Button>
         </Box>
       </div>

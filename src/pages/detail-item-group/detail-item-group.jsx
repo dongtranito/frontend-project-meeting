@@ -199,7 +199,6 @@ export default function DetailItemGroup() {
                 {isCurrentUserOwner && (
                   <CreateMeetingDialog groupId={id} onCreated={fetchMeetings} />
                 )}
-                {/* <CreateMeetingDialog groupId={id} onCreated={fetchMeetings} /> */}
               </div>
 
               {loadingMeetings ? (

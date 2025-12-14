@@ -13,7 +13,7 @@ import MainLayout from "./routes/main-layout";
 import { AuthProvider } from "./auth/auth-context";
 import TestBackend from "./pages/test/test";
 import { GroupContext, GroupProvider } from "./context/group-context";
-import AuthGuard from "./auth/auth-guard";
+// import AuthGuard from "./auth/auth-guard";
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -22,7 +22,7 @@ function App() {
       <AuthProvider>
         <GroupProvider>
           <div className="app-container" >
-            <AuthGuard />
+            {/* <AuthGuard /> */}
             <Routes>
 
               <Route

@@ -89,7 +89,6 @@ export default function CreateMeetingDialog({ groupId, onCreated }) {
         const uploadRes = await fetch(`${API_URL}/upload/sample-minute`, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${user?.token || ""}`,
           },
           body: fileForm,

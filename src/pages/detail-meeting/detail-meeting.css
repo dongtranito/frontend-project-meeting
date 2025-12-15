@@ -24,7 +24,6 @@
 .recorder-card {
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
   background: #fff;
-  transition: all 0.3s ease;
 }
 
 .recorder-title {
@@ -203,16 +202,16 @@
   border-radius: 12px;
   padding: 0px;
   box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+  border: 2px solid #cce5e8;
 }
 
 .minute-body {
   flex: 1;
   overflow-y: auto;
-  border: 2px solid #e0e0e0;
   border-radius: 12px;
-  padding: 16px;
+  /* padding: 16px; */
   background: #fafafa;
-  min-height: 400px;
+  min-height: 4 00px;
 }
 
 @keyframes pulse {
@@ -231,8 +230,35 @@
   margin-top: 12px;
 }
 
-.MuiTabPanel-root {
+/* Chỉ áp dụng trong detail-meeting-container */
+
+.detail-meeting-container .MuiTabPanel-root {
   width: 80%;
   margin: auto;
-  padding: 0 80px !important; /* top/bottom 20px, left/right 0 */
+  padding: 0 80px !important; 
+}
+
+.detail-meeting-container .MuiTabPanel-root {
+  width: 80%;
+  margin: auto;
+  padding: 0 80px !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+.detail-meeting-container .MuiTabPanel-root,
+.detail-meeting-container .MuiTabPanel-root *,
+.detail-meeting-container .MuiCard-root,
+.detail-meeting-container .meeting-tab,
+.detail-meeting-container .recorder-card {
+  transform: none !important;
+  transition: none !important;
+}
+
+.detail-meeting-container .MuiCard-root:hover {
+  box-shadow: none;
+}
+
+.detail-meeting-container .MuiPaper-root.MuiCard-root {
+  box-shadow: none !important;
 }

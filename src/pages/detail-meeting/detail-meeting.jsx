@@ -182,7 +182,7 @@ export default function DetailMeeting() {
       const res = await fetch(`${API_URL}/upload/record`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          // "Content-Type": "application/json",
         },
         body: formData,
         credentials: "include",
@@ -228,7 +228,9 @@ export default function DetailMeeting() {
 
       const res = await fetch(`${API_URL}/create-minute`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json" 
+        },
         credentials: "include",
         body: JSON.stringify({
           meetingId: id,
@@ -283,7 +285,7 @@ export default function DetailMeeting() {
       const res = await fetch(`${API_URL}/upload/sample-minute`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          // "Content-Type": "application/json",
         },
         body: formData,
         credentials: "include",

@@ -181,9 +181,6 @@ export default function DetailMeeting() {
       // const res = await fetch("http://localhost:3001/upload/record", {
       const res = await fetch(`${API_URL}/upload/record`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: formData,
         credentials: "include",
       });
@@ -282,9 +279,6 @@ export default function DetailMeeting() {
       // const res = await fetch("http://localhost:3001/upload/sample-minute", {
       const res = await fetch(`${API_URL}/upload/sample-minute`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: formData,
         credentials: "include",
       });

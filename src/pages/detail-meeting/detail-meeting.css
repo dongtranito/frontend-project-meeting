@@ -24,6 +24,7 @@
 .recorder-card {
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
   background: #fff;
+  padding-bottom: 36px;
 }
 
 .recorder-title {
@@ -261,4 +262,8 @@
 
 .detail-meeting-container .MuiPaper-root.MuiCard-root {
   box-shadow: none !important;
+}
+
+.detail-meeting-container .MuiCardContent-root:last-child {
+  padding-bottom: 0 !important;
 }

@@ -47,10 +47,24 @@ export default function DetailMeeting() {
   const [signedMinute, setSignedMinute] = useState(null);
 
   const [transcript, setTranscript] = useState(null);
+  
+  const tabPanelRef = useRef(null);
 
   useEffect(() => {
     fetchMeetingDetail();
   }, [id]);
+
+  useEffect(() => {
+    if (value === "2" && tabPanelRef.current) {
+      // Scroll đến TabPanel 2
+      setTimeout(() => {
+        tabPanelRef.current?.scrollIntoView({
+          // behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+    }
+  }, [value]);
 
   const fetchMeetingDetail = async () => {
     try {
@@ -485,7 +499,7 @@ export default function DetailMeeting() {
         </TabPanel>
 
         {/* === TAB 2 === */}
-        <TabPanel value="2">
+        <TabPanel value="2" ref={tabPanelRef}>
           <Card
             className="meeting-tab"
             sx={{ borderRadius: "12px", boxShadow: 3 }}

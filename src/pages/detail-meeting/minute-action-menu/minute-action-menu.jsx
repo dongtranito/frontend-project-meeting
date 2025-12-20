@@ -15,12 +15,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import SendIcon from "@mui/icons-material/Send";
 import SendMinuteDialog from "../send-minute-dialog/send-minute-dialog";
 import CreateMinutePromptDialog from "../create-minute-prompt-dialog/create-minute-prompt-dialog";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 export default function MinuteActionsMenu({
   createMinute,
   handleUploadSampleMinute,
   navigate,
   id,
+  isOwner,
+  isEditor,
+  hasOfficialMinute,
   loadingMinute,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -37,6 +41,8 @@ export default function MinuteActionsMenu({
     setTimeout(() => handleClose(), 0);
   };
 
+  if (!isOwner && !isEditor) return null;
+
   return (
     <div>
       <IconButton color="primary" onClick={handleOpen}>
@@ -45,26 +51,29 @@ export default function MinuteActionsMenu({
 
       {/* Menu popup */}
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        
+
         <MenuItem
           onClick={() => {
-            setOpenPromptDialog(true);  
-            handleClose();             
+            setOpenPromptDialog(true);
+            handleClose();
           }}
         >
           <ListItemIcon>
-            <CreateIcon fontSize="small" />
+            <AddCircleOutlineIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Tạo biên bản</ListItemText>
         </MenuItem>
 
-        <MenuItem component="label">
-          <ListItemIcon>
-            <UploadFileIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Thêm / cập nhật mẫu biên bản</ListItemText>
-          <input type="file" hidden onChange={handleUploadSampleMinute} />
-        </MenuItem>
+        {(isOwner || !hasOfficialMinute) && (
+          <MenuItem component="label">
+            <ListItemIcon>
+              <UploadFileIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Thêm / cập nhật mẫu biên bản</ListItemText>
+            <input type="file" hidden onChange={handleUploadSampleMinute} />
+          </MenuItem>
+        )}
+
 
         <MenuItem
           onClick={() => {
@@ -80,12 +89,15 @@ export default function MinuteActionsMenu({
 
         <Divider />
 
-        <MenuItem onClick={handleSendMinute}>
+        {isOwner && (
+          <MenuItem onClick={handleSendMinute}>
           <ListItemIcon>
             <SendIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Gửi biên bản</ListItemText>
         </MenuItem>
+      )}
+        
 
       </Menu>
       <SendMinuteDialog

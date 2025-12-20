@@ -77,7 +77,7 @@ export default function AudioRecorder() {
       recorder.start();
       setIsRecording(true);
 
-      //  ⏱️ Auto stop after 10 second
+      // Auto stop after 10 second
       setTimeout(() => {
         if (
           mediaRecorderRef.current &&

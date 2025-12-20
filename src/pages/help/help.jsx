@@ -78,11 +78,9 @@ export default function Help() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography variant="body2" sx={{ lineHeight: 1.8 }}>
-            • Trong trang Chi tiết cuộc họp, chọn tab <b>Record & Transcript</b>:
-            <ul>
-              <li>Nhấn “Bắt đầu Ghi âm” hoặc “Tải file” âm thanh có sẵn.</li>
-              <li>Sau khi gửi xử lý và thực hiện tạo biên bản, hệ thống sẽ chuyển đổi thành văn bản (transcript) và sử dụng mẫu giọng nói của nhóm để gán nhãn Tên gợi nhớ chính xác cho từng đoạn hội thoại.</li>
-            </ul>
+            Trong trang Chi tiết cuộc họp, chọn tab <b>Record & Transcript</b>: <br />
+              • Nhấn “Bắt đầu Ghi âm” hoặc “Tải file” âm thanh có sẵn.<br />
+              • Sau khi gửi xử lý và thực hiện tạo biên bản, hệ thống sẽ chuyển đổi thành văn bản (transcript) và sử dụng mẫu giọng nói của nhóm để gán nhãn Tên gợi nhớ chính xác cho từng đoạn hội thoại.
           </Typography>
         </AccordionDetails>
       </Accordion>

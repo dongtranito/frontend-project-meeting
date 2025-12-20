@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import {
@@ -24,6 +24,7 @@ import MinuteActionsMenu from "./minute-action-menu/minute-action-menu";
 import FloatingChatStream from "../../components/floating-chatbot/floating-chatbot";
 import { API_URL } from "../../config/api.js";
 import Header from "../../components/header/header.jsx";
+import { AuthContext } from "../../auth/auth-context.jsx";
 
 export default function DetailMeeting() {
   const { id } = useParams();
@@ -47,12 +48,28 @@ export default function DetailMeeting() {
   const [signedMinute, setSignedMinute] = useState(null);
 
   const [transcript, setTranscript] = useState(null);
-  
+
   const tabPanelRef = useRef(null);
+
+  const { user } = useContext(AuthContext);
+  const isOwner = user?.email === meetingDetail?.ownerId;
+  const [groupDetail, setGroupDetail] = useState(null);
+
+  const currentMember = groupDetail?.members?.find(
+    (m) => m.user_id === user?.email
+  );
+  const isEditor = currentMember?.is_editor === true;
 
   useEffect(() => {
     fetchMeetingDetail();
   }, [id]);
+
+  useEffect(() => {
+  if (meetingDetail?.groupId) {
+    fetchGroupDetail(meetingDetail.groupId);
+  }
+}, [meetingDetail?.groupId]);
+  
 
   useEffect(() => {
     if (value === "2" && tabPanelRef.current) {
@@ -87,6 +104,29 @@ export default function DetailMeeting() {
     }
   };
 
+  const fetchGroupDetail = async () => {
+    if (!meetingDetail?.groupId) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/detail-group/${meetingDetail?.groupId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token || ""}`,
+        },
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success)
+        throw new Error(data.message || "Không thể tải thông tin nhóm");
+      setGroupDetail(data.data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleViewSignedMinute = async () => {
     try {
       setLoading(true);
@@ -100,14 +140,12 @@ export default function DetailMeeting() {
       const data = await res.json();
       console.log("data sign:", data.data);
 
-      // Có official nhưng chưa ký
       if (!data.data?.signedMinute) {
         setMessage("⚠️ Biên bản hiện chưa được ký.");
         setSignedMinute(null);
         return;
       }
 
-      // Đã ký → mở file
       const signedUrl = data.data.signedMinute;
       setSignedMinute(signedUrl);
       window.open(signedUrl, "_blank", "noopener,noreferrer");
@@ -157,7 +195,6 @@ export default function DetailMeeting() {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Chỉ kiểm tra audio
     if (!file.type.startsWith("audio/")) {
       setMessage("Vui lòng chọn tệp âm thanh hợp lệ");
       return;
@@ -228,8 +265,8 @@ export default function DetailMeeting() {
 
       const res = await fetch(`${API_URL}/create-minute`, {
         method: "POST",
-        headers: { 
-          "Content-Type": "application/json" 
+        headers: {
+          "Content-Type": "application/json"
         },
         credentials: "include",
         body: JSON.stringify({
@@ -365,10 +402,10 @@ export default function DetailMeeting() {
           <Card className="recorder-card" sx={{ borderRadius: "12px" }}>
             <CardContent>
               <Typography variant="h6" className="recorder-title">
-                🎙️ Ghi âm hoặc tải tệp âm thanh
+                {isOwner ? "🎙️ Ghi âm hoặc tải tệp âm thanh" : "🎧 Thông tin cuộc họp"}
               </Typography>
 
-              <div className="recorder-actions">
+              {isOwner && (<div className="recorder-actions">
                 <div className="recorder-action">
                   <IconButton
                     onClick={isRecording ? stopRecording : startRecording}
@@ -402,7 +439,8 @@ export default function DetailMeeting() {
                   </label>
                   <Typography variant="body2">Tải file</Typography>
                 </div>
-              </div>
+              </div>)}
+
 
               {audioURL && (
                 <div className="audio-preview">
@@ -427,14 +465,15 @@ export default function DetailMeeting() {
               )}
 
               <div className="action-buttons">
-                <Button
+                {isOwner && (<Button
                   variant="outlined"
                   startIcon={<CloudUpload />}
                   onClick={uploadToServer}
                   disabled={loading || !audioBlob || uploaded}
                 >
                   {uploaded ? "Đã upload lên server" : "Gửi lên server"}
-                </Button>
+                </Button>)}
+
 
                 <Button
                   variant="outlined"
@@ -489,9 +528,8 @@ export default function DetailMeeting() {
               {message && (
                 <Typography
                   variant="body2"
-                  className={`message ${
-                    message.startsWith("✅") ? "success" : "error"
-                  }`}
+                  className={`message ${message.startsWith("✅") ? "success" : "error"
+                    }`}
                 >
                   {message}
                 </Typography>
@@ -531,25 +569,29 @@ export default function DetailMeeting() {
                       ✓ Đã ký hoàn tất
                     </Typography>
                   </Box>
-                ) : (
+                ) : ((isOwner || isEditor) && (
                   <div className="minute-actions">
+
                     <MinuteActionsMenu
                       createMinute={createMinute}
                       handleUploadSampleMinute={handleUploadSampleMinute}
                       navigate={navigate}
                       id={id}
                       loadingMinute={loadingMinute}
+                      isOwner={isOwner}
+                      isEditor={isEditor}
+                      hasOfficialMinute={meetingDetail.minutes?.officeMinute}
                     />
                   </div>
-                )}
+                ))}
               </div>
 
               {meetingDetail.minutes?.signerEmails?.length > 0 && (
                 <Box
                   sx={{
                     bgcolor: "#e8f5e9",
-                    px: 2, 
-                    py: 0.5, 
+                    px: 2,
+                    py: 0.5,
                     borderRadius: 2,
                     mb: 1,
                     border: "1px solid #4caf50",
@@ -629,6 +671,7 @@ export default function DetailMeeting() {
                     height="100%"
                     style={{ border: "none", borderRadius: "8px" }}
                     title="Official Minute"
+                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                   />
                 ) : meetingDetail?.minutes?.sampleMinute ? (
                   <>
@@ -654,6 +697,7 @@ export default function DetailMeeting() {
                       height="100%"
                       style={{ border: "none", borderRadius: "8px" }}
                       title="Sample Minute"
+                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                     />
                   </>
                 ) : (

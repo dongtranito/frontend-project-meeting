@@ -86,7 +86,8 @@ export default function EditMinutePage() {
     if (result.success) {
       setMessage("Cập nhật thành công!");
       setTimeout(() => {
-        window.history.back();
+        // window.history.back();
+        window.location.href = `/meeting/${id}`;
       }, 5000);
     }
     else setMessage("Lỗi cập nhật!");

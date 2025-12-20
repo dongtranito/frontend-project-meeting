@@ -13,12 +13,15 @@ import {
   Typography,
   DialogContentText,
   Box,
+  Checkbox,
+  FormControlLabel
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import "./item-member.css";
 import { API_URL } from "../../../config/api.js";
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 export default function MemberItem({
   member,
@@ -32,6 +35,7 @@ export default function MemberItem({
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [newName, setNewName] = useState(member.name);
+  const [permission, setPermission] = useState(member.is_editor);
   const [message, setMessage] = useState(null);
 
   const handleRemoveMember = async () => {
@@ -81,7 +85,7 @@ export default function MemberItem({
         body: JSON.stringify({
           memberEmail: member.user_id,
           name: newName,
-          is_editor: true,
+          is_editor: permission,
           groupId,
         }),
       });
@@ -96,7 +100,7 @@ export default function MemberItem({
       setMessage({ type: "success", text: "Cập nhật thành công!" });
 
       // Cập nhật UI ngay sau khi thành công
-      onUpdated?.({ ...member, name: newName });
+      onUpdated?.({ ...member, name: newName, is_editor: permission });
 
       // Đóng dialog sau khi hiển thị thông báo một chút
       setTimeout(() => handleCloseUpdateDialog(), 800);
@@ -125,6 +129,11 @@ export default function MemberItem({
             <Typography variant="body2" className="member-role">
               (Chủ nhóm)
             </Typography>
+          )}
+
+          {member.is_editor && (
+            <CheckCircleIcon color="primary" sx={{ fontSize: 16 }} />
+
           )}
         </div>
         <div className="email">
@@ -213,6 +222,23 @@ export default function MemberItem({
             variant="outlined"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
+          />
+
+          <DialogContentText>Cấp quyền chỉnh sửa:</DialogContentText>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={permission}
+                onChange={(e) => setPermission(e.target.checked)}
+                sx={{
+                  color: "#006b7f", 
+                  '&.Mui-checked': {
+                    color: "#006b7f", 
+                  },
+                }}
+              />
+            }
+            label="Người chỉnh sửa"
           />
 
           {message && (

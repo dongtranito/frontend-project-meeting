@@ -14,6 +14,7 @@ import {
   DialogContentText,
   Box,
   CircularProgress,
+  Alert,
 } from "@mui/material";
 import "./item-meeting.css";
 import UpdateMeetingDialog from "./update-meeting-dialog/update-meeting-dialog";
@@ -38,6 +39,8 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted, isOwner }) 
   };
 
   const handleDeleteMeeting = async () => {
+    setOpenConfirm(false);
+    setMessage(null);
     try {
       // const res = await fetch(`http://localhost:3001/delete-meeting/${meeting.meetingId}`, {
       const res = await fetch(
@@ -54,10 +57,17 @@ export default function MeetingItem({ meeting, onUpdated, onDeleted, isOwner }) 
 
       if (!res.ok || !data.success) throw new Error(data.message);
 
+      
+      // setMessage({ type: "success", text: "Xóa cuộc họp thành công!" });
+      setMessage({
+        type: "success",
+        text: `Đã xóa thành viên "${data}" thành công!`,
+      });
       onDeleted(meeting.meetingId);
-
-      setMessage({ type: "success", text: "Xóa cuộc họp thành công!" });
-      setOpenConfirm(false);
+      // setOpenConfirm(false);
+      // setTimeout(() => {
+      //   setMessage(null);
+      // }, 5000);
     } catch (err) {
       console.error("Lỗi khi xóa:", err);
       setMessage({ type: "error", text: "Không thể xóa cuộc họp." });

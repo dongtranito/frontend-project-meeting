@@ -14,7 +14,8 @@ import {
   DialogContentText,
   Box,
   Checkbox,
-  FormControlLabel
+  FormControlLabel,
+  Snackbar
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -38,16 +39,47 @@ export default function MemberItem({
   const [permission, setPermission] = useState(member.is_editor);
   const [message, setMessage] = useState(null);
 
+  // const handleRemoveMember = async () => {
+  //   setLoading(true);
+  //   setMessage(null);
+  //   try {
+  //     // const res = await fetch("http://localhost:3001/remove-member", {
+  //     const res = await fetch(`${API_URL}/remove-member`, {
+  //       method: "DELETE",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         // Authorization: `Bearer ${user?.token || ""}`,
+  //       },
+  //       credentials: "include",
+  //       body: JSON.stringify({
+  //         groupId: groupId,
+  //         memberId: member.user_id,
+  //       }),
+  //     });
+
+  //     const data = await res.json();
+  //     if (!res.ok || !data.success) throw new Error(data.message);
+  //     onRemoved?.();
+  //     setOpenDeleteDialog(false);
+  //   } catch (err) {
+  //     setMessage({
+  //       type: "error",
+  //       text: err.message || "Không thể xóa thành viên.",
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const handleRemoveMember = async () => {
+    setOpenDeleteDialog(false); // ✅ đóng dialog ngay
     setLoading(true);
     setMessage(null);
+
     try {
-      // const res = await fetch("http://localhost:3001/remove-member", {
       const res = await fetch(`${API_URL}/remove-member`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer ${user?.token || ""}`,
         },
         credentials: "include",
         body: JSON.stringify({
@@ -58,8 +90,17 @@ export default function MemberItem({
 
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.message);
+
+      setMessage({
+        type: "success",
+        text: `Đã xóa thành viên "${member.name}" thành công!`,
+      });
+
       onRemoved?.();
-      setOpenDeleteDialog(false);
+
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
     } catch (err) {
       setMessage({
         type: "error",
@@ -69,6 +110,7 @@ export default function MemberItem({
       setLoading(false);
     }
   };
+
 
   const handleUpdateMember = async () => {
     setLoading(true);
@@ -96,13 +138,10 @@ export default function MemberItem({
         throw new Error(data.message || "Cập nhật thất bại");
       }
 
-      // Chỉ chạy khi server thực sự trả thành công
       setMessage({ type: "success", text: "Cập nhật thành công!" });
 
-      // Cập nhật UI ngay sau khi thành công
       onUpdated?.({ ...member, name: newName, is_editor: permission });
 
-      // Đóng dialog sau khi hiển thị thông báo một chút
       setTimeout(() => handleCloseUpdateDialog(), 800);
     } catch (err) {
       console.error("Lỗi cập nhật thành viên:", err);
@@ -202,6 +241,28 @@ export default function MemberItem({
         </DialogActions>
       </Dialog>
 
+      <Snackbar
+        open={!!message}
+        autoHideDuration={5000}
+        onClose={() => setMessage(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Box sx={{ px: 2, pb: 1 }}>
+          <Alert
+            severity={message?.type}
+            onClose={() => setMessage(null)}
+            sx={{
+              mb: 1,
+              borderRadius: 2,
+              boxShadow: 3,
+              alignItems: "center",
+            }}
+          >
+            {message?.text}
+          </Alert>
+        </Box>
+      </Snackbar>
+
       <Dialog
         open={openUpdateDialog}
         onClose={() => setOpenUpdateDialog(false)}
@@ -231,9 +292,9 @@ export default function MemberItem({
                 checked={permission}
                 onChange={(e) => setPermission(e.target.checked)}
                 sx={{
-                  color: "#006b7f", 
+                  color: "#006b7f",
                   '&.Mui-checked': {
-                    color: "#006b7f", 
+                    color: "#006b7f",
                   },
                 }}
               />

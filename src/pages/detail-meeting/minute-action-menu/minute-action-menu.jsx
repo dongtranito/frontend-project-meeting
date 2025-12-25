@@ -42,6 +42,9 @@ export default function MinuteActionsMenu({
   };
 
   if (!isOwner && !isEditor) return null;
+  console.log("owner:", isOwner);
+  console.log("editor: ", isEditor);
+  console.log("official: ", hasOfficialMinute);
 
   return (
     <div>
@@ -64,7 +67,7 @@ export default function MinuteActionsMenu({
           <ListItemText>Tạo biên bản</ListItemText>
         </MenuItem>
 
-        {(isOwner || !hasOfficialMinute) && (
+        {(isOwner && !hasOfficialMinute) && (
           <MenuItem component="label">
             <ListItemIcon>
               <UploadFileIcon fontSize="small" />

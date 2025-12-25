@@ -7,13 +7,13 @@
   border-radius: 12px;
   background: #fff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  /* transition: box-shadow 0.2s ease, transform 0.2s ease; */
   margin-bottom: 10px;
 }
 
 .member-item:hover {
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
 }
 
 .member-info {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Typography, CircularProgress, Tab } from "@mui/material";
+import { Box, Typography, CircularProgress, Tab, Snackbar, Alert } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { AuthContext } from "../../auth/auth-context";
 
@@ -23,6 +23,7 @@ export default function DetailItemGroup() {
   const [error, setError] = useState("");
   const [meetings, setMeetings] = useState([]);
   const [loadingMeetings, setLoadingMeetings] = useState(false);
+  const [message, setMessage] = useState(null);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -207,12 +208,17 @@ export default function DetailItemGroup() {
                 meetings.map((meeting) => {
 
                   return (
+
                     <MeetingItem
                       key={meeting.meetingId}
                       meeting={meeting}
                       isOwner={isCurrentUserOwner}
                       onDeleted={(deletedId) => {
                         setMeetings((prev) => prev.filter((m) => m.meetingId !== deletedId));
+                        setMessage({
+                          type: "success",
+                          text: "Cuộc họp đã được xóa thành công!",
+                        });
                       }}
                       onUpdated={(updatedMeeting) => {
                         setMeetings((prev) =>
@@ -222,6 +228,7 @@ export default function DetailItemGroup() {
                         );
                       }}
                     />
+
                   );
                 })
 
@@ -230,6 +237,29 @@ export default function DetailItemGroup() {
                   Chưa có cuộc họp nào.
                 </Typography>
               )}
+
+              <Snackbar
+                open={!!message}
+                autoHideDuration={5000}
+                onClose={() => setMessage(null)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+              >
+                <Box sx={{ px: 2, pb: 1 }}>
+                  <Alert
+                    severity={message?.type}
+                    onClose={() => setMessage(null)}
+                    sx={{
+                      mb: 1,
+                      borderRadius: 2,
+                      boxShadow: 3,
+                      alignItems: "center",
+                    }}
+                  >
+                    {message?.text}
+                  </Alert>
+                </Box>
+              </Snackbar>
+
             </div>
 
             <FloatingChatStream groupId={id} nameChat='Chat hỗ trợ nhóm' headerColor="#243B55" />

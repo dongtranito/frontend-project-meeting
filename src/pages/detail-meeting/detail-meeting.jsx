@@ -65,11 +65,11 @@ export default function DetailMeeting() {
   }, [id]);
 
   useEffect(() => {
-  if (meetingDetail?.groupId) {
-    fetchGroupDetail(meetingDetail.groupId);
-  }
-}, [meetingDetail?.groupId]);
-  
+    if (meetingDetail?.groupId) {
+      fetchGroupDetail(meetingDetail.groupId);
+    }
+  }, [meetingDetail?.groupId]);
+
 
   useEffect(() => {
     if (value === "2" && tabPanelRef.current) {
@@ -82,6 +82,15 @@ export default function DetailMeeting() {
       }, 100);
     }
   }, [value]);
+
+  const showMessage = ({ tab, type, text }) => {
+    setMessage({ tab, type, text });
+
+    setTimeout(() => {
+      setMessage(null);
+    }, 3000);
+  };
+
 
   const fetchMeetingDetail = async () => {
     try {
@@ -100,7 +109,12 @@ export default function DetailMeeting() {
         setUploaded(true);
       }
     } catch (err) {
-      setMessage("❌ Không thể tải thông tin cuộc họp.");
+      // setMessage("❌ Không thể tải thông tin cuộc họp.");
+      showMessage({
+        tab: "1",
+        type: "error",
+        text: "Không thể tải thông tin cuộc họp.",
+      });
     }
   };
 
@@ -141,7 +155,12 @@ export default function DetailMeeting() {
       console.log("data sign:", data.data);
 
       if (!data.data?.signedMinute) {
-        setMessage("⚠️ Biên bản hiện chưa được ký.");
+        // setMessage("⚠️ Biên bản hiện chưa được ký.");
+        showMessage({
+          tab: "2",
+          type: "success",
+          text: "Biên bản hiện chưa được ký.",
+        });
         setSignedMinute(null);
         return;
       }
@@ -151,7 +170,12 @@ export default function DetailMeeting() {
       window.open(signedUrl, "_blank", "noopener,noreferrer");
     } catch (err) {
       console.error(err);
-      setMessage("❌ Lỗi khi tải biên bản đã ký.");
+      // setMessage("❌ Lỗi khi tải biên bản đã ký.");
+      showMessage({
+        tab: "2",
+        type: "error",
+        text: "Lỗi khi tải biên bản đã ký.",
+      });
     } finally {
       setLoading(false);
     }
@@ -182,7 +206,12 @@ export default function DetailMeeting() {
       setIsRecording(true);
       setMessage("");
     } catch (err) {
-      setMessage("Không thể truy cập microphone");
+      // setMessage("Không thể truy cập microphone");
+      showMessage({
+        tab: "1",
+        type: "error",
+        text: "Không thể truy cập microphone.",
+      });
     }
   };
 
@@ -196,7 +225,12 @@ export default function DetailMeeting() {
     if (!file) return;
 
     if (!file.type.startsWith("audio/")) {
-      setMessage("Vui lòng chọn tệp âm thanh hợp lệ");
+      // setMessage("Vui lòng chọn tệp âm thanh hợp lệ");
+      showMessage({
+        tab: "1",
+        type: "error",
+        text: "Vui lòng chọn tệp âm thanh hợp lệ.",
+      });
       return;
     }
 
@@ -207,7 +241,13 @@ export default function DetailMeeting() {
   };
 
   const uploadToServer = async () => {
-    if (!audioBlob) return setMessage("Chưa có tệp âm thanh để tải lên");
+    if (!audioBlob)
+      // return setMessage("Chưa có tệp âm thanh để tải lên");
+      return showMessage({
+        tab: "1",
+        type: "error",
+        text: "Chưa có tệp âm thanh để tải lên.",
+      });
     setLoading(true);
     setMessage("");
     try {
@@ -232,14 +272,29 @@ export default function DetailMeeting() {
       if (res.ok && data.success) {
         setUploadedUrl(data.data?.url || "");
         setUploaded(true);
-        setMessage("Đã gửi đoạn ghi âm lên server");
+        // setMessage("Đã gửi đoạn ghi âm lên server");
+        showMessage({
+          tab: "1",
+          type: "success",
+          text: "Đã tải lên thành công.",
+        });
 
         await fetchMeetingDetail();
       } else {
-        setMessage(`❌ Lỗi: ${data.error || "Không rõ"}`);
+        // setMessage(`❌ Lỗi: ${data.error || "Không rõ"}`);
+        showMessage({
+          tab: "1",
+          type: "error",
+          text: `Lỗi: ${data.error}`,
+        });
       }
     } catch (err) {
-      setMessage(`Lỗi: ${err.message}`);
+      // setMessage(`Lỗi: ${err.message}`);
+      showMessage({
+        tab: "1",
+        type: "error",
+        text: `Lỗi: ${err.message}`,
+      });
     } finally {
       setLoading(false);
     }
@@ -256,7 +311,12 @@ export default function DetailMeeting() {
     const audioUrlToUse = uploadedUrl || meetingDetail?.audioUrl;
 
     if (!audioUrlToUse) {
-      setMessage("⚠️ Hãy upload file ghi âm trước!");
+      // setMessage("⚠️ Hãy upload file ghi âm trước!");
+      showMessage({
+        tab: "2",
+        type: "error",
+        text: "Hãy upload tệp ghi âm trước!",
+      });
       return;
     }
 
@@ -293,9 +353,19 @@ export default function DetailMeeting() {
         },
       }));
 
-      setMessage("✅ Tạo biên bản thành công!");
+      // setMessage("✅ Tạo biên bản thành công!");
+      showMessage({
+        tab: "2",
+        type: "success",
+        text: "Tạo biên bản thành công!",
+      });
     } catch (err) {
-      setMessage(`❌ ${err.message}`);
+      // setMessage(`❌ ${err.message}`);
+      showMessage({
+        tab: "2",
+        type: "error",
+        text: `Lỗi: ${err.message}`,
+      });
     } finally {
       setLoadingMinute(false);
     }
@@ -309,7 +379,12 @@ export default function DetailMeeting() {
       file.type !==
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) {
-      alert("Vui lòng chọn file .docx hợp lệ!");
+      // alert("Vui lòng chọn file .docx hợp lệ!");
+      showMessage({
+        tab: "2",
+        type: "error",
+        text: "Vui lòng chọn file .docx hợp lệ!",
+      });
       return;
     }
 
@@ -330,15 +405,30 @@ export default function DetailMeeting() {
 
       const data = await res.json();
       if (!data.success) {
-        setMessage(`Upload thất bại: ${data.error}`);
+        // setMessage(`Upload thất bại: ${data.error}`);
+        showMessage({
+          tab: "2",
+          type: "error",
+          text: `Upload thất bại: ${data.error}`,
+        });
         return;
       }
 
-      setMessage("✅ Upload biên bản mẫu thành công!");
+      // setMessage("✅ Upload biên bản mẫu thành công!");
+      showMessage({
+        tab: "2",
+        type: "success",
+        text: "Upload biên bản mẫu thành công!",
+      });
       await fetchMeetingDetail();
     } catch (err) {
       console.error(err);
-      setMessage("❌ Lỗi khi upload file biên bản mẫu");
+      // setMessage("❌ Lỗi khi upload file biên bản mẫu");
+      showMessage({
+        tab: "2",
+        type: "error",
+        text: "Lỗi khi upload tệp biên bản mẫu!",
+      });
     }
   };
 
@@ -361,12 +451,22 @@ export default function DetailMeeting() {
         setTranscript(data.data.transcript);
       } else {
         // alert("Không tìm thấy transcript cho cuộc họp này!");
-        setMessage("Chưa có transcript cho cuộc họp này!");
+        // setMessage("Chưa có transcript cho cuộc họp này!");
+        showMessage({
+          tab: "1",
+          type: "error",
+          text: "Chưa có transcript cho cuộc họp này!",
+        });
       }
     } catch (error) {
       console.error("Lỗi khi gọi API transcript:", error);
       // alert("Đã xảy ra lỗi khi lấy transcript!");
-      setMessage("Đã xảy ra lỗi khi lấy transcript!");
+      // setMessage("Đã xảy ra lỗi khi lấy transcript!");
+      showMessage({
+        tab: "1",
+        type: "error",
+        text: "Đã xảy ra lỗi khi lấy transcript!",
+      });
     } finally {
       setLoading(false);
     }
@@ -525,7 +625,7 @@ export default function DetailMeeting() {
                 </div>
               )}
 
-              {message && (
+              {/* {message && (
                 <Typography
                   variant="body2"
                   className={`message ${message.startsWith("✅") ? "success" : "error"
@@ -533,7 +633,12 @@ export default function DetailMeeting() {
                 >
                   {message}
                 </Typography>
-              )}
+              )} */}
+                {message?.tab === "1" && (
+                  <Typography className={`message ${message.type}`}>
+                    {message.text}
+                  </Typography>
+                )}
             </CardContent>
           </Card>
         </TabPanel>
@@ -746,6 +851,12 @@ export default function DetailMeeting() {
                   </Button>
                 </Box>
               )}
+
+                {message?.tab === "2" && (
+                  <Typography className={`message ${message.type}`}>
+                    {message.text}
+                  </Typography>
+                )}
             </CardContent>
           </Card>
         </TabPanel>

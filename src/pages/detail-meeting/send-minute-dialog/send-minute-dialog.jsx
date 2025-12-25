@@ -40,6 +40,8 @@ export default function SendMinuteDialog({ open, handleClose, meetingId }) {
     setSigners(signers.filter((s) => s !== removeEmail));
   };
 
+  console.log("URL: ", API_URL);
+
   const handleSend = async () => {
     if (signers.length === 0) {
       setMessage({ type: "warning", text: "Vui lòng thêm ít nhất một email." });
@@ -62,6 +64,8 @@ export default function SendMinuteDialog({ open, handleClose, meetingId }) {
       });
 
       const data = await res.json();
+
+      console.log("meetingId: ", meetingId);
 
       if (data.success) {
         setMessage({
